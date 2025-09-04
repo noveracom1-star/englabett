@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FUN BASE - Ocean Blue Edition</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+    :root{
+      --bg1:#006aa6;
+      --bg2:#003f63;
+      --panel:#012a3f;
+      --mint:#a8e6cf;
+      --mint-2:#6ed3cf;
+      --ink:#032538;
+      --good:#19c37d;
+      --bad:#f25f5c;
+      --chip:#0a3a53;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial;
+      color:#fff;
+      background: radial-gradient(1200px 700px at 15% -10%, #0287cc 0%, #015f91 35%, #003a58 100%),
+                  linear-gradient(135deg,var(--bg1),var(--bg2));
+      background-attachment: fixed;
+      padding:20px;
+      overflow-x:hidden;
+      font-size: 16px;
+    }
+
+    .container{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+    header{text-align:center}
+    h1{
+      font-size:clamp(1.9rem,2vw+1.2rem,2.8rem);
+      letter-spacing:.5px;
+      background:linear-gradient(90deg,var(--mint),#d7f7e9);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+      filter:drop-shadow(0 6px 18px rgba(0,0,0,.25));
+      position:relative;display:inline-block
+    }
+    h1::after{
+      content:"";position:absolute;left:50%;transform:translateX(-50%);
+      bottom:-10px;width:110px;height:3px;border-radius:3px;
+      background:linear-gradient(90deg,var(--mint),#d7f7e9);
+      opacity:.9
+    }
+    .subtitle{opacity:.9;margin-top:8px}
+
+    .top-bar{
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+      background:rgba(0,33,51,.55);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(6px);
+      padding:12px 14px;border-radius:14px;
+      box-shadow:0 10px 28px rgba(0,0,0,.25) inset, 0 6px 16px rgba(0,0,0,.18)
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      font-weight:600
+    }
+
+    .game{display:grid;grid-template-columns:1fr 1.2fr;gap:18px}
+    @media (max-width:980px){.game{grid-template-columns:1fr}}
+
+    .panel{
+      background:linear-gradient(180deg,rgba(1,33,51,.7),rgba(1,26,40,.7));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 12px 40px rgba(0,0,0,.35)
+    }
+    .panel h2{font-size:1.2rem;margin-bottom:12px;color:var(--mint);letter-spacing:.3px}
+
+    .input{display:grid;gap:12px}
+    .field label{display:block;margin:2px 0 6px 2px;opacity:.95}
+    .field input{
+      width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(168,230,207,.35);
+      background:rgba(255,255,255,.06);color:#fff;font-size:1rem;outline:none;
+      transition:box-shadow .2s,border-color .2s;text-transform:uppercase
+    }
+    .field input:focus{border-color:var(--mint);box-shadow:0 0 0 4px rgba(168,230,207,.20)}
+
+    .btn{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      padding:12px 14px;border-radius:12px;border:none;cursor:pointer;
+      font-weight:800;color:var(--ink);
+      background:linear-gradient(90deg,var(--mint),var(--mint-2));
+      box-shadow:0 8px 20px rgba(0,0,0,.22);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease
+    }
+    .btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(0,0,0,.30)}
+    .btn.secondary{background:transparent;color:#e5f9ff;border:1px solid rgba(168,230,207,.35)}
+    .btn.ghost{background:transparent;color:#e5f9ff;border:1px dashed rgba(168,230,207,.35)}
+
+    .search input{
+      width:100%;padding:11px 14px;border-radius:11px;
+      border:1px solid rgba(168,230,207,.35);
+      background:rgba(255,255,255,.06);color:#fff;outline:none
+    }
+    .word-grid{
+      display: grid;grid-template-columns: repeat(6, 1fr);grid-template-rows: repeat(5, 1fr);
+      gap: 4px;height: 180px;
+    }
+    .word-item{
+      display:flex;align-items:center;justify-content:center;padding:8px 6px;
+      border-radius:5px;background:linear-gradient(145deg, rgba(168,230,207,.20), rgba(168,230,207,.08));
+      border:1px solid rgba(168,230,207,.35);text-align:center;font-weight:600;
+      letter-spacing:.2px;user-select:none;cursor:pointer;transition:transform .12s ease;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.5rem;line-height:1
+    }
+    .word-item:hover{background:rgba(168,230,207,.32);transform:translateY(-1px)}
+
+    .slip{
+      display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;
+      border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(168,230,207,.25);
+    }
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;
+      background:linear-gradient(145deg, rgba(168,230,207,.15), rgba(168,230,207,.06));
+      border:1px solid rgba(168,230,207,.35);font-weight:800;font-size:.85rem;
+    }
+    .chip .x{
+      width:18px;height:18px;display:grid;place-items:center;cursor:pointer;
+      border-radius:50%;border:1px solid rgba(168,230,207,.4);
+      background:rgba(255,255,255,.12);font-size:.75rem;line-height:1
+    }
+
+    .review{
+      padding:10px;border-radius:12px;background:rgba(255,255,255,.05);
+      border:1px dashed rgba(168,230,207,.35);font-weight:700;letter-spacing:.5px
+    }
+
+    .result{
+      display:none;text-align:center;padding:22px;border-radius:16px;
+      background:linear-gradient(180deg, rgba(1,33,51,.85), rgba(1,26,40,.85));
+      border:1px solid rgba(255,255,255,.08)
+    }
+    .result.win{outline:2px solid rgba(25,195,125,.45)}
+    .result.lose{outline:2px solid rgba(242,95,92,.45)}
+    .result .big{font-size:1.25rem;margin:8px 0 10px}
+    .result-list{margin-top:12px;text-align:left;display:grid;gap:8px}
+    .result-item{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:10px;border-radius:10px;background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);font-weight:700
+    }
+    .tag{padding:4px 8px;border-radius:999px;font-size:.8rem;font-weight:900}
+    .tag.win{background:rgba(25,195,125,.18);border:1px solid rgba(25,195,125,.45);color:#bff3dd}
+    .tag.lose{background:rgba(242,95,92,.18);border:1px solid rgba(242,95,92,.45);color:#ffd3d2}
+
+    footer{opacity:.8;text-align:center;margin-top:8px}
+
+    .toast{
+      position:fixed;left:50%;top:24px;transform:translateX(-50%);
+      background:#fff;color:#00324d;border-radius:14px;padding:12px 14px;
+      box-shadow:0 10px 26px rgba(0,0,0,.30);z-index:2000;display:none;max-width:92%;font-weight:700
+    }
+    .toast.show{display:block;animation:drop .24s ease-out}
+    @keyframes drop{from{transform:translate(-50%,-14px);opacity:.0}to{transform:translate(-50%,0);opacity:1}}
+
+    .modal{
+      position:fixed;inset:0;display:none;place-items:center;z-index:1600;
+      background:rgba(0,0,0,.35);backdrop-filter:blur(2px)
+    }
+    .modal-card{
+      background:#fff;color:#00324d;border-radius:16px;padding:18px 16px;max-width:420px;width:92%;
+      box-shadow:0 18px 48px rgba(0,0,0,.35);text-align:center
+    }
+    .modal .btn{width:auto}
+  </style>
+</head>
+<body>
+  <audio id="bg-music" autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2021/09/01/audio_f50744c6a2.mp3?filename=gentle-ocean-waves-ambient-11077.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <header>
+      <h1>FUN BASE Challenge</h1>
+      <p class="subtitle">Form valid words using the letters (Key letter = <b>C</b>)</p>
+    </header>
+
+    <div class="top-bar">
+      <div class="pill"><i class="fa-solid fa-calendar-days"></i> 08:00am – 10:00am</div>
+      <div class="pill"><i class="fa-solid fa-wallet"></i> Balance: <span id="balance">₦1000</span></div>
+      <div class="pill"><i class="fa-regular fa-clock"></i> Time Left: <span id="timer">01:30</span></div>
+      <div class="pill"><i class="fa-solid fa-key"></i> Key Letter: <b>C</b></div>
+    </div>
+
+    <div class="game">
+      <!-- Left: input / actions -->
+      <section class="panel">
+        <h2>Your Guess</h2>
+        <div class="input">
+          <div class="field">
+            <label for="word-input">Enter Word</label>
+            <input id="word-input" type="text" placeholder="Enter word..." autocomplete="off"/>
+          </div>
+          <div class="review" id="review-box">Review: <span id="review-text">—</span></div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button id="add-word" class="btn secondary" style="flex:1"><i class="fa-solid fa-plus"></i> Add to Bet Slip</button>
+            <button id="clear-slip" class="btn ghost" style="flex:0 0 auto"><i class="fa-regular fa-trash-can"></i> Clear</button>
+          </div>
+
+          <div class="field">
+            <label>Bet Slip (<span id="slip-count">0</span>/10)</label>
+            <div id="bet-slip" class="slip">
+              <span style="opacity:.8">No words added yet</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="bet-amount">Bet Amount <small>(per word, Min 50)</small></label>
+            <input id="bet-amount" type="number" value="50" min="50"/>
+          </div>
+
+          <button id="submit-btn" class="btn"><i class="fa-solid fa-coins"></i> Place Bet</button>
+          <button id="hint-btn" class="btn secondary"><i class="fa-regular fa-lightbulb"></i> Give Me a Hint</button>
+        </div>
+      </section>
+
+      <!-- Right: word list -->
+      <section class="panel">
+        <h2>C-Words</h2>
+        <div class="search">
+          <input id="search-words" type="text" placeholder="Search words..."/>
+        </div>
+        <div id="word-grid" class="word-grid"><div class="word-item">Loading…</div></div>
+        <p style="opacity:.8;margin-top:10px;font-size:.9rem">Tip: Tap a word to add it to your bet slip. Max 10 words.</p>
+      </section>
+    </div>
+
+    <!-- Result / countdown -->
+    <section id="result" class="result">
+      <h2>Result</h2>
+      <div id="result-msg" class="big"></div>
+      <div id="result-list" class="result-list"></div>
+      <button id="play-again" class="btn" style="width:auto;margin-top:10px"><i class="fa-solid fa-rotate-right"></i> Play Again</button>
+    </section>
+
+    <footer><p>FUN BASE Challenge © 2025 • Ocean Blue Edition</p></footer>
+  </div>
+
+  <!-- Hint modal -->
+  <div id="hint-modal" class="modal">
+    <div class="modal-card">
+      <div id="hint-text" style="font-weight:800;margin-bottom:10px">Hint</div>
+      <button id="hint-ok" class="btn">OK</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+<script>
+(() => {
+  // ---- STATE ----
+  let dict = [], cWords = [], validWords = [], availableLetters = [], keyword = "";
+  let balance = 1000, currency = "₦";
+  let roundActive = true, timerInterval = null;
+  const MAX_SLIP = 10;
+  let slip = [];
+
+  // ---- DOM ----
+  const els = {
+    balance: document.getElementById('balance'),
+    timer: document.getElementById('timer'),
+    grid: document.getElementById('word-grid'),
+    input: document.getElementById('word-input'),
+    bet: document.getElementById('bet-amount'),
+    result: document.getElementById('result'),
+    resultMsg: document.getElementById('result-msg'),
+    resultList: document.getElementById('result-list'),
+    search: document.getElementById('search-words'),
+    toast: document.getElementById('toast'),
+    hintModal: document.getElementById('hint-modal'),
+    hintText: document.getElementById('hint-text'),
+    reviewText: document.getElementById('review-text'),
+    reviewBox: document.getElementById('review-box'),
+    betSlip: document.getElementById('bet-slip'),
+    slipCount: document.getElementById('slip-count'),
+    addWord: document.getElementById('add-word'),
+    clearSlip: document.getElementById('clear-slip'),
+  };
+
+  // ---- UTIL ----
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const rand = n => Math.floor(Math.random() * n);
+  const randomLetters = (c) => Array.from({ length: c }, () => "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)]).join("");
+  const canFormWord = (word, letters) => {
+    let bag = [...letters];
+    for (const ch of word) {
+      const k = bag.indexOf(ch);
+      if (k < 0) return false;
+      bag.splice(k, 1);
+    }
+    return true;
+  };
+
+  function notify(msg, type = "info") {
+    els.toast.textContent = msg;
+    els.toast.style.color = type === "error" ? "#6a0000" : "#00324d";
+    els.toast.classList.add('show');
+    setTimeout(() => els.toast.classList.remove('show'), 1500);
+  }
+
+  function renderGrid(words) {
+    const list = words.slice(0, 30);
+    els.grid.innerHTML = "";
+    if (!list.length) {
+      els.grid.innerHTML = "<div class='word-item'>No words</div>";
+      return;
+    }
+    list.forEach(w => {
+      const d = document.createElement('div');
+      d.className = 'word-item';
+      d.textContent = w.toUpperCase();
+      d.title = "Click to add: " + w.toUpperCase();
+      d.onclick = () => {
+        els.input.value = w.toUpperCase();
+        updateReview();
+        addToSlip(w);
+      };
+      els.grid.appendChild(d);
+    });
+  }
+
+  function renderSlip() {
+    els.betSlip.innerHTML = "";
+    if (slip.length === 0) {
+      els.betSlip.innerHTML = "<span style='opacity:.8'>No words added yet</span>";
+    } else {
+      slip.forEach((w, idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        const span = document.createElement('span');
+        span.textContent = w.toUpperCase();
+        const x = document.createElement('div');
+        x.className = 'x';
+        x.innerHTML = '&times;';
+        x.onclick = () => { removeFromSlip(idx); };
+        chip.appendChild(span);
+        chip.appendChild(x);
+        els.betSlip.appendChild(chip);
+      });
+    }
+    els.slipCount.textContent = slip.length;
+  }
+
+  function addToSlip(raw) {
+    const w = (raw || "").trim().toLowerCase();
+    if (!w) return notify("Type a word first");
+    if (w.length < 3) return notify("Word must be at least 3 letters", "error");
+    if (slip.includes(w)) return notify("Already in your slip");
+    if (slip.length >= MAX_SLIP) return notify("Bet slip full (max 10)", "error");
+    slip.push(w);
+    renderSlip();
+  }
+
+  function removeFromSlip(index) {
+    slip.splice(index, 1);
+    renderSlip();
+  }
+
+  function clearSlip() {
+    slip = [];
+    renderSlip();
+  }
+
+  function updateReview() {
+    const val = els.input.value.trim().toUpperCase();
+    els.reviewText.textContent = val || "—";
+  }
+
+  function startTimer() {
+    let t = 90;
+    clearInterval(timerInterval);
+    function tick() {
+      const m = Math.floor(t / 60), s = t % 60;
+      els.timer.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      if (t <= 0) {
+        clearInterval(timerInterval);
+        roundActive = false;
+        notify("⏱️ Time up!", "error");
+      }
+      t--;
+    }
+    tick();
+    timerInterval = setInterval(tick, 1000);
+  }
+
+  function startNewRound() {
+    els.result.style.display = "none";
+    roundActive = true;
+    els.input.value = "";
+    updateReview();
+    clearSlip();
+    keyword = (cWords[rand(cWords.length)] || "cat");
+    const extra = randomLetters(rand(2) + 2);
+    availableLetters = shuffle((keyword + extra).split(""));
+    validWords = dict.filter(w => w.length >= 3 && canFormWord(w, availableLetters));
+    renderGrid(shuffle(cWords).slice(0, 30));
+    startTimer();
+  }
+
+  // ---- EVENTS ----
+  els.input.addEventListener('input', updateReview);
+  els.addWord.addEventListener('click', () => addToSlip(els.input.value));
+  els.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addToSlip(els.input.value); } });
+  els.clearSlip.addEventListener('click', clearSlip);
+
+  document.getElementById('submit-btn').addEventListener('click', async () => {
+    if (!roundActive) {
+      notify("Round finished. Tap Play Again.", "error");
+      els.result.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    if (slip.length === 0 && els.input.value.trim()) {
+      addToSlip(els.input.value);
+    }
+
+    if (slip.length === 0) {
+      notify("Add at least one word to bet on", "error");
+      return;
+    }
+
+    const bet = parseInt(els.bet.value, 10);
+    if (isNaN(bet) || bet < 50) {
+      notify("Minimum bet is ₦50", "error");
+      return;
+    }
+    const totalCost = bet * slip.length;
+    if (totalCost > balance) {
+      notify("Insufficient balance for all words", "error");
+      return;
+    }
+
+    els.result.style.display = "block";
+    els.result.classList.remove('win', 'lose');
+    els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s) in <b>5</b>…`;
+    els.resultList.innerHTML = "";
+    els.result.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    roundActive = false;
+    for (let c = 5; c >= 1; c--) {
+      els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s) in <b>${c}</b>…`;
+      await sleep(700);
+    }
+
+    let net = 0;
+    slip.forEach(w => {
+      const ok = validWords.includes(w);
+      const item = document.createElement('div');
+      item.className = 'result-item';
+      const left = document.createElement('div');
+      left.textContent = w.toUpperCase();
+      const right = document.createElement('div');
+      const tag = document.createElement('span');
+      tag.className = 'tag ' + (ok ? 'win' : 'lose');
+      tag.textContent = ok ? `+${currency}${bet}` : `-${currency}${bet}`;
+      right.appendChild(tag);
+      item.appendChild(left);
+      item.appendChild(right);
+      els.resultList.appendChild(item);
+      net += ok ? bet : -bet;
+    });
+
+    balance += net;
+    els.balance.textContent = currency + balance;
+
+    if (net >= 0) {
+      els.result.classList.add('win');
+      els.resultMsg.innerHTML = `🎉 Done! You netted <b>+${currency}${net}</b> on ${slip.length} word(s).`;
+      notify("✅ You won!");
+    } else {
+      els.result.classList.add('lose');
+      els.resultMsg.innerHTML = `❌ Done! You lost <b>${currency}${Math.abs(net)}</b> on ${slip.length} word(s).`;
+      notify("✖️ Better luck next time");
+    }
+  });
+
+  document.getElementById('play-again').addEventListener('click', startNewRound);
+
+  document.getElementById('hint-btn').addEventListener('click', () => {
+    const hintLetter = keyword[rand(keyword.length)].toUpperCase();
+    els.hintText.innerHTML = `💡 The keyword contains the letter <b>${hintLetter}</b>`;
+    els.hintModal.style.display = 'grid';
+  });
+  document.getElementById('hint-ok').addEventListener('click', () => {
+    els.hintModal.style.display = 'none';
+  });
+
+  let tId = null;
+  els.search.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
+    clearTimeout(tId);
+    tId = setTimeout(() => {
+      const filtered = cWords.filter(w => w.startsWith('c') && w.includes(q) && w.length >= 3);
+      renderGrid(filtered.slice(0, 30));
+    }, 120);
+  });
+
+  async function loadDict() {
+    const res = await fetch("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt");
+    const text = await res.text();
+    return text.split("\n").map(x => x.trim().toLowerCase());
+  }
+
+  (async function init() {
+    notify("Loading dictionary…");
+    dict = await loadDict();
+    cWords = dict.filter(w => w.startsWith('c') && w.length >= 3);
+    notify("Ready!");
+    startNewRound();
+    updateReview();
+  })();
+})();
+</script>
+</body>
+</html>

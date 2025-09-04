@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile - Englabet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <style>
+        :root {
+            --primary: #006aa6;
+            --primary-dark: #003f63;
+            --panel: #012a3f;
+            --accent: #a8e6cf;
+            --accent-light: #6ed3cf;
+            --text: #ffffff;
+            --text-secondary: #a0bcc9;
+            --card-bg: rgba(1, 33, 51, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --success: #19c37d;
+            --warning: #f25f5c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, Roboto, sans-serif;
+            color: var(--text);
+            background: radial-gradient(1200px 700px at 15% -10%, #0287cc 0%, #015f91 35%, #003a58 100%),
+                        linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent), #d7f7e9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #032538;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Main content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+            text-align: center;
+        }
+
+        .profile-image {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent);
+            margin: 0 auto 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .profile-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(25, 195, 125, 0.2);
+            color: #bff3dd;
+            border: 1px solid rgba(25, 195, 125, 0.4);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        /* Details Card */
+        .details-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .settings-btn {
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(45deg);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(25, 195, 125, 0.2);
+            color: #bff3dd;
+            border: 1px solid rgba(25, 195, 125, 0.4);
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #fff;
+            color: #00324d;
+            border-radius: 14px;
+            padding: 14px 18px;
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+            max-width: 320px;
+            font-weight: 600;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            
+            header {
+                padding: 12px 0;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+            
+            .profile-image {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .profile-name {
+                font-size: 20px;
+            }
+            
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .detail-item {
+                padding: 12px;
+            }
+            
+            .action-buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .action-buttons .btn {
+                flex: 1;
+                min-width: 120px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 20px;
+            }
+            
+            .profile-image {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .profile-name {
+                font-size: 18px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">ENGLABET</div>
+            <div class="header-actions">
+                <div class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Profile Summary Card -->
+            <div class="profile-card">
+                <img id="profile-photo" src="" alt="Profile Photo" class="profile-image">
+                <h2 id="profile-name" class="profile-name">Loading...</h2>
+                <div id="profile-status" class="profile-status">Loading...</div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="user-balance">₦ 0.00</div>
+                        <div class="stat-label">Account Balance</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="user-age">--</div>
+                        <div class="stat-label">Age</div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn" onclick="navigateTo('deposit.html')">
+                        <i class="fas fa-coins"></i> Deposit
+                    </button>
+                    <button class="btn" onclick="navigateTo('withdraw.html')">
+                        <i class="fas fa-money-bill-wave"></i> Withdraw
+                    </button>
+                    <button class="btn btn-secondary" onclick="navigateTo('transactions.html')">
+                        <i class="fas fa-history"></i> History
+                    </button>
+                </div>
+            </div>
+
+            <!-- Details Card -->
+            <div class="details-card">
+                <div class="card-header">
+                    <h2 class="card-title">Personal Information</h2>
+                    <div class="settings-btn" onclick="navigateTo('settings.html')">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Full Name</div>
+                        <div class="detail-value" id="user-fullname">Loading...</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Email Address</div>
+                        <div class="detail-value">
+                            <span id="user-email">Loading...</span>
+                            <span class="verified-badge" id="email-verified"><i class="fas fa-check-circle"></i> Verified</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Phone Number</div>
+                        <div class="detail-value" id="user-phone">Loading...</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Gender</div>
+                        <div class="detail-value" id="user-gender">Loading...</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value" id="user-country">Loading...</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">User ID</div>
+                        <div class="detail-value" id="user-id">Loading...</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Member Since</div>
+                        <div class="detail-value" id="join-date">Loading...</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Security Question</div>
+                        <div class="detail-value" id="security-question">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Englabet © 2023 • All rights reserved • Responsible Gaming</p>
+        </footer>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyAqh7ql42SY7FfHGfNWB_x5mZGQEfcOY40",
+  authDomain: "englabet-69982.firebaseapp.com",
+  projectId: "englabet-69982",
+  storageBucket: "englabet-69982.firebasestorage.app",
+  messagingSenderId: "372562022534",
+  appId: "1:372562022534:web:2876ea54733028f7da4107",
+  measurementId: "G-07ETXLQRHQ"
+};
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // Global user data variable
+        let userData = null;
+        
+        // Function to go back to previous page
+        function goBack() {
+            window.history.back();
+        }
+        
+        // Function to navigate to different pages
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+        
+        // Function to fetch user data from Firestore
+        async function fetchUserData() {
+            try {
+                const user = auth.currentUser;
+                
+                if (!user) {
+                    // If no user is logged in, redirect to login
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // Get user document from Firestore
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                if (!userDoc.exists) {
+                    showToast('User data not found. Please contact support.');
+                    return;
+                }
+                
+                userData = userDoc.data();
+                displayUserData();
+                
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                showToast('Error loading profile data. Please try again.');
+            }
+        }
+        
+        // Format and display user data
+        function displayUserData() {
+            if (!userData) return;
+            
+            // Profile section
+            document.getElementById('profile-photo').src = userData.profilePhotoUrl || 'https://res.cloudinary.com/demo/image/upload/v1586919327/sample.jpg';
+            document.getElementById('profile-name').textContent = `${userData.firstName} ${userData.lastName}`;
+            document.getElementById('user-balance').textContent = `₦ ${userData.balance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('user-age').textContent = userData.age || '--';
+            
+            // Set status badge
+            const statusElement = document.getElementById('profile-status');
+            statusElement.textContent = userData.status ? userData.status.charAt(0).toUpperCase() + userData.status.slice(1) : 'Pending';
+            
+            if (userData.status === 'verified') {
+                statusElement.style.background = 'rgba(25, 195, 125, 0.2)';
+                statusElement.style.color = '#bff3dd';
+                statusElement.style.borderColor = 'rgba(25, 195, 125, 0.4)';
+            } else if (userData.status === 'pending') {
+                statusElement.style.background = 'rgba(242, 95, 92, 0.2)';
+                statusElement.style.color = '#ffd3d2';
+                statusElement.style.borderColor = 'rgba(242, 95, 92, 0.4)';
+            }
+            
+            // Details section
+            document.getElementById('user-fullname').textContent = `${userData.firstName} ${userData.lastName}`;
+            document.getElementById('user-email').textContent = userData.email;
+            document.getElementById('user-phone').textContent = userData.phone;
+            document.getElementById('user-gender').textContent = userData.gender;
+            document.getElementById('user-country').textContent = userData.country;
+            document.getElementById('user-id').textContent = userData.userId;
+            
+            // Format join date
+            let joinDate = 'Unknown';
+            if (userData.createdAt) {
+                const date = userData.createdAt.toDate ? userData.createdAt.toDate() : new Date(userData.createdAt);
+                joinDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            }
+            document.getElementById('join-date').textContent = joinDate;
+            
+            document.getElementById('security-question').textContent = userData.securityQuestion;
+            
+            // Email verification badge
+            const emailVerifiedBadge = document.getElementById('email-verified');
+            if (!userData.emailVerified) {
+                emailVerifiedBadge.innerHTML = '<i class="fas fa-times-circle"></i> Not Verified';
+                emailVerifiedBadge.style.background = 'rgba(242, 95, 92, 0.2)';
+                emailVerifiedBadge.style.color = '#ffd3d2';
+                emailVerifiedBadge.style.borderColor = 'rgba(242, 95, 92, 0.4)';
+            }
+        }
+
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    fetchUserData();
+                } else {
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

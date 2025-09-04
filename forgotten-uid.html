@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgotten UID - EnglaBet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        :root {
+            --primary: #0a2e5a;
+            --secondary: #1a4789;
+            --accent: #ff9d00;
+            --accent-gradient: linear-gradient(to right, #ff9d00, #ffcc00);
+            --text-light: #ffffff;
+            --text-gray: #a0c1ed;
+            --card-bg: #1a3e75;
+            --card-dark: #0f2b50;
+            --input-bg: #0f2b50;
+        }
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .recovery-container {
+            width: 100%;
+            max-width: 520px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        .recovery-header {
+            background: linear-gradient(to right, #0d3b78, var(--primary));
+            padding: 25px 20px;
+            text-align: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            font-size: 22px;
+            box-shadow: 0 4px 10px rgba(255, 157, 0, 0.4);
+        }
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .recovery-header h1 {
+            font-size: 24px;
+            margin: 10px 0 5px;
+            font-weight: 600;
+        }
+        .recovery-header p {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+        .recovery-body {
+            padding: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-gray);
+        }
+        .input-with-icon {
+            position: relative;
+        }
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+        }
+        .form-control {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background: var(--input-bg);
+            border: 1px solid #1e4a86;
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(255, 157, 0, 0.2);
+        }
+        .error-message {
+            font-size: 12px;
+            color: #ff3366;
+            margin-top: 5px;
+            display: none;
+        }
+        .form-control.error {
+            border-color: #ff3366;
+        }
+        .btn-recover {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: 10px;
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 157, 0, 0.4);
+        }
+        .btn-recover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 157, 0, 0.5);
+        }
+        .recovery-footer {
+            background: var(--card-dark);
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        .recovery-footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+        .login-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Responsive */
+        @media (max-width: 500px) {
+            .recovery-body {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="recovery-container">
+        <div class="recovery-header">
+            <div class="logo">
+                <div class="logo-img">EB</div>
+                <div class="logo-text">EnglaBet</div>
+            </div>
+            <h1>Recover Your UID</h1>
+            <p>Enter your details to retrieve your User ID</p>
+        </div>
+
+        <div class="recovery-body">
+            <form id="recoveryForm">
+                <!-- Phone Number -->
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number">
+                    </div>
+                    <div class="error-message" id="phoneError">Please enter a valid phone number.</div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email">
+                    </div>
+                    <div class="error-message" id="emailError">Please enter a valid email.</div>
+                </div>
+
+                <!-- Security Question -->
+                <div class="form-group">
+                    <label for="securityQuestion">Security Question</label>
+                    <select id="securityQuestion" class="form-control">
+                        <option value="">Choose a question</option>
+                        <option value="pet">What was your first pet's name?</option>
+                        <option value="school">What was the name of your first school?</option>
+                        <option value="city">What city were you born in?</option>
+                        <option value="mother">What is your mother's maiden name?</option>
+                        <option value="car">What was your first car?</option>
+                    </select>
+                    <div class="error-message" id="securityQuestionError">Please select a security question.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="securityAnswer">Your Answer</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-key input-icon"></i>
+                        <input type="text" id="securityAnswer" class="form-control" placeholder="Enter your answer">
+                    </div>
+                    <div class="error-message" id="securityAnswerError">Answer is required.</div>
+                </div>
+
+                <button type="submit" class="btn-recover">Recover UID</button>
+            </form>
+
+            <div class="login-link">
+                Remember your UID? <a href="login.html">Sign In</a>
+            </div>
+        </div>
+
+        <div class="recovery-footer">
+            <p>© 2023 EnglaBet. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('recoveryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+
+            // Reset errors
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.form-control').forEach(el => el.classList.remove('error'));
+
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const securityQuestion = document.getElementById('securityQuestion').value;
+            const securityAnswer = document.getElementById('securityAnswer').value.trim();
+
+            const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // Validate at least one method is fully correct
+            if ((!phone || !phoneRegex.test(phone)) &&
+                (!email || !emailRegex.test(email)) &&
+                (!securityQuestion || !securityAnswer)) {
+
+                if (!phone || !phoneRegex.test(phone)) {
+                    document.getElementById('phoneError').textContent = phone ? 'Invalid phone number.' : 'Enter your phone to use this method.';
+                    document.getElementById('phoneError').style.display = 'block';
+                    document.getElementById('phone').classList.add('error');
+                }
+
+                if (!email || !emailRegex.test(email)) {
+                    document.getElementById('emailError').textContent = email ? 'Invalid email address.' : 'Enter your email to use this method.';
+                    document.getElementById('emailError').style.display = 'block';
+                    document.getElementById('email').classList.add('error');
+                }
+
+                if (!securityQuestion) {
+                    document.getElementById('securityQuestionError').style.display = 'block';
+                    document.getElementById('securityQuestion').classList.add('error');
+                }
+                if (!securityAnswer) {
+                    document.getElementById('securityAnswerError').style.display = 'block';
+                    document.getElementById('securityAnswer').classList.add('error');
+                }
+
+                isValid = false;
+            } else {
+                // Validate individual methods if partially filled
+                if (phone && !phoneRegex.test(phone)) {
+                    document.getElementById('phoneError').style.display = 'block';
+                    document.getElementById('phone').classList.add('error');
+                    isValid = false;
+                }
+                if (email && !emailRegex.test(email)) {
+                    document.getElementById('emailError').style.display = 'block';
+                    document.getElementById('email').classList.add('error');
+                    isValid = false;
+                }
+                if (securityQuestion && !securityAnswer) {
+                    document.getElementById('securityAnswerError').style.display = 'block';
+                    document.getElementById('securityAnswer').classList.add('error');
+                    isValid = false;
+                }
+                if (!securityQuestion && securityAnswer) {
+                    document.getElementById('securityQuestionError').style.display = 'block';
+                    document.getElementById('securityQuestion').classList.add('error');
+                    isValid = false;
+                }
+            }
+
+            if (isValid) {
+                const btn = this.querySelector('.btn-recover');
+                btn.textContent = 'Recovering...';
+                btn.style.opacity = '0.8';
+
+                // Simulate recovery process
+                setTimeout(() => {
+                    alert('Your UID is: EB123456\nWe have sent it to your registered contact method.');
+                    btn.textContent = 'Recover UID';
+                    btn.style.opacity = '1';
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
