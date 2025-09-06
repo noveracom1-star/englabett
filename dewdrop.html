@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dewdrop - Ocean Blue Edition</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com  ">
+  <link rel="preconnect" href="https://fonts.gstatic.com  " crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="  https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css  "/>
 
   <style>
     :root{
@@ -17,24 +20,79 @@
       --good:#19c37d;
       --bad:#f25f5c;
       --chip:#0a3a53;
+      --txt:#e8fbff;
+      --glow:0 20px 50px rgba(0,0,0,.35);
+      --ring:#bfeee0;
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%}
     body{
-      font-family: ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial;
-      color:#fff;
-      background: radial-gradient(1200px 700px at 15% -10%, #0287cc 0%, #015f91 35%, #003a58 100%),
-                  linear-gradient(135deg,var(--bg1),var(--bg2));
+      font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial;
+      color:var(--txt);
+      background:
+        radial-gradient(1200px 700px at 15% -10%, #0287cc 0%, #015f91 35%, #003a58 100%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
       background-attachment: fixed;
       padding:20px;
       overflow-x:hidden;
-      font-size: 16px;
+      font-size:16px;
     }
 
-    /* layout */
-    .container{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
-    header{text-align:center}
+    /* animated ocean gradient sheen */
+    body::before{
+      content:""; position:fixed; inset:-20%;
+      background: conic-gradient(from 180deg at 50% 50%, rgba(255,255,255,.06), rgba(255,255,255,0) 35%, rgba(255,255,255,.07) 55%, rgba(255,255,255,0) 85%);
+      filter: blur(60px);
+      animation: drift 26s linear infinite;
+      pointer-events:none; z-index:0;
+      opacity:.5;
+    }
+    @keyframes drift{to{transform:rotate(360deg)}}
+
+    /* floating bubbles */
+    .bubbles{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+    .bubble{
+      position:absolute; bottom:-120px; border-radius:999px; opacity:.15;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,255,255,.2) 40%, rgba(255,255,255,0) 65%);
+      filter: blur(0.2px);
+      animation: rise var(--dur) linear infinite, sway calc(var(--dur)*.6) ease-in-out infinite;
+    }
+    @keyframes rise{ to { transform: translateY(-115vh) translateZ(0) } }
+    @keyframes sway{ 50% { transform: translateX(18px) } }
+
+    .container{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px; position:relative; z-index:2;}
+
+    /* top nav */
+    .nav{
+      display:flex; align-items:center; gap:12px; justify-content:space-between;
+      background:rgba(0,33,51,.55);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(6px);
+      padding:12px 14px; border-radius:16px; box-shadow: var(--glow);
+    }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.4px; }
+    .logo{
+      width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--mint),var(--mint-2));
+      color:var(--ink); font-weight:900; box-shadow:0 6px 18px rgba(0,0,0,.25);
+    }
+    .nav-ctas{display:flex; gap:10px; align-items:center}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      font-weight:700
+    }
+    .action{
+      display:inline-flex;align-items:center;gap:8px; padding:8px 10px;
+      border-radius:12px; border:1px solid rgba(168,230,207,.35); background:rgba(255,255,255,.06);
+      cursor:pointer; font-weight:700;
+      transition:transform .15s ease, box-shadow .15s ease, background .2s ease;
+    }
+    .action:hover{ transform: translateY(-1px); box-shadow:0 10px 18px rgba(0,0,0,.22) }
+
+    header{text-align:center;padding-top:2px}
     h1{
       font-size:clamp(1.9rem,2vw+1.2rem,2.8rem);
       letter-spacing:.5px;
@@ -49,25 +107,19 @@
       background:linear-gradient(90deg,var(--mint),#d7f7e9);
       opacity:.9
     }
-    .subtitle{opacity:.9;margin-top:8px}
-
+    .subtitle{opacity:.92;margin-top:10px; font-weight:600}
     .top-bar{
-      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;
       background:rgba(0,33,51,.55);
       border:1px solid rgba(255,255,255,.08);
       backdrop-filter: blur(6px);
       padding:12px 14px;border-radius:14px;
       box-shadow:0 10px 28px rgba(0,0,0,.25) inset, 0 6px 16px rgba(0,0,0,.18)
     }
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.14);
-      font-weight:600
-    }
+    .top-bar .pill{font-weight:800}
 
     /* GAME LAYOUT */
-    .game{display:grid;grid-template-columns:1fr 1.2fr;gap:18px}
+    .game{display:grid;grid-template-columns:1fr 1.2fr;gap:18px; align-items:start}
     @media (max-width:980px){.game{grid-template-columns:1fr}}
 
     .panel{
@@ -75,28 +127,33 @@
       border:1px solid rgba(255,255,255,.08);
       border-radius:18px;
       padding:18px;
-      box-shadow:0 12px 40px rgba(0,0,0,.35)
+      box-shadow:var(--glow);
+      transform: translateY(0);
+      animation: fadeUp .5s ease both;
+    }
+    @keyframes fadeUp{
+      from{opacity:0; transform: translateY(8px)}
+      to{opacity:1; transform: translateY(0)}
     }
     .panel h2{
-      font-size:1.2rem;margin-bottom:12px;color:var(--mint);letter-spacing:.3px
+      font-size:1.18rem;margin-bottom:12px;color:var(--mint);letter-spacing:.35px; text-transform:uppercase
     }
+    .lede{font-size:.95rem; opacity:.88; margin:-2px 0 12px; line-height:1.45}
 
     /* inputs */
     .input{display:grid;gap:12px}
-    .field label{display:block;margin:2px 0 6px 2px;opacity:.95}
-    .field input{
+    .field label{display:block;margin:2px 0 6px 2px;opacity:.98; font-weight:700}
+    .field input, .field select{
       width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(168,230,207,.35);
       background:rgba(255,255,255,.06);color:#fff;font-size:1rem;outline:none;
       transition:box-shadow .2s,border-color .2s;text-transform:uppercase
     }
-    .field input:focus{
-      border-color:var(--mint);box-shadow:0 0 0 4px rgba(168,230,207,.20)
-    }
+    .field input:focus{ border-color:var(--mint); box-shadow:0 0 0 4px rgba(168,230,207,.20) }
 
     .btn{
       display:flex;align-items:center;justify-content:center;gap:8px;
       padding:12px 14px;border-radius:12px;border:none;cursor:pointer;
-      font-weight:800;color:var(--ink);
+      font-weight:900;color:var(--ink);
       background:linear-gradient(90deg,var(--mint),var(--mint-2));
       box-shadow:0 8px 20px rgba(0,0,0,.22);
       transition:transform .15s ease, box-shadow .15s ease, filter .15s ease
@@ -108,47 +165,47 @@
     .btn.ghost{
       background:transparent;color:#e5f9ff;border:1px dashed rgba(168,230,207,.35)
     }
+    .btn:disabled{ opacity:.6; cursor:not-allowed }
 
-    /* WORD GRID – increased padding, same tiny font */
-    .search{margin-bottom:12px}
+    /* WORD GRID */
+    .search{margin-bottom:12px; display:flex; gap:8px; align-items:center}
     .search input{
       width:100%;padding:11px 14px;border-radius:11px;
       border:1px solid rgba(168,230,207,.35);
       background:rgba(255,255,255,.06);color:#fff;outline:none
     }
     .word-grid{
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      grid-template-rows: repeat(5, 1fr);
-      gap: 4px;
-      height: 180px;
+      --cols:6;
+      display:grid;
+      grid-template-columns:repeat(var(--cols), 1fr);
+      grid-auto-rows:minmax(28px,1fr);
+      gap:6px;
+      min-height: 196px;
     }
+    @media (max-width:620px){ .word-grid{ --cols:4 } }
 
     .word-item{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 8px 6px;           /* <-- bigger padding */
-      border-radius:5px;
+      display:flex; align-items:center; justify-content:center;
+      padding:10px 6px; border-radius:7px;
       background:linear-gradient(145deg, rgba(168,230,207,.20), rgba(168,230,207,.08));
       border:1px solid rgba(168,230,207,.35);
-      text-align:center;
-      font-weight:600;
-      letter-spacing:.2px;
-      user-select:none;
-      cursor:pointer;
-      transition:transform .12s ease, background .2s ease, box-shadow .2s ease;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      font-size: 0.5rem;          /* same very small text size */
-      line-height: 1;
+      text-align:center; font-weight:800; letter-spacing:.35px; user-select:none;
+      cursor:pointer; transition:transform .12s ease, background .2s ease, box-shadow .2s ease;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      font-size:.64rem; line-height:1; text-shadow:0 1px 0 rgba(0,0,0,.25);
+      position:relative; isolation:isolate;
     }
     .word-item:hover{
       background:rgba(168,230,207,.32);
       transform:translateY(-1px);
-      box-shadow:0 2px 4px rgba(0,0,0,.15)
+      box-shadow:0 2px 6px rgba(0,0,0,.18)
     }
+    .word-item::after{
+      content:""; position:absolute; inset:0; border-radius:inherit;
+      background: radial-gradient(60% 90% at 50% 0%, rgba(255,255,255,.18), transparent 60%);
+      opacity:0; transition: opacity .2s ease;
+    }
+    .word-item:hover::after{ opacity:1 }
 
     /* bet slip (selected words) */
     .slip{
@@ -156,42 +213,47 @@
       padding:10px;border-radius:12px;
       background:rgba(255,255,255,.05);
       border:1px solid rgba(168,230,207,.25);
+      min-height:46px;
     }
     .chip{
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 10px;border-radius:999px;
       background:linear-gradient(145deg, rgba(168,230,207,.15), rgba(168,230,207,.06));
       border:1px solid rgba(168,230,207,.35);
-      font-weight:800;font-size:.85rem;
+      font-weight:900;font-size:.9rem; letter-spacing:.3px;
+      box-shadow:0 4px 10px rgba(0,0,0,.18) inset;
+      animation: pop .2s ease;
     }
+    @keyframes pop{ from{ transform:scale(.92); opacity:0 } to { transform:scale(1); opacity:1 } }
     .chip .x{
       width:18px;height:18px;display:grid;place-items:center;cursor:pointer;
       border-radius:50%;border:1px solid rgba(168,230,207,.4);
       background:rgba(255,255,255,.12);font-size:.75rem;line-height:1
     }
-    .slip-meta{opacity:.85;font-size:.9rem;margin-left:auto}
+    .slip-meta{opacity:.9;font-size:.9rem;margin-left:auto; font-weight:800}
 
     /* review box */
     .review{
       padding:10px;border-radius:12px;background:rgba(255,255,255,.05);
-      border:1px dashed rgba(168,230,207,.35);font-weight:700;letter-spacing:.5px
+      border:1px dashed rgba(168,230,207,.35);font-weight:800;letter-spacing:.5px
     }
 
-    /* result section (countdown) */
+    /* result section */
     .result{
-      display:none; text-align:center; padding:22px; border-radius:16px;
+      display:none; text-align:left; padding:22px; border-radius:16px;
       background:linear-gradient(180deg, rgba(1,33,51,.85), rgba(1,26,40,.85));
-      border:1px solid rgba(255,255,255,.08)
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: var(--glow);
     }
     .result.win{outline:2px solid rgba(25,195,125,.45)}
     .result.lose{outline:2px solid rgba(242,95,92,.45)}
-    .result .big{font-size:1.25rem;margin:8px 0 10px}
-    .result-list{margin-top:12px;text-align:left;display:grid;gap:8px}
+    .result .big{font-size:1.1rem;margin:8px 0 10px; font-weight:900}
+    .result-list{margin-top:12px;display:grid;gap:8px}
     .result-item{
-      display:flex;justify-content:space-between;align-items:center;
+      display:grid;grid-template-columns:1fr auto;align-items:center; gap:10px;
       padding:10px;border-radius:10px;
       background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
-      font-weight:700
+      font-weight:800
     }
     .tag{padding:4px 8px;border-radius:999px;font-size:.8rem;font-weight:900}
     .tag.win{background:rgba(25,195,125,.18);border:1px solid rgba(25,195,125,.45);color:#bff3dd}
@@ -203,15 +265,15 @@
     .toast{
       position:fixed;left:50%;top:24px;transform:translateX(-50%);
       background:#fff;color:#00324d;border-radius:14px;padding:12px 14px;
-      box-shadow:0 10px 26px rgba(0,0,0,.30);z-index:2000;display:none;max-width:92%;
-      font-weight:700
+      box-shadow:0 10px 26px rgba(0,0,0,.30);z-index:3000;display:none;max-width:92%;
+      font-weight:900
     }
     .toast.show{display:block;animation:drop .24s ease-out}
     @keyframes drop{from{transform:translate(-50%,-14px);opacity:.0}to{transform:translate(-50%,0);opacity:1}}
 
     /* modal hint */
     .modal{
-      position:fixed;inset:0;display:none;place-items:center;z-index:1600;
+      position:fixed;inset:0;display:none;place-items:center;z-index:2600;
       background:rgba(0,0,0,.35);backdrop-filter:blur(2px)
     }
     .modal-card{
@@ -219,36 +281,101 @@
       box-shadow:0 18px 48px rgba(0,0,0,.35);text-align:center
     }
     .modal .btn{width:auto}
+
+    /* progress ring timer */
+    .ring{
+      position:relative; width:54px; height:54px; display:grid; place-items:center;
+    }
+    .ring svg{ transform: rotate(-90deg) }
+    .ring .num{ position:absolute; font-size:.75rem; font-weight:900; letter-spacing:.3px }
+
+    /* subtle shimmering highlight for primary CTA */
+    .shimmer{
+      position:relative; overflow:hidden;
+    }
+    .shimmer::after{
+      content:""; position:absolute; top:0; left:-120%;
+      width:60%; height:100%;
+      background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,.6) 45%, transparent 100%);
+      animation: shimmer 3.2s ease-in-out infinite;
+    }
+    @keyframes shimmer{ 50% { left:160% } }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important; transition:none!important}
+    }
   </style>
 </head>
 <body>
-  <audio id="bg-music" autoplay loop>
-    <source src="https://cdn.pixabay.com/download/audio/2021/09/01/audio_f50744c6a2.mp3?filename=gentle-ocean-waves-ambient-11077.mp3" type="audio/mpeg">
+  <!-- ambient audio -->
+  <audio id="bg-music" loop>
+    <source src="dewdrop.mp3" type="audio/mpeg">
   </audio>
 
-  <div class="container">
+  <!-- bubbles -->
+  <div class="bubbles" aria-hidden="true" id="bubbles"></div>
+
+  <div class="container" role="application">
+    <!-- nav -->
+    <div class="nav" aria-label="Top Navigation">
+      <div class="brand">
+        <div class="logo">O₂</div>
+        <div>
+          <div style="font-size:.95rem">Dewdrop</div>
+          <small style="opacity:.8;font-weight:700">Ocean Blue Edition</small>
+        </div>
+      </div>
+      <div class="nav-ctas">
+        <div class="pill" title="Session Window"><i class="fa-solid fa-calendar-days"></i> 08:00am – 10:00am</div>
+        <button id="music-toggle" class="action" aria-pressed="true" title="Toggle Ocean Ambience">
+          <i class="fa-solid fa-music"></i> <span>Sound On</span>
+        </button>
+        <button id="help-btn" class="action" title="How to play" aria-haspopup="dialog"><i class="fa-regular fa-circle-question"></i> Help</button>
+      </div>
+    </div>
+
     <header>
       <h1>Dewdrop Challenge</h1>
-      <p class="subtitle">Form valid words using the letters (Key letter = <b>O</b>)</p>
+      <p class="subtitle">Form valid words using the available letters. <strong>Key letter = O</strong>. Win per correct word, lose per incorrect pick. Choose wisely.</p>
     </header>
 
-    <div class="top-bar">
-      <div class="pill"><i class="fa-solid fa-calendar-days"></i> 08:00am – 10:00am</div>
+    <div class="top-bar" role="status" aria-live="polite">
       <div class="pill"><i class="fa-solid fa-wallet"></i> Balance: <span id="balance">₦1000</span></div>
-      <div class="pill"><i class="fa-regular fa-clock"></i> Time Left: <span id="timer">01:30</span></div>
+      <div class="pill" style="gap:12px">
+        <i class="fa-regular fa-clock"></i>
+        <div class="ring" aria-label="Round timer">
+          <svg width="54" height="54">
+            <circle cx="27" cy="27" r="24" stroke="rgba(255,255,255,.15)" stroke-width="6" fill="none"></circle>
+            <circle id="ring-arc" cx="27" cy="27" r="24" stroke="url(#grad)" stroke-width="6" stroke-linecap="round" fill="none" stroke-dasharray="151" stroke-dashoffset="0"/>
+            <defs>
+              <linearGradient id="grad" x1="0" x2="1">
+                <stop offset="0%" stop-color="#a8e6cf"/>
+                <stop offset="100%" stop-color="#6ed3cf"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="num" id="timer">01:30</div>
+        </div>
+      </div>
       <div class="pill"><i class="fa-solid fa-key"></i> Key Letter: <b>O</b></div>
     </div>
 
     <div class="game">
       <!-- Left: input / actions -->
-      <section class="panel">
-        <h2>Your Guess</h2>
+      <section class="panel" aria-labelledby="guess-title">
+        <h2 id="guess-title">Your Guess</h2>
+        <p class="lede">Enter a word built from the current letter bag. Each correct guess earns your bet; each miss deducts it. Add up to 10 picks per round.</p>
+
         <div class="input">
           <div class="field">
             <label for="word-input">Enter Word</label>
-            <input id="word-input" type="text" placeholder="Enter word..." autocomplete="off"/>
+            <input id="word-input" type="text" placeholder="Enter word..." autocomplete="off" aria-describedby="review-text" />
           </div>
-          <div class="review" id="review-box">Review: <span id="review-text">—</span></div>
+
+          <div class="review" id="review-box" aria-live="polite">
+            Review: <span id="review-text">—</span>
+          </div>
 
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <button id="add-word" class="btn secondary" style="flex:1"><i class="fa-solid fa-plus"></i> Add to Bet Slip</button>
@@ -260,50 +387,81 @@
             <div id="bet-slip" class="slip">
               <span style="opacity:.8">No words added yet</span>
             </div>
+            <div class="slip-meta" id="slip-meta">Total: ₦0</div>
           </div>
 
-          <div class="field">
-            <label for="bet-amount">Bet Amount <small>(per word, Min 50)</small></label>
-            <input id="bet-amount" type="number" value="50" min="50"/>
+          <div class="field" style="display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:center">
+            <div>
+              <label for="bet-amount">Bet Amount <small>(per word, Min 50)</small></label>
+              <input id="bet-amount" type="number" value="50" min="50" inputmode="numeric" />
+            </div>
+            <button id="submit-btn" class="btn shimmer" title="Place your bet now"><i class="fa-solid fa-coins"></i> Place Bet</button>
           </div>
 
-          <button id="submit-btn" class="btn"><i class="fa-solid fa-coins"></i> Place Bet</button>
-          <button id="hint-btn" class="btn secondary"><i class="fa-regular fa-lightbulb"></i> Give Me a Hint</button>
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <button id="hint-btn" class="btn secondary"><i class="fa-regular fa-lightbulb"></i> Give Me a Hint</button>
+            <button id="play-again" class="btn ghost"><i class="fa-solid fa-rotate-right"></i> New Round</button>
+          </div>
         </div>
       </section>
 
       <!-- Right: word list -->
-      <section class="panel">
-        <h2>O-Words</h2>
+      <section class="panel" aria-labelledby="list-title">
+        <h2 id="list-title">O-Words</h2>
+        <p class="lede">Browse curated "O" starters. Tap to add instantly to your slip.</p>
+
         <div class="search">
-          <input id="search-words" type="text" placeholder="Search words..."/>
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input id="search-words" type="text" placeholder="Search words..." aria-label="Search O-words"/>
         </div>
-        <div id="word-grid" class="word-grid"><div class="word-item">Loading…</div></div>
-        <p style="opacity:.8;margin-top:10px;font-size:.9rem">Tip: Tap a word to add it to your bet slip. Max 10 words.</p>
+
+        <div id="letters-bag" class="pill" style="margin-bottom:10px; font-weight:900">
+          Letters Bag: <span id="bag-letters" style="margin-left:6px; letter-spacing:4px">—</span>
+        </div>
+
+        <div id="word-grid" class="word-grid" role="list"><div class="word-item">Loading…</div></div>
+        <p style="opacity:.85;margin-top:10px;font-size:.9rem">Tip: Tap a word to add it to your bet slip. Max 10 words.</p>
       </section>
     </div>
 
     <!-- Result / countdown -->
-    <section id="result" class="result">
+    <section id="result" class="result" aria-live="polite">
       <h2>Result</h2>
       <div id="result-msg" class="big"></div>
       <div id="result-list" class="result-list"></div>
-      <button id="play-again" class="btn" style="width:auto;margin-top:10px"><i class="fa-solid fa-rotate-right"></i> Play Again</button>
     </section>
 
-    <footer><p>Dewdrop Challenge © 2025 • Ocean Blue Edition</p></footer>
+    <footer><p>Dewdrop Challenge © 2025 • Ocean Blue Edition • Crafted for clarity, speed, and thrill.</p></footer>
+  </div>
+
+  <!-- Help modal -->
+  <div id="help-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="modal-card">
+      <h3 id="help-title" style="font-weight:900;margin-bottom:8px">How to Play</h3>
+      <div style="text-align:left; font-weight:700; line-height:1.35; margin-bottom:12px">
+        <ol style="padding-left:18px">
+          <li>Form words using only the <b>Letters Bag</b>. Key letter is <b>O</b>.</li>
+          <li>Add up to <b>10</b> words to your bet slip.</li>
+          <li>Set your <b>Bet Amount</b> (at least ₦50 per word).</li>
+          <li>Place your bet before time runs out.</li>
+          <li>Each correct word pays +bet; incorrect deducts −bet.</li>
+        </ol>
+      </div>
+      <button id="help-ok" class="btn">Got it</button>
+    </div>
   </div>
 
   <!-- Hint modal -->
-  <div id="hint-modal" class="modal">
+  <div id="hint-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="hint-title">
     <div class="modal-card">
-      <div id="hint-text" style="font-weight:800;margin-bottom:10px">Hint</div>
+      <h3 id="hint-title" style="font-weight:900;margin-bottom:8px">Hint</h3>
+      <div id="hint-text" style="font-weight:800;margin-bottom:12px">Hint</div>
       <button id="hint-ok" class="btn">OK</button>
     </div>
   </div>
 
   <!-- Toast -->
-  <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="status" aria-live="assertive"></div>
 
 <script>
 (() => {
@@ -313,11 +471,13 @@
   let roundActive=true, timerInterval=null;
   const MAX_SLIP = 10;
   let slip = []; // selected words
+  const ROUND_SECONDS = 90;
 
   // ---- DOM ----
   const els = {
     balance: document.getElementById('balance'),
     timer: document.getElementById('timer'),
+    ringArc: document.getElementById('ring-arc'),
     grid: document.getElementById('word-grid'),
     input: document.getElementById('word-input'),
     bet: document.getElementById('bet-amount'),
@@ -334,6 +494,15 @@
     slipCount: document.getElementById('slip-count'),
     addWord: document.getElementById('add-word'),
     clearSlip: document.getElementById('clear-slip'),
+    bag: document.getElementById('bag-letters'),
+    playAgain: document.getElementById('play-again'),
+    helpBtn: document.getElementById('help-btn'),
+    helpModal: document.getElementById('help-modal'),
+    helpOk: document.getElementById('help-ok'),
+    musicToggle: document.getElementById('music-toggle'),
+    bg: document.getElementById('bg-music'),
+    slipMeta: document.getElementById('slip-meta'),
+    bubbles: document.getElementById('bubbles')
   };
 
   // ---- UTIL ----
@@ -344,16 +513,24 @@
   const canFormWord = (word, letters) => {
     let bag=[...letters]; for(const ch of word){const k=bag.indexOf(ch); if(k<0) return false; bag.splice(k,1);} return true;
   };
+  const formatMoney = (n)=> currency + n.toLocaleString();
 
   function notify(msg, type="info"){
     els.toast.textContent = msg;
     els.toast.style.color = type==="error" ? "#6a0000" : "#00324d";
     els.toast.classList.add('show');
-    setTimeout(()=>els.toast.classList.remove('show'), 1500);
+    setTimeout(()=>els.toast.classList.remove('show'), 1400);
+  }
+
+  // progress ring (circumference 2πr with r=24 ≈ 150.8 ~ 151)
+  const RING_LEN = 151;
+  function setRing(progress){ // 1.0 -> full, 0 -> empty
+    const offset = RING_LEN * (1 - progress);
+    els.ringArc.setAttribute('stroke-dasharray', RING_LEN);
+    els.ringArc.setAttribute('stroke-dashoffset', offset.toFixed(2));
   }
 
   function renderGrid(words){
-    // Select exactly 30 words for our 6x5 grid
     const list = words.slice(0, 30);
     els.grid.innerHTML = "";
     if(!list.length){
@@ -363,6 +540,7 @@
     list.forEach(w=>{
       const d=document.createElement('div');
       d.className='word-item';
+      d.setAttribute('role','listitem');
       d.textContent = w.toUpperCase();
       d.title = "Click to add: " + w.toUpperCase();
       d.onclick = ()=>{
@@ -387,6 +565,7 @@
         const x = document.createElement('div');
         x.className = 'x';
         x.setAttribute('title','Remove');
+        x.setAttribute('aria-label','Remove '+w.toUpperCase());
         x.innerHTML = '&times;';
         x.onclick = ()=>{ removeFromSlip(idx); };
         chip.appendChild(span);
@@ -395,12 +574,15 @@
       });
     }
     els.slipCount.textContent = slip.length;
+    const bet = Math.max(50, parseInt(els.bet.value||"0",10) || 0);
+    els.slipMeta.textContent = "Total: " + formatMoney(bet * slip.length);
   }
 
   function addToSlip(raw){
     const w = (raw||"").trim().toLowerCase();
     if(!w) return notify("Type a word first");
     if(w.length<3) return notify("Word must be at least 3 letters","error");
+    if(!w.includes('o')) return notify("Each word must include O","error");
     if(slip.includes(w)) return notify("Already in your slip");
     if(slip.length>=MAX_SLIP) return notify("Bet slip full (max 10)","error");
     slip.push(w);
@@ -423,15 +605,20 @@
   }
 
   function startTimer(){
-    let t=90;
+    let t=ROUND_SECONDS;
     clearInterval(timerInterval);
     function tick(){
       const m=Math.floor(t/60), s=t%60;
       els.timer.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      setRing(t/ROUND_SECONDS);
       if(t<=0){ clearInterval(timerInterval); roundActive=false; notify("⏱️ Time up!", "error"); }
       t--;
     }
     tick(); timerInterval=setInterval(tick,1000);
+  }
+
+  function setLettersBag(letters){
+    els.bag.textContent = letters.map(x=>x.toUpperCase()).join(" ");
   }
 
   function startNewRound(){
@@ -441,44 +628,38 @@
     els.input.value="";
     updateReview();
     clearSlip();
+
+    // keyword from O words;  ensure presence of 'o'
     keyword = (oWords[rand(oWords.length)] || "oil");
     const extra = randomLetters(rand(2)+2);
     availableLetters = shuffle((keyword+extra).split(""));
     validWords = dict.filter(w => w.length>=3 && canFormWord(w, availableLetters));
+
+    // UI
+    setLettersBag(availableLetters);
     renderGrid(shuffle(oWords).slice(0,30));
     startTimer();
   }
 
   // ---- EVENTS ----
-  // typing review
   els.input.addEventListener('input', updateReview);
-  // add to slip button
-  els.addWord.addEventListener('click', ()=>{
-    addToSlip(els.input.value);
-  });
-  // enter key adds
-  els.input.addEventListener('keydown', (e)=>{
-    if(e.key==='Enter'){ e.preventDefault(); addToSlip(els.input.value); }
-  });
-  // clear slip
+  els.addWord.addEventListener('click', ()=>{ addToSlip(els.input.value); });
+  els.input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addToSlip(els.input.value); }});
   els.clearSlip.addEventListener('click', clearSlip);
+  els.bet.addEventListener('input', renderSlip);
+  els.playAgain.addEventListener('click', startNewRound);
 
   document.getElementById('submit-btn').addEventListener('click', async ()=>{
     if(!roundActive){
-      notify("Round finished. Tap Play Again.", "error");
+      notify("Round finished. Start a new one.", "error");
       els.result.scrollIntoView({behavior:"smooth",block:"center"});
       return;
     }
 
-    // If user hasn't added anything but has something typed, try to add it
     if(slip.length===0 && els.input.value.trim()){
       addToSlip(els.input.value);
     }
-
-    if(slip.length===0){
-      notify("Add at least one word to bet on","error");
-      return;
-    }
+    if(slip.length===0){ notify("Add at least one word to bet on","error"); return; }
 
     const bet = parseInt(els.bet.value,10);
     if(isNaN(bet) || bet<50){ notify("Minimum bet is ₦50", "error"); return; }
@@ -494,7 +675,7 @@
     roundActive=false;
     for(let c=5;c>=1;c--){
       els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s) in <b>${c}</b>…`;
-      await sleep(700);
+      await sleep(600);
     }
 
     // Evaluate each word
@@ -508,7 +689,7 @@
       const right = document.createElement('div');
       const tag = document.createElement('span');
       tag.className = 'tag ' + (ok?'win':'lose');
-      tag.textContent = ok ? `+${currency}${bet}` : `-${currency}${bet}`;
+      tag.textContent = (ok ? '+' : '−') + currency + bet;
       right.appendChild(tag);
       item.appendChild(left);
       item.appendChild(right);
@@ -518,6 +699,7 @@
 
     balance += net;
     els.balance.textContent = currency + balance;
+    localStorage.setItem('dewdrop_balance', String(balance));
 
     if(net>=0){
       els.result.classList.add('win');
@@ -530,17 +712,7 @@
     }
   });
 
-  document.getElementById('play-again').addEventListener('click', startNewRound);
-
-  document.getElementById('hint-btn').addEventListener('click', ()=>{
-    const hintLetter = keyword[rand(keyword.length)].toUpperCase();
-    els.hintText.innerHTML = `💡 The keyword contains the letter <b>${hintLetter}</b>`;
-    els.hintModal.style.display='grid';
-  });
-  document.getElementById('hint-ok').addEventListener('click', ()=>{
-    els.hintModal.style.display='none';
-  });
-
+  // search
   let tId=null;
   els.search.addEventListener('input', (e)=>{
     const q=e.target.value.toLowerCase();
@@ -551,17 +723,85 @@
     },120);
   });
 
+  // help
+  els.helpBtn.addEventListener('click', ()=> els.helpModal.style.display='grid');
+  els.helpOk.addEventListener('click', ()=> els.helpModal.style.display='none');
+
+  // hint
+  document.getElementById('hint-btn').addEventListener('click', ()=>{
+    if(!keyword){ return; }
+    const hintLetter = keyword[rand(keyword.length)].toUpperCase();
+    els.hintText.innerHTML = `💡 The keyword contains the letter <b>${hintLetter}</b>`;
+    els.hintModal.style.display='grid';
+  });
+  document.getElementById('hint-ok').addEventListener('click', ()=> els.hintModal.style.display='none');
+
+  // music toggle
+  function syncMusicUI(){
+    const on = !els.bg.paused;
+    els.musicToggle.setAttribute('aria-pressed', String(on));
+    els.musicToggle.querySelector('span').textContent = on ? "Sound On" : "Sound Off";
+    els.musicToggle.querySelector('i').className = on ? "fa-solid fa-music" : "fa-solid fa-music-slash";
+  }
+  els.musicToggle.addEventListener('click', async ()=>{
+    if(els.bg.paused){ try{ await els.bg.play(); }catch(e){} } else { els.bg.pause(); }
+    syncMusicUI();
+  });
+
+  // bubbles
+  function spawnBubbles(){
+    const n = 18;
+    for(let i=0;i<n;i++){
+      const b = document.createElement('div');
+      b.className='bubble';
+      const size = 10 + Math.random()*26;
+      b.style.width = size+'px';
+      b.style.height = size+'px';
+      b.style.left = (Math.random()*100)+'%';
+      b.style.setProperty('--dur', (12 + Math.random()*18) + 's');
+      b.style.animationDelay = (-Math.random()*20)+'s';
+      els.bubbles.appendChild(b);
+    }
+  }
+
+  // dictionary
   async function loadDict(){
-    const res = await fetch("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt");
+    const res = await fetch("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt  ");
     const text = await res.text();
     return text.split("\n").map(x=>x.trim().toLowerCase());
   }
 
   (async function init(){
+    // restore balance
+    const saved = parseInt(localStorage.getItem('dewdrop_balance')||"0",10);
+    if(!isNaN(saved) && saved>0){ balance = saved; }
+    els.balance.textContent = currency + balance;
+
     notify("Loading dictionary…");
-    dict = await loadDict();
-    oWords = dict.filter(w=>w.startsWith('o') && w.length>=3);
-    notify("Ready!");
+    try{
+      dict = await loadDict();
+      oWords = dict.filter(w=>w.startsWith('o') && w.length>=3);
+      notify("Ready!");
+    }catch(e){
+      notify("Failed to load dictionary","error");
+      // fallback minimal dictionary if fetch fails
+      dict = ["oil","oils","soil","solo","soon","soonest","stone","one","ones","nose","son","sonic","ionic","icon","icons"];
+      oWords = dict.filter(w=>w.startsWith('o') && w.length>=3);
+    }
+
+    // start audio automatically on init (attempt autoplay)
+    try{ 
+      await els.bg.play(); 
+      syncMusicUI(); // sync UI to reflect "on" state
+    } catch(e) {
+      console.warn("Autoplay failed, user interaction may be required.");
+      syncMusicUI(); // still sync UI in case it was paused
+    }
+
+    // visuals
+    spawnBubbles();
+
+    // kick off round
     startNewRound();
     updateReview();
   })();

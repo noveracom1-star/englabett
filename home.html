@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EnglaBet - Word Gaming Platform</title>
+    <title>Word Gaming Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
     <!-- Firebase SDK -->
@@ -72,8 +72,9 @@
             margin-right: 12px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 168, 216, 0.4);
-            background: white;
-            padding: 4px;
+            /* Removed white background */
+            background: transparent;
+            padding: 0;
         }
         .logo-img img {
             width: 100%;
@@ -120,6 +121,8 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
+            width: 100%;
+            text-align: right;
         }
         .balance-label {
             font-size: 12px;
@@ -515,14 +518,14 @@
         /* Quick Access Menu */
         .quick-access {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(5, 1fr); /* Changed from 4 to 5 columns */
+            gap: 5px; /* Reduced gap from 10px to 5px */
             margin: 20px 0;
         }
         .quick-item {
             background: var(--card-bg);
-            padding: 15px 10px;
-            border-radius: 10px;
+            padding: 12px 5px; /* Reduced padding */
+            border-radius: 8px; /* Slightly smaller radius */
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -533,12 +536,12 @@
             color: var(--primary);
         }
         .quick-icon {
-            font-size: 24px;
-            margin-bottom: 5px;
+            font-size: 20px; /* Reduced icon size from 24px to 20px */
+            margin-bottom: 3px; /* Reduced margin */
             color: var(--accent);
         }
         .quick-text {
-            font-size: 12px;
+            font-size: 10px; /* Reduced text size from 12px to 10px */
             font-weight: 500;
         }
         /* Notification Badge */
@@ -696,7 +699,7 @@
         }
         .profile-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(3, fr);
             gap: 10px;
             margin: 20px 0;
         }
@@ -1011,7 +1014,6 @@
         <div id="game-types-container" class="game-types">
             <!-- Game types will be dynamically populated based on day of week -->
         </div>
-
         <!-- Home Screen Content -->
         <div id="home-screen" class="screen-content">
             <!-- Promotional Banner -->
@@ -1020,7 +1022,6 @@
                 <div class="promo-text">Get 200% bonus on your first deposit</div>
                 <button class="promo-btn" onclick="window.location.href='deposit.html'">Claim Now</button>
             </div>
-
             <!-- Quick Access Menu -->
             <div class="quick-access">
                 <div class="quick-item" onclick="window.location.href='deposit.html'">
@@ -1039,8 +1040,11 @@
                     <div class="quick-icon"><i class="fas fa-lightbulb"></i></div>
                     <div class="quick-text">Rules & Clues</div>
                 </div>
+                <div class="quick-item" onclick="window.location.href='results.html'">
+                    <div class="quick-icon"><i class="fas fa-chart-bar"></i></div>
+                    <div class="quick-text">Results</div>
+                </div>
             </div>
-
             <!-- Today's Schedule Section -->
             <div class="featured-section">
                 <div class="section-title">
@@ -1050,7 +1054,6 @@
                     <!-- Today's schedule will be dynamically populated -->
                 </div>
             </div>
-
             <!-- Weekly Schedule Section -->
             <div class="featured-section">
                 <div class="section-title">
@@ -1060,7 +1063,6 @@
                     <!-- Weekly schedule will be dynamically populated -->
                 </div>
             </div>
-
             <!-- Live Games Section -->
             <div class="featured-section">
                 <div class="live-indicator">
@@ -1102,7 +1104,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Featured Games Section -->
             <div class="featured-section">
                 <div class="section-title">
@@ -1144,7 +1145,6 @@
                 </div>
             </div>
         </div>
-
         <!-- WordBet Screen Content -->
         <div id="wordbet-screen" class="screen-content">
             <div class="wordbet-hero">
@@ -1171,7 +1171,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Empty Screens for Other Navigation Items -->
         <div id="spelling-screen" class="empty-screen">
             <div class="empty-icon"><i class="fas fa-spell-check"></i></div>
@@ -1191,13 +1190,6 @@
             <div class="empty-text">This section is coming soon!</div>
             <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
         </div>
-        <div id="promotions-screen" class="empty-screen">
-            <div class="empty-icon"><i class="fas fa-gift"></i></div>
-            <div class="empty-title">Promotions</div>
-            <div class="empty-text">This section is coming soon!</div>
-            <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
-        </div>
-
         <!-- Profile Screen Content -->
         <div id="me-screen" class="profile-screen">
             <div class="profile-header">
@@ -1260,12 +1252,10 @@
             </div>
         </div>
     </div>
-
     <!-- Scroll to Top Button -->
     <div class="scroll-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
         <i class="fas fa-arrow-up"></i>
     </div>
-
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
         <div class="nav-item nav-active" data-screen="home">
@@ -1289,7 +1279,6 @@
             <div class="nav-text">Me</div>
         </div>
     </div>
-
     <script>
         // Firebase configuration
         const firebaseConfig = {
@@ -1301,7 +1290,6 @@
   appId: "1:124544822433:web:c77c980f28c99364c214e0",
   measurementId: "G-JMYYM433R7"
 };
-
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -1725,7 +1713,7 @@
             } else {
                 scrollTop.style.display = 'none';
             }
-        }
+        });
         document.getElementById('toggle-schedule').addEventListener('click', function() {
             const weeklySchedule = document.getElementById('weekly-schedule');
             if (weeklySchedule.style.display === 'none') {
