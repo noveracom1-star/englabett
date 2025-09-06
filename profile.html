@@ -1,637 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Profile - Englabet</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    
-    <style>
-        :root {
-            --primary: #006aa6;
-            --primary-dark: #003f63;
-            --panel: #012a3f;
-            --accent: #a8e6cf;
-            --accent-light: #6ed3cf;
-            --text: #ffffff;
-            --text-secondary: #a0bcc9;
-            --card-bg: rgba(1, 33, 51, 0.7);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --success: #19c37d;
-            --warning: #f25f5c;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Englabet | Profile Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-        body {
-            font-family: 'Segoe UI', system-ui, Roboto, sans-serif;
-            color: var(--text);
-            background: radial-gradient(1200px 700px at 15% -10%, #0287cc 0%, #015f91 35%, #003a58 100%),
-                        linear-gradient(135deg, var(--primary), var(--primary-dark));
-            background-attachment: fixed;
-            min-height: 100vh;
-            padding: 20px;
-            line-height: 1.6;
-        }
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0a2540;
+      --accent: #38ef7d;
+      --accent-light: #43e97b;
+      --danger: #ef4444;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --glass: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.15);
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
+    * {margin:0;padding:0;box-sizing:border-box;}
 
-        /* Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
 
-        .logo {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--accent), #d7f7e9);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-        }
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--glass);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      animation: slideInLeft 0.7s ease;
+    }
 
-        .header-actions {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--accent-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            color: #032538;
-            background: linear-gradient(90deg, var(--accent), var(--accent-light));
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-            transition: all 0.2s ease;
-            text-decoration: none;
-        }
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
-        }
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
 
-        .btn-secondary {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(4px);
+    }
 
-        .back-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
+    /* Main content */
+    .main {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      animation: fadeIn 1s ease;
+    }
 
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        /* Main content */
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 24px;
-        }
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+    }
 
-        @media (max-width: 900px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
+    .profile-card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(16px);
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      animation: floatUp 0.8s ease;
+    }
 
-        /* Profile Card */
-        .profile-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            padding: 24px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-            text-align: center;
-        }
+    .profile-photo {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--accent-light);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
 
-        .profile-image {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--accent);
-            margin: 0 auto 16px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
+    .profile-info {
+      flex: 1;
+    }
 
-        .profile-name {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--accent);
-        }
+    .profile-info h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
 
-        .profile-status {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: rgba(25, 195, 125, 0.2);
-            color: #bff3dd;
-            border: 1px solid rgba(25, 195, 125, 0.4);
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
 
-        .profile-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
-        }
+    .status-verified {
+      background: rgba(34,197,94,0.15);
+      color: #86efac;
+      border: 1px solid rgba(34,197,94,0.4);
+    }
 
-        .stat-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
+    .status-pending {
+      background: rgba(239,68,68,0.15);
+      color: #fecaca;
+      border: 1px solid rgba(239,68,68,0.4);
+    }
 
-        .stat-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent);
-        }
+    .stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+    }
 
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
+    .stat {
+      flex: 1;
+      background: rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
 
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
-        }
+    .stat:hover {
+      transform: translateY(-4px);
+    }
 
-        /* Details Card */
-        .details-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            padding: 24px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-        }
+    .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+    }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
 
-        .card-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent);
-        }
+    /* Details Grid */
+    .details {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
 
-        .settings-btn {
-            background: rgba(255, 255, 255, 0.1);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
+    .details h3 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: var(--accent-light);
+    }
 
-        .settings-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: rotate(45deg);
-        }
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
 
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
+    .detail {
+      background: rgba(255,255,255,0.05);
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all 0.3s ease;
+    }
 
-        .detail-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
+    .detail:hover {
+      transform: scale(1.02);
+      background: rgba(255,255,255,0.08);
+    }
 
-        .detail-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-        }
+    .detail-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
 
-        .detail-value {
-            font-size: 16px;
-            font-weight: 600;
-        }
+    .detail-value {
+      font-size: 15px;
+      font-weight: 600;
+    }
 
-        .verified-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            background: rgba(25, 195, 125, 0.2);
-            color: #bff3dd;
-            border: 1px solid rgba(25, 195, 125, 0.4);
-            font-size: 12px;
-            margin-left: 8px;
-        }
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #fff;
+      color: #111827;
+      border-radius: 14px;
+      padding: 14px 18px;
+      box-shadow: 0 8px 26px rgba(0,0,0,0.3);
+      display: none;
+      font-weight: 600;
+      animation: slideIn 0.4s ease;
+    }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            color: var(--text-secondary);
-            font-size: 14px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 20px;
-        }
+    .toast.show {display:block;}
 
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: #fff;
-            color: #00324d;
-            border-radius: 14px;
-            padding: 14px 18px;
-            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            display: none;
-            max-width: 320px;
-            font-weight: 600;
-            animation: slideIn 0.3s ease-out;
-        }
+    /* Animations */
+    @keyframes slideIn {from{transform:translateX(100px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+    @keyframes fadeIn {from{opacity:0;}to{opacity:1;}}
+    @keyframes slideInLeft {from{transform:translateX(-100px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+    @keyframes floatUp {from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 
-        .toast.show {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            body {
-                padding: 12px;
-            }
-            
-            header {
-                padding: 12px 0;
-            }
-            
-            .logo {
-                font-size: 24px;
-            }
-            
-            .profile-image {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .profile-name {
-                font-size: 20px;
-            }
-            
-            .profile-stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .details-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .detail-item {
-                padding: 12px;
-            }
-            
-            .action-buttons {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-            
-            .action-buttons .btn {
-                flex: 1;
-                min-width: 120px;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .logo {
-                font-size: 20px;
-            }
-            
-            .profile-image {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .profile-name {
-                font-size: 18px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
-    </style>
+    /* Responsive */
+    @media (max-width: 900px) {
+      body {flex-direction: column;}
+      .sidebar {flex-direction: row; width:100%; overflow-x:auto;}
+      .main {padding:20px;}
+      .profile-card {flex-direction: column; text-align:center;}
+      .stats {flex-direction: column;}
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">ENGLABET</div>
-            <div class="header-actions">
-                <div class="back-btn" onclick="goBack()">
-                    <i class="fas fa-arrow-left"></i>
-                </div>
-            </div>
-        </header>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">ENGLABET</div>
+    <nav class="nav-links">
+      <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="deposit.html"><i class="fas fa-coins"></i> Deposit</a>
+      <a href="withdraw.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
+      <a href="transactions.html"><i class="fas fa-history"></i> Transactions</a>
+      <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+      <a href="logout.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </div>
 
-        <div class="main-content">
-            <!-- Profile Summary Card -->
-            <div class="profile-card">
-                <img id="profile-photo" src="" alt="Profile Photo" class="profile-image">
-                <h2 id="profile-name" class="profile-name">Loading...</h2>
-                <div id="profile-status" class="profile-status">Loading...</div>
-                
-                <div class="profile-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="user-balance">₦ 0.00</div>
-                        <div class="stat-label">Account Balance</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="user-age">--</div>
-                        <div class="stat-label">Age</div>
-                    </div>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="btn" onclick="navigateTo('deposit.html')">
-                        <i class="fas fa-coins"></i> Deposit
-                    </button>
-                    <button class="btn" onclick="navigateTo('withdraw.html')">
-                        <i class="fas fa-money-bill-wave"></i> Withdraw
-                    </button>
-                    <button class="btn btn-secondary" onclick="navigateTo('transactions.html')">
-                        <i class="fas fa-history"></i> History
-                    </button>
-                </div>
-            </div>
-
-            <!-- Details Card -->
-            <div class="details-card">
-                <div class="card-header">
-                    <h2 class="card-title">Personal Information</h2>
-                    <div class="settings-btn" onclick="navigateTo('settings.html')">
-                        <i class="fas fa-cog"></i>
-                    </div>
-                </div>
-
-                <div class="details-grid">
-                    <div class="detail-item">
-                        <div class="detail-label">Full Name</div>
-                        <div class="detail-value" id="user-fullname">Loading...</div>
-                    </div>
-                    
-                    <div class="detail-item">
-                        <div class="detail-label">Email Address</div>
-                        <div class="detail-value">
-                            <span id="user-email">Loading...</span>
-                            <span class="verified-badge" id="email-verified"><i class="fas fa-check-circle"></i> Verified</span>
-                        </div>
-                    </div>
-                    
-                    <div class="detail-item">
-                        <div class="detail-label">Phone Number</div>
-                        <div class="detail-value" id="user-phone">Loading...</div>
-                    </div>
-                    
-                    <div class="detail-item">
-                        <div class="detail-label">Gender</div>
-                        <div class="detail-value" id="user-gender">Loading...</div>
-                    </div>
-                    
-                    <div class="detail-item">
-                        <div class="detail-label">Country</div>
-                        <div class="detail-value" id="user-country">Loading...</div>
-                    </div>
-                    
-                    <div class="detail-item">
-                        <div class="detail-label">User ID</div>
-                        <div class="detail-value" id="user-id">Loading...</div>
-                    </div>
-                    
-                    <div class="detail-item">
-                        <div class="detail-label">Member Since</div>
-                        <div class="detail-value" id="join-date">Loading...</div>
-                    </div>
-                    
-                    <div class="detail-item">
-                        <div class="detail-label">Security Question</div>
-                        <div class="detail-value" id="security-question">Loading...</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <footer>
-            <p>Englabet © 2023 • All rights reserved • Responsible Gaming</p>
-        </footer>
+  <!-- Main content -->
+  <div class="main">
+    <div class="header">
+      <h1>Your Profile</h1>
     </div>
 
-    <div id="toast" class="toast"></div>
+    <!-- Profile card -->
+    <div class="profile-card">
+      <img id="profile-photo" src="" alt="Profile Photo" class="profile-photo"/>
+      <div class="profile-info">
+        <h2 id="profile-name">Loading...</h2>
+        <div id="profile-status" class="status-badge">Loading...</div>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-value" id="user-balance">₦0.00</div>
+            <div class="stat-label">Account Balance</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="user-age">--</div>
+            <div class="stat-label">Age</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <script>
-       const firebaseConfig = {
-  apiKey: "AIzaSyDivFTAKUznc1xryU8marfMDZG3v1eYsl8",
-  authDomain: "englabet-ad1fe.firebaseapp.com",
-  projectId: "englabet-ad1fe",
-  storageBucket: "englabet-ad1fe.firebasestorage.app",
-  messagingSenderId: "124544822433",
-  appId: "1:124544822433:web:c77c980f28c99364c214e0",
-  measurementId: "G-JMYYM433R7"
-};
+    <!-- Details -->
+    <div class="details">
+      <h3>Personal Information</h3>
+      <div class="details-grid">
+        <div class="detail">
+          <div class="detail-label">Full Name</div>
+          <div class="detail-value" id="user-fullname">Loading...</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Email Address</div>
+          <div class="detail-value" id="user-email">Loading...</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Phone Number</div>
+          <div class="detail-value" id="user-phone">Loading...</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Gender</div>
+          <div class="detail-value" id="user-gender">Loading...</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Country</div>
+          <div class="detail-value" id="user-country">Loading...</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">User ID</div>
+          <div class="detail-value" id="user-id">Loading...</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Member Since</div>
+          <div class="detail-value" id="join-date">Loading...</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Security Question</div>
+          <div class="detail-value" id="security-question">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
-        // Global user data variable
-        let userData = null;
-        
-        // Function to go back to previous page
-        function goBack() {
-            window.history.back();
-        }
-        
-        // Function to navigate to different pages
-        function navigateTo(page) {
-            window.location.href = page;
-        }
-        
-        // Function to fetch user data from Firestore
-        async function fetchUserData() {
-            try {
-                const user = auth.currentUser;
-                
-                if (!user) {
-                    // If no user is logged in, redirect to login
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                // Get user document from Firestore
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                
-                if (!userDoc.exists) {
-                    showToast('User data not found. Please contact support.');
-                    return;
-                }
-                
-                userData = userDoc.data();
-                displayUserData();
-                
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-                showToast('Error loading profile data. Please try again.');
-            }
-        }
-        
-        // Format and display user data
-        function displayUserData() {
-            if (!userData) return;
-            
-            // Profile section
-            document.getElementById('profile-photo').src = userData.profilePhotoUrl || 'https://res.cloudinary.com/demo/image/upload/v1586919327/sample.jpg';
-            document.getElementById('profile-name').textContent = `${userData.firstName} ${userData.lastName}`;
-            document.getElementById('user-balance').textContent = `₦ ${userData.balance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
-            document.getElementById('user-age').textContent = userData.age || '--';
-            
-            // Set status badge
-            const statusElement = document.getElementById('profile-status');
-            statusElement.textContent = userData.status ? userData.status.charAt(0).toUpperCase() + userData.status.slice(1) : 'Pending';
-            
-            if (userData.status === 'verified') {
-                statusElement.style.background = 'rgba(25, 195, 125, 0.2)';
-                statusElement.style.color = '#bff3dd';
-                statusElement.style.borderColor = 'rgba(25, 195, 125, 0.4)';
-            } else if (userData.status === 'pending') {
-                statusElement.style.background = 'rgba(242, 95, 92, 0.2)';
-                statusElement.style.color = '#ffd3d2';
-                statusElement.style.borderColor = 'rgba(242, 95, 92, 0.4)';
-            }
-            
-            // Details section
-            document.getElementById('user-fullname').textContent = `${userData.firstName} ${userData.lastName}`;
-            document.getElementById('user-email').textContent = userData.email;
-            document.getElementById('user-phone').textContent = userData.phone;
-            document.getElementById('user-gender').textContent = userData.gender;
-            document.getElementById('user-country').textContent = userData.country;
-            document.getElementById('user-id').textContent = userData.userId;
-            
-            // Format join date
-            let joinDate = 'Unknown';
-            if (userData.createdAt) {
-                const date = userData.createdAt.toDate ? userData.createdAt.toDate() : new Date(userData.createdAt);
-                joinDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-            }
-            document.getElementById('join-date').textContent = joinDate;
-            
-            document.getElementById('security-question').textContent = userData.securityQuestion;
-            
-            // Email verification badge
-            const emailVerifiedBadge = document.getElementById('email-verified');
-            if (!userData.emailVerified) {
-                emailVerifiedBadge.innerHTML = '<i class="fas fa-times-circle"></i> Not Verified';
-                emailVerifiedBadge.style.background = 'rgba(242, 95, 92, 0.2)';
-                emailVerifiedBadge.style.color = '#ffd3d2';
-                emailVerifiedBadge.style.borderColor = 'rgba(242, 95, 92, 0.4)';
-            }
-        }
+  <div id="toast" class="toast"></div>
 
-        // Toast notification function
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDivFTAKUznc1xryU8marfMDZG3v1eYsl8",
+      authDomain: "englabet-ad1fe.firebaseapp.com",
+      projectId: "englabet-ad1fe",
+      storageBucket: "englabet-ad1fe.appspot.com",
+      messagingSenderId: "124544822433",
+      appId: "1:124544822433:web:c77c980f28c99364c214e0",
+      measurementId: "G-JMYYM433R7"
+    };
 
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check if user is logged in
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    fetchUserData();
-                } else {
-                    window.location.href = 'login.html';
-                }
-            });
-        });
-    </script>
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    let userData = null;
+
+    function showToast(msg){
+      const toast=document.getElementById('toast');
+      toast.textContent=msg;
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'),3000);
+    }
+
+    async function fetchUserData(){
+      try{
+        const user=auth.currentUser;
+        if(!user){window.location.href='login.html';return;}
+        const doc=await db.collection('users').doc(user.uid).get();
+        if(!doc.exists){showToast('User data not found.');return;}
+        userData=doc.data();displayUserData();
+      }catch(e){console.error(e);showToast('Error loading profile.');}
+    }
+
+    function displayUserData(){
+      if(!userData)return;
+      document.getElementById('profile-photo').src=userData.profilePhotoUrl||'https://res.cloudinary.com/demo/image/upload/v1586919327/sample.jpg';
+      document.getElementById('profile-name').textContent=`${userData.firstName} ${userData.lastName}`;
+      document.getElementById('user-balance').textContent=`₦ ${userData.balance.toLocaleString('en-US',{minimumFractionDigits:2})}`;
+      document.getElementById('user-age').textContent=userData.age||'--';
+      const statusEl=document.getElementById('profile-status');
+      if(userData.status==='verified'){statusEl.textContent="Verified";statusEl.className="status-badge status-verified";}
+      else{statusEl.textContent="Pending";statusEl.className="status-badge status-pending";}
+      document.getElementById('user-fullname').textContent=`${userData.firstName} ${userData.lastName}`;
+      document.getElementById('user-email').textContent=userData.email;
+      document.getElementById('user-phone').textContent=userData.phone;
+      document.getElementById('user-gender').textContent=userData.gender;
+      document.getElementById('user-country').textContent=userData.country;
+      document.getElementById('user-id').textContent=userData.userId;
+      document.getElementById('security-question').textContent=userData.securityQuestion;
+      let joinDate='Unknown';
+      if(userData.createdAt){
+        const d=userData.createdAt.toDate?userData.createdAt.toDate():new Date(userData.createdAt);
+        joinDate=d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      }
+      document.getElementById('join-date').textContent=joinDate;
+    }
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      auth.onAuthStateChanged(user=>{
+        if(user){fetchUserData();}else{window.location.href='login.html';}
+      });
+    });
+  </script>
 </body>
 </html>
