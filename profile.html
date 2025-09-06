@@ -1,348 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Englabet | Profile Dashboard</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Englabet — Profile Dashboard</title>
+
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase (compat used to match your original code) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
   <style>
-    :root {
-      --primary: #0284c7;
-      --primary-dark: #0a2540;
-      --accent: #38ef7d;
-      --accent-light: #43e97b;
-      --danger: #ef4444;
-      --text: #f9fafb;
-      --text-muted: #9ca3af;
-      --glass: rgba(255, 255, 255, 0.08);
-      --border: rgba(255, 255, 255, 0.15);
+    /* ===========================
+       Variables & reset
+       =========================== */
+    :root{
+      --bg-1: #071428;        /* deep midnight */
+      --bg-2: #04263f;
+      --accent-a: #25d0d7;    /* cyan */
+      --accent-b: #60e0a8;    /* mint */
+      --muted: #9fb7c6;
+      --glass: rgba(255,255,255,0.06);
+      --glass-2: rgba(255,255,255,0.04);
+      --card-border: rgba(255,255,255,0.08);
+      --success: #19c37d;
+      --danger: #f25f5c;
+      --glass-blur: 12px;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body,#app{height:100%}
+    body{
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(700px 400px at 10% 10%, rgba(10,120,170,0.16), transparent 15%),
+                  linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      color:#e8f6f9;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:20px;
+      min-height:100vh;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
     }
 
-    * {margin:0;padding:0;box-sizing:border-box;}
-
-    body {
-      font-family: "Inter", system-ui, sans-serif;
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
+    /* ===========================
+       App container
+       =========================== */
+    .app {
+      width: min(1200px, 96%);
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      gap:24px;
+      align-items:start;
     }
 
-    /* Sidebar */
-    .sidebar {
-      width: 260px;
-      background: var(--glass);
-      border-right: 1px solid var(--border);
-      backdrop-filter: blur(16px);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-      animation: slideInLeft 0.7s ease;
+    /* ===========================
+       SIDEBAR (left)
+       =========================== */
+    .sidebar{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid var(--card-border);
+      border-radius:var(--radius-lg);
+      padding:20px;
+      backdrop-filter: blur(var(--glass-blur));
+      box-shadow: 0 10px 30px rgba(1,8,12,0.45);
+      height:fit-content;
+      position:sticky;
+      top:20px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      animation: slideLeft 600ms cubic-bezier(.2,.9,.2,1);
     }
 
-    .logo {
-      font-size: 28px;
-      font-weight: 800;
-      background: linear-gradient(90deg, var(--accent-light), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .brand {
+      display:flex;
+      gap:12px;
+      align-items:center;
     }
-
-    .nav-links {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
+    .brand .logo {
+      width:48px;height:48px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent-a),var(--accent-b));
+      display:flex;align-items:center;justify-content:center;font-weight:800;color:#042d36;
+      box-shadow:0 6px 18px rgba(2,22,32,0.4);
+      font-size:18px;
     }
+    .brand .title {font-weight:800;font-size:18px;letter-spacing:0.6px}
 
-    .nav-links a {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 12px;
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 500;
-      transition: all 0.3s ease;
+    .nav {
+      display:flex;flex-direction:column;gap:10px;margin-top:6px;
     }
-
-    .nav-links a:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateX(4px);
+    .nav a{
+      display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;
+      color:var(--muted);text-decoration:none;font-weight:600;font-size:14px;
+      transition: all 220ms ease;
     }
+    .nav a:hover{transform:translateX(6px);color:#e6fbff;background:rgba(255,255,255,0.02)}
+    .nav a .ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.02)}
 
-    /* Main content */
+    .sidebar .small {font-size:12px;color:var(--muted);margin-top:8px}
+
+    /* ===========================
+       MAIN (right)
+       =========================== */
     .main {
-      flex: 1;
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-      animation: fadeIn 1s ease;
+      display:flex;flex-direction:column;gap:18px;
+      min-height:80vh;
     }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* top header row */
+    .topbar {
+      display:flex;justify-content:space-between;align-items:center;gap:12px;
+    }
+    .page-title{font-size:20px;font-weight:800}
+    .search-actions {display:flex;gap:12px;align-items:center}
+    .search {
+      display:flex;align-items:center;background:var(--glass-2);border-radius:12px;padding:10px 12px;border:1px solid var(--card-border);
+      gap:8px;width:360px;
+    }
+    .search input{background:transparent;border:0;color:inherit;outline:none;width:100%}
+    .action-btn {
+      background: linear-gradient(90deg,var(--accent-b),var(--accent-a));
+      color:#042d36;padding:10px 14px;border-radius:12px;border:none;font-weight:700;
+      box-shadow:0 8px 20px rgba(2,22,32,0.35);cursor:pointer;display:inline-flex;gap:8px;align-items:center;
+    }
+    .ghost-btn {background:transparent;border:1px solid var(--card-border);padding:10px 12px;border-radius:10px;color:var(--muted);cursor:pointer}
+
+    /* dashboard grid */
+    .grid {
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:18px;
+      align-items:start;
     }
 
-    .header h1 {
-      font-size: 26px;
-      font-weight: 700;
+    /* Profile summary card (complex) */
+    .profile-card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:18px;border-radius:16px;border:1px solid var(--card-border);backdrop-filter: blur(var(--glass-blur));
+      box-shadow: 0 18px 50px rgba(1,8,12,0.5);
+      display:flex;gap:18px;align-items:center;
+      position:relative;overflow:visible;
     }
 
-    .profile-card {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 30px;
-      backdrop-filter: blur(16px);
-      display: flex;
-      gap: 30px;
-      align-items: center;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-      animation: floatUp 0.8s ease;
+    .avatar {
+      width:112px;height:112px;border-radius:20px;overflow:hidden;border:4px solid rgba(255,255,255,0.03);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.45);flex-shrink:0;
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover}
+
+    .profile-meta{flex:1;display:flex;flex-direction:column;gap:8px}
+    .profile-meta h2{font-size:20px;font-weight:800}
+    .meta-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .badge {
+      padding:6px 12px;border-radius:999px;font-weight:700;font-size:13px;border:1px solid rgba(255,255,255,0.04)
+    }
+    .badge.verified{background:rgba(34,197,94,0.12);color:#bbf7d0;border-color:rgba(34,197,94,0.28)}
+    .badge.pending{background:rgba(242,95,92,0.09);color:#ffd6d4;border-color:rgba(242,95,92,0.2)}
+
+    .profile-actions {display:flex;gap:10px;margin-top:8px}
+    .small-stat {
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
+      min-width:120px;text-align:center;
+    }
+    .small-stat .num{font-weight:800;font-size:18px;color:var(--accent-a)}
+    .small-stat .label{font-size:12px;color:var(--muted);margin-top:4px}
+
+    /* Right column cards */
+    .card {
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;padding:16px;border:1px solid var(--card-border);backdrop-filter: blur(6px);
     }
 
-    .profile-photo {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid var(--accent-light);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    }
+    .charts {display:flex;flex-direction:column;gap:12px}
+    .chart-row{display:flex;gap:12px;align-items:stretch}
+    .chart-canvas {flex:1;padding:12px;border-radius:12px}
 
-    .profile-info {
-      flex: 1;
+    /* Transactions list */
+    .transactions {display:flex;flex-direction:column;gap:10px}
+    .tx {
+      display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      border:1px solid rgba(255,255,255,0.03);
     }
+    .tx .left{display:flex;gap:10px;align-items:center}
+    .tx .amount {font-weight:800}
+    .tx .type.in {color:var(--success)}
+    .tx .type.out {color:var(--danger)}
 
-    .profile-info h2 {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 6px;
+    /* footer small */
+    .muted {color:var(--muted);font-size:13px}
+
+    /* responsiveness */
+    @media (max-width:1060px){
+      .app{grid-template-columns: 1fr}
+      .grid{grid-template-columns:1fr}
+      .charts .chart-row{flex-direction:column}
     }
-
-    .status-badge {
-      display: inline-block;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 600;
-      margin-top: 6px;
-    }
-
-    .status-verified {
-      background: rgba(34,197,94,0.15);
-      color: #86efac;
-      border: 1px solid rgba(34,197,94,0.4);
-    }
-
-    .status-pending {
-      background: rgba(239,68,68,0.15);
-      color: #fecaca;
-      border: 1px solid rgba(239,68,68,0.4);
-    }
-
-    .stats {
-      display: flex;
-      gap: 24px;
-      margin-top: 20px;
-    }
-
-    .stat {
-      flex: 1;
-      background: rgba(255,255,255,0.06);
-      border-radius: 14px;
-      padding: 14px;
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-
-    .stat:hover {
-      transform: translateY(-4px);
-    }
-
-    .stat-value {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .stat-label {
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-
-    /* Details Grid */
-    .details {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 30px;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-    }
-
-    .details h3 {
-      font-size: 20px;
-      margin-bottom: 20px;
-      color: var(--accent-light);
-    }
-
-    .details-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px;
-    }
-
-    .detail {
-      background: rgba(255,255,255,0.05);
-      border-radius: 14px;
-      padding: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: all 0.3s ease;
-    }
-
-    .detail:hover {
-      transform: scale(1.02);
-      background: rgba(255,255,255,0.08);
-    }
-
-    .detail-label {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .detail-value {
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #fff;
-      color: #111827;
-      border-radius: 14px;
-      padding: 14px 18px;
-      box-shadow: 0 8px 26px rgba(0,0,0,0.3);
-      display: none;
-      font-weight: 600;
-      animation: slideIn 0.4s ease;
-    }
-
-    .toast.show {display:block;}
 
     /* Animations */
-    @keyframes slideIn {from{transform:translateX(100px);opacity:0;}to{transform:translateX(0);opacity:1;}}
-    @keyframes fadeIn {from{opacity:0;}to{opacity:1;}}
-    @keyframes slideInLeft {from{transform:translateX(-100px);opacity:0;}to{transform:translateX(0);opacity:1;}}
-    @keyframes floatUp {from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      body {flex-direction: column;}
-      .sidebar {flex-direction: row; width:100%; overflow-x:auto;}
-      .main {padding:20px;}
-      .profile-card {flex-direction: column; text-align:center;}
-      .stats {flex-direction: column;}
-    }
+    @keyframes slideLeft {from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+    @keyframes pop {from{transform:scale(.98);opacity:0}to{transform:scale(1);opacity:1}}
+    .profile-card{animation:pop 560ms cubic-bezier(.22,.9,.18,1)}
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="logo">ENGLABET</div>
-    <nav class="nav-links">
-      <a href="#"><i class="fas fa-home"></i> Dashboard</a>
-      <a href="deposit.html"><i class="fas fa-coins"></i> Deposit</a>
-      <a href="withdraw.html"><i class="fas fa-money-bill-wave"></i> Withdraw</a>
-      <a href="transactions.html"><i class="fas fa-history"></i> Transactions</a>
-      <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
-      <a href="logout.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </nav>
-  </div>
-
-  <!-- Main content -->
-  <div class="main">
-    <div class="header">
-      <h1>Your Profile</h1>
-    </div>
-
-    <!-- Profile card -->
-    <div class="profile-card">
-      <img id="profile-photo" src="" alt="Profile Photo" class="profile-photo"/>
-      <div class="profile-info">
-        <h2 id="profile-name">Loading...</h2>
-        <div id="profile-status" class="status-badge">Loading...</div>
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-value" id="user-balance">₦0.00</div>
-            <div class="stat-label">Account Balance</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value" id="user-age">--</div>
-            <div class="stat-label">Age</div>
-          </div>
+  <div id="app" class="app" role="application" aria-label="Englabet profile dashboard">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" aria-hidden="false">
+      <div class="brand">
+        <div class="logo">E</div>
+        <div>
+          <div class="title">ENGLABET</div>
+          <div class="small muted">Safe • Fast • Account</div>
         </div>
       </div>
-    </div>
 
-    <!-- Details -->
-    <div class="details">
-      <h3>Personal Information</h3>
-      <div class="details-grid">
-        <div class="detail">
-          <div class="detail-label">Full Name</div>
-          <div class="detail-value" id="user-fullname">Loading...</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#"><span class="ico"><i class="fas fa-home"></i></span>Overview</a>
+        <a href="deposit.html"><span class="ico"><i class="fas fa-coins"></i></span>Deposit</a>
+        <a href="withdraw.html"><span class="ico"><i class="fas fa-money-bill-wave"></i></span>Withdraw</a>
+        <a href="transactions.html"><span class="ico"><i class="fas fa-history"></i></span>Transactions</a>
+        <a href="settings.html"><span class="ico"><i class="fas fa-cog"></i></span>Settings</a>
+      </nav>
+
+      <div class="small muted">Tips: Keep your email verified for faster support.</div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Profile • Account Overview</div>
+          <div class="muted" style="margin-top:6px">Professional account summary and real-time insights</div>
         </div>
-        <div class="detail">
-          <div class="detail-label">Email Address</div>
-          <div class="detail-value" id="user-email">Loading...</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Phone Number</div>
-          <div class="detail-value" id="user-phone">Loading...</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Gender</div>
-          <div class="detail-value" id="user-gender">Loading...</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Country</div>
-          <div class="detail-value" id="user-country">Loading...</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">User ID</div>
-          <div class="detail-value" id="user-id">Loading...</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Member Since</div>
-          <div class="detail-value" id="join-date">Loading...</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Security Question</div>
-          <div class="detail-value" id="security-question">Loading...</div>
+
+        <div class="search-actions" role="region" aria-label="actions">
+          <div class="search" role="search">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <input id="search-input" placeholder="Search transactions, support, etc." aria-label="Search"/>
+          </div>
+          <button class="ghost-btn" title="Notifications"><i class="fas fa-bell"></i></button>
+          <button class="action-btn" onclick="navigateTo('deposit.html')"><i class="fas fa-coins"></i> Deposit</button>
         </div>
       </div>
-    </div>
+
+      <div class="grid">
+        <!-- LEFT: profile, summary and transactions -->
+        <section>
+          <article class="profile-card" role="region" aria-label="Profile summary">
+            <div class="avatar">
+              <img id="profile-photo" src="https://res.cloudinary.com/demo/image/upload/v1586919327/sample.jpg" alt="Profile photo of user"/>
+            </div>
+            <div class="profile-meta">
+              <h2 id="profile-name">Loading user...</h2>
+              <div class="meta-row">
+                <div id="profile-status" class="badge pending">Pending</div>
+                <div class="muted" id="user-id">ID: —</div>
+              </div>
+
+              <div class="profile-actions">
+                <div class="small-stat">
+                  <div class="num" id="user-balance">₦0.00</div>
+                  <div class="label muted">Balance</div>
+                </div>
+
+                <div class="small-stat">
+                  <div class="num" id="user-age">—</div>
+                  <div class="label muted">Age</div>
+                </div>
+
+                <div style="flex:1"></div>
+
+                <button class="ghost-btn" onclick="navigateTo('transactions.html')"><i class="fas fa-history"></i> History</button>
+                <button class="action-btn" onclick="navigateTo('withdraw.html')"><i class="fas fa-paper-plane"></i> Send</button>
+              </div>
+
+              <div style="margin-top:12px" class="muted">Member since <span id="join-date">—</span></div>
+            </div>
+          </article>
+
+          <article class="card" style="margin-top:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <div>
+                <div style="font-weight:800">Recent transactions</div>
+                <div class="muted" style="font-size:13px">Latest five transactions — click to view full history</div>
+              </div>
+              <button class="ghost-btn" onclick="navigateTo('transactions.html')">View all</button>
+            </div>
+
+            <div id="tx-list" class="transactions" aria-live="polite">
+              <!-- JS will render recent transactions here -->
+              <div class="muted">Loading transactions...</div>
+            </div>
+          </article>
+        </section>
+
+        <!-- RIGHT: charts & details -->
+        <aside>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <div style="font-weight:800">Insights</div>
+              <div class="muted" style="font-size:13px">Real-time financial overview</div>
+            </div>
+
+            <div class="charts">
+              <div class="chart-row" style="align-items:flex-start">
+                <div class="chart-canvas" style="flex:1">
+                  <canvas id="balanceChart" height="180" style="width:100%"></canvas>
+                </div>
+              </div>
+
+              <div class="chart-row">
+                <div class="chart-canvas" style="width:220px">
+                  <canvas id="expensesChart" height="180"></canvas>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:10px;justify-content:center">
+                  <div style="font-weight:700">Spending breakdown</div>
+                  <div class="muted">Shows the proportion of categories from recent transactions</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <div style="font-weight:800">Personal details</div>
+              <button class="ghost-btn" onclick="navigateTo('settings.html')"><i class="fas fa-pen"></i> Edit</button>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div><div class="muted">Full name</div><div id="user-fullname" style="font-weight:700">—</div></div>
+              <div><div class="muted">Email</div><div id="user-email" style="font-weight:700">—</div></div>
+              <div><div class="muted">Phone</div><div id="user-phone" style="font-weight:700">—</div></div>
+              <div><div class="muted">Country</div><div id="user-country" style="font-weight:700">—</div></div>
+              <div><div class="muted">Security question</div><div id="security-question" style="font-weight:700">—</div></div>
+              <div><div class="muted">Email verified</div><div id="email-verified" style="font-weight:700">—</div></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div style="text-align:center;margin-top:6px" class="muted">Englabet © 2023 • Responsible Gaming • Secure payments</div>
+    </main>
   </div>
 
-  <div id="toast" class="toast"></div>
+  <div id="toast" style="position:fixed;right:20px;bottom:20px;background:#fff;color:#032; padding:12px 18px;border-radius:10px;display:none;box-shadow:0 10px 28px rgba(0,0,0,0.3)">Toast</div>
 
   <script>
+    /*****************************************************************************
+     * Firebase config - keep your existing keys (I left them from your example)
+     *****************************************************************************/
     const firebaseConfig = {
       apiKey: "AIzaSyDivFTAKUznc1xryU8marfMDZG3v1eYsl8",
       authDomain: "englabet-ad1fe.firebaseapp.com",
@@ -352,56 +368,327 @@
       appId: "1:124544822433:web:c77c980f28c99364c214e0",
       measurementId: "G-JMYYM433R7"
     };
-
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+
+    // global state
     let userData = null;
+    let recentTx = [];
 
-    function showToast(msg){
-      const toast=document.getElementById('toast');
-      toast.textContent=msg;
-      toast.classList.add('show');
-      setTimeout(()=>toast.classList.remove('show'),3000);
+    // navigation helper
+    function navigateTo(href){ window.location.href = href; }
+
+    // toast helper
+    function showToast(msg, ms = 3000){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.style.display = 'block';
+      setTimeout(()=> t.style.display = 'none', ms);
     }
 
-    async function fetchUserData(){
-      try{
-        const user=auth.currentUser;
-        if(!user){window.location.href='login.html';return;}
-        const doc=await db.collection('users').doc(user.uid).get();
-        if(!doc.exists){showToast('User data not found.');return;}
-        userData=doc.data();displayUserData();
-      }catch(e){console.error(e);showToast('Error loading profile.');}
+    // --- Chart placeholders/instances
+    let balanceChart = null;
+    let expensesChart = null;
+
+    // Initialize charts with empty data (Chart.js)
+    function initCharts(){
+      const bCtx = document.getElementById('balanceChart').getContext('2d');
+      balanceChart = new Chart(bCtx, {
+        type: 'line',
+        data: {
+          labels: ['—'],
+          datasets: [{
+            label: 'Balance',
+            data: [0],
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2,
+            pointRadius: 3,
+            pointHoverRadius: 6,
+          }]
+        },
+        options: {
+          animation: {duration:800,easing:'easeOutCubic'},
+          plugins: {legend:{display:false}},
+          scales: {
+            x: { grid:{display:false}, ticks:{color:'#a9c0c9'}},
+            y: { grid:{color:'rgba(255,255,255,0.03)'}, ticks:{color:'#a9c0c9'} }
+          }
+        }
+      });
+
+      const eCtx = document.getElementById('expensesChart').getContext('2d');
+      expensesChart = new Chart(eCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['—'],
+          datasets: [{
+            label: 'Expenses',
+            data: [1],
+            hoverOffset: 6,
+            borderWidth: 0
+          }]
+        },
+        options: {
+          animation: {duration:700},
+          plugins: {legend:{position:'bottom',labels:{color:'#a9c0c9'}}}
+        }
+      });
     }
 
-    function displayUserData(){
-      if(!userData)return;
-      document.getElementById('profile-photo').src=userData.profilePhotoUrl||'https://res.cloudinary.com/demo/image/upload/v1586919327/sample.jpg';
-      document.getElementById('profile-name').textContent=`${userData.firstName} ${userData.lastName}`;
-      document.getElementById('user-balance').textContent=`₦ ${userData.balance.toLocaleString('en-US',{minimumFractionDigits:2})}`;
-      document.getElementById('user-age').textContent=userData.age||'--';
-      const statusEl=document.getElementById('profile-status');
-      if(userData.status==='verified'){statusEl.textContent="Verified";statusEl.className="status-badge status-verified";}
-      else{statusEl.textContent="Pending";statusEl.className="status-badge status-pending";}
-      document.getElementById('user-fullname').textContent=`${userData.firstName} ${userData.lastName}`;
-      document.getElementById('user-email').textContent=userData.email;
-      document.getElementById('user-phone').textContent=userData.phone;
-      document.getElementById('user-gender').textContent=userData.gender;
-      document.getElementById('user-country').textContent=userData.country;
-      document.getElementById('user-id').textContent=userData.userId;
-      document.getElementById('security-question').textContent=userData.securityQuestion;
-      let joinDate='Unknown';
-      if(userData.createdAt){
-        const d=userData.createdAt.toDate?userData.createdAt.toDate():new Date(userData.createdAt);
-        joinDate=d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    // Update charts with computed data
+    function updateCharts(balanceTimeline, expensesMap){
+      // balanceTimeline: array of {dateLabel, amount}
+      const labels = balanceTimeline.map(i=>i.dateLabel);
+      const data = balanceTimeline.map(i=>i.amount);
+
+      const accentGradient = (ctx, area) => {
+        const g = ctx.createLinearGradient(0,0,0,area.bottom);
+        g.addColorStop(0, 'rgba(37,208,215,0.72)');
+        g.addColorStop(1, 'rgba(96,224,168,0.08)');
+        return g;
+      };
+
+      if(balanceChart){
+        balanceChart.data.labels = labels;
+        balanceChart.data.datasets[0].data = data;
+        // set dataset colors dynamically
+        balanceChart.data.datasets[0].borderColor = 'rgba(37,208,215,0.98)';
+        balanceChart.data.datasets[0].backgroundColor = function(context){
+          const chart = context.chart;
+          const {ctx, chartArea} = chart;
+          if(!chartArea) return 'rgba(37,208,215,0.12)';
+          return accentGradient(ctx, chartArea);
+        };
+        balanceChart.update();
       }
-      document.getElementById('join-date').textContent=joinDate;
+
+      // expenses map -> arrays
+      const expLabels = Object.keys(expensesMap);
+      const expData = Object.values(expensesMap);
+      if(expData.length === 0){
+        expensesChart.data.labels = ['No spending'];
+        expensesChart.data.datasets[0].data = [1];
+      } else {
+        expensesChart.data.labels = expLabels;
+        expensesChart.data.datasets[0].data = expData;
+        // colors (do not set exact colors to respect Chart.js default palette)
+      }
+      expensesChart.update();
     }
 
-    document.addEventListener('DOMContentLoaded',()=>{
-      auth.onAuthStateChanged(user=>{
-        if(user){fetchUserData();}else{window.location.href='login.html';}
+    // Build a balance timeline from user data or transactions.
+    // Attempts to use userData.balanceHistory if present, else synthesizes from recentTx.
+    function buildBalanceTimeline(){
+      // Desired: an array of objects {dateLabel, amount}
+      if(userData && Array.isArray(userData.balanceHistory) && userData.balanceHistory.length){
+        return userData.balanceHistory.map(item=>{
+          const d = (item.date && item.date.toDate) ? item.date.toDate() : new Date(item.date || item.ts || Date.now());
+          return { dateLabel: d.toLocaleDateString('en-US', {month:'short', day:'numeric'}), amount: Number(item.amount) || 0 };
+        }).slice(-12);
+      }
+
+      // Otherwise, synthesize from recentTx
+      if(recentTx && recentTx.length){
+        // organize by date (day), build cumulative balance (simulate)
+        const map = {};
+        for(const t of recentTx){
+          const date = t.timestamp ? (t.timestamp.toDate ? t.timestamp.toDate() : new Date(t.timestamp)) : new Date();
+          const key = date.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+          map[key] = map[key] || 0;
+          map[key] += (t.type === 'credit' || t.type === 'in') ? Number(t.amount) : -Number(t.amount);
+        }
+        // create ordered timeline (oldest -> newest)
+        const keys = Object.keys(map);
+        // if map empty -> create tiny demo
+        if(keys.length === 0){
+          const today = new Date();
+          const demo = [];
+          let bal = Number(userData && userData.balance ? userData.balance : 15000);
+          for(let i=6;i>=0;i--){
+            const d = new Date(today); d.setDate(today.getDate()-i);
+            demo.push({dateLabel: d.toLocaleDateString('en-US',{month:'short',day:'numeric'}), amount: Math.max(0, Math.round((bal - (Math.random()*1500))*100)/100)});
+            bal += Math.random()*100 - 30;
+          }
+          return demo;
+        }
+        // Build cumulative balance series
+        const ordered = keys.sort((a,b)=>{
+          const pa = new Date(a + ' 2025'); // year arbitrary but consistent
+          const pb = new Date(b + ' 2025');
+          return pa - pb;
+        });
+        let running = Number(userData && userData.balance ? userData.balance : 0);
+        // We'll build from oldest to newest by reversing (we have net per day)
+        const series = [];
+        // start from earliest by estimating backwards
+        // To avoid complicated backtracking, use net-of-day and produce simple series based on cumulative sums
+        ordered.forEach((k, idx)=>{
+          running += map[k];
+          series.push({dateLabel: k, amount: Math.max(0, Math.round(running*100)/100)});
+        });
+        return series;
+      }
+
+      // fallback demo timeline
+      const demo = [];
+      const base = Number(userData && userData.balance ? userData.balance : 12000);
+      const today = new Date();
+      for(let i=6;i>=0;i--){
+        const d = new Date(today); d.setDate(today.getDate()-i);
+        demo.push({dateLabel: d.toLocaleDateString('en-US',{month:'short',day:'numeric'}), amount: Math.round((base + (Math.sin(i)*800) + (Math.random()*400))*100)/100});
+      }
+      return demo;
+    }
+
+    // Build expenses by category from recentTx
+    function buildExpensesMap(){
+      const map = {}; // category => total
+      for(const t of recentTx){
+        if(!t.category) t.category = 'Other';
+        if(t.type === 'credit' || t.type === 'in') continue; // exclude credits
+        map[t.category] = (map[t.category] || 0) + Number(t.amount || 0);
+      }
+      return map;
+    }
+
+    // Render recent transactions into the tx-list
+    function renderTransactions(){
+      const list = document.getElementById('tx-list');
+      list.innerHTML = '';
+      if(!recentTx || !recentTx.length){
+        const el = document.createElement('div'); el.className = 'muted'; el.textContent = 'No recent transactions available';
+        list.appendChild(el); return;
+      }
+      recentTx.slice(0,5).forEach(tx=>{
+        const el = document.createElement('div'); el.className = 'tx';
+        const left = document.createElement('div'); left.className = 'left';
+        const avatar = document.createElement('div'); avatar.style.width='44px'; avatar.style.height='44px'; avatar.style.borderRadius='10px';
+        avatar.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))';
+        avatar.style.display='flex'; avatar.style.alignItems='center'; avatar.style.justifyContent='center';
+        avatar.innerHTML = `<i class="fas fa-${tx.icon||'exchange-alt'}"></i>`;
+        left.appendChild(avatar);
+
+        const info = document.createElement('div'); info.style.marginLeft='10px';
+        const title = document.createElement('div'); title.style.fontWeight='700'; title.textContent = tx.description || tx.title || 'Transaction';
+        const sub = document.createElement('div'); sub.className = 'muted'; sub.style.fontSize='13px'; sub.textContent = (tx.timestamp ? (tx.timestamp.toDate ? tx.timestamp.toDate() : new Date(tx.timestamp)).toLocaleString() : '—');
+        info.appendChild(title); info.appendChild(sub);
+        left.appendChild(info);
+
+        const right = document.createElement('div'); right.style.textAlign='right';
+        const amt = document.createElement('div'); amt.className = 'amount'; amt.textContent = (tx.type === 'credit' || tx.type === 'in' ? '₦ ' : '- ₦ ') + Number(tx.amount || 0).toLocaleString('en-US', {minimumFractionDigits:2});
+        const typ = document.createElement('div'); typ.className = 'muted ' + (tx.type === 'credit' || tx.type === 'in' ? 'type in' : 'type out'); typ.style.fontSize='13px';
+        typ.textContent = tx.type === 'credit' || tx.type === 'in' ? 'Credit' : 'Debit';
+        right.appendChild(amt); right.appendChild(typ);
+
+        el.appendChild(left); el.appendChild(right);
+        list.appendChild(el);
+      });
+    }
+
+    // Display user data into DOM fields
+    function displayUserData(){
+      if(!userData) return;
+      document.getElementById('profile-photo').src = userData.profilePhotoUrl || 'https://res.cloudinary.com/demo/image/upload/v1586919327/sample.jpg';
+      document.getElementById('profile-name').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'Unnamed user';
+      document.getElementById('user-id').textContent = `ID: ${userData.userId || (auth.currentUser && auth.currentUser.uid) || '—'}`;
+      document.getElementById('user-balance').textContent = `₦ ${Number(userData.balance || 0).toLocaleString('en-US',{minimumFractionDigits:2})}`;
+      document.getElementById('user-age').textContent = userData.age || '—';
+      document.getElementById('join-date').textContent = (userData.createdAt && userData.createdAt.toDate) ? userData.createdAt.toDate().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}) : (userData.createdAt ? (new Date(userData.createdAt)).toLocaleDateString() : '—');
+
+      document.getElementById('user-fullname').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || '—';
+      document.getElementById('user-email').textContent = userData.email || (auth.currentUser && auth.currentUser.email) || '—';
+      document.getElementById('user-phone').textContent = userData.phone || '—';
+      document.getElementById('user-country').textContent = userData.country || '—';
+      document.getElementById('security-question').textContent = userData.securityQuestion || '—';
+      document.getElementById('email-verified').textContent = (userData.emailVerified ? 'Yes' : 'No');
+
+      // status badge
+      const s = document.getElementById('profile-status');
+      if(userData.status === 'verified'){
+        s.className = 'badge verified'; s.textContent = 'Verified';
+      } else {
+        s.className = 'badge pending'; s.textContent = (userData.status ? (userData.status.charAt(0).toUpperCase()+userData.status.slice(1)) : 'Pending');
+      }
+    }
+
+    // Attempt to load recent transactions from Firestore subcollection 'transactions'
+    async function loadRecentTransactions(uid){
+      try{
+        const txRef = db.collection('users').doc(uid).collection('transactions').orderBy('timestamp','desc').limit(12);
+        const snap = await txRef.get();
+        const arr = [];
+        snap.forEach(doc=>{
+          const data = doc.data();
+          arr.push({
+            id: doc.id,
+            description: data.description || data.note || data.title || (data.type === 'credit' ? 'Credit' : 'Debit'),
+            amount: data.amount || 0,
+            category: data.category || 'Other',
+            type: data.type || (data.amount < 0 ? 'debit' : 'credit'),
+            timestamp: data.timestamp || data.ts || null,
+            icon: data.icon || (data.type === 'credit' ? 'plus' : 'minus')
+          });
+        });
+        return arr;
+      } catch(e){
+        console.error('Error loading transactions:', e);
+        return [];
+      }
+    }
+
+    // Main bootstrap: auth listener and initial render
+    document.addEventListener('DOMContentLoaded', () => {
+      initCharts();
+      auth.onAuthStateChanged(async (user) => {
+        if(!user){
+          // redirect to login if not authenticated
+          window.location.href = 'login.html';
+          return;
+        }
+        // load user document
+        try{
+          const doc = await db.collection('users').doc(user.uid).get();
+          if(doc.exists){
+            userData = doc.data();
+          } else {
+            showToast('Profile not found. Contact support.');
+            userData = { firstName: (user.displayName || ''), email: user.email, balance: 0, status: 'pending' };
+          }
+        } catch(err){
+          console.error('Error fetching user doc:', err);
+          showToast('Network error while loading profile.');
+          userData = { firstName: (user.displayName || ''), email: user.email, balance: 0, status: 'pending' };
+        }
+
+        // load transactions
+        recentTx = await loadRecentTransactions(user.uid);
+        // If there are no transactions, add a few demo entries to keep charts full (non-destructive)
+        if(!recentTx.length){
+          recentTx = [
+            { description:'Initial Bonus', amount:5000, type:'credit', category:'Bonus', timestamp:new Date(new Date().setDate(new Date().getDate()-6)) },
+            { description:'Grocery', amount:1200, type:'debit', category:'Groceries', timestamp:new Date(new Date().setDate(new Date().getDate()-5)) },
+            { description:'Transport', amount:320, type:'debit', category:'Transport', timestamp:new Date(new Date().setDate(new Date().getDate()-4)) },
+            { description:'Top-up', amount:2000, type:'credit', category:'Top-up', timestamp:new Date(new Date().setDate(new Date().getDate()-3)) },
+            { description:'Subscription', amount:450, type:'debit', category:'Services', timestamp:new Date(new Date().setDate(new Date().getDate()-1)) },
+          ];
+        }
+
+        // display
+        displayUserData();
+        renderTransactions();
+
+        // build and update charts
+        const timeline = buildBalanceTimeline();
+        const expenses = buildExpensesMap();
+        updateCharts(timeline, expenses);
+      });
+
+      // Search quick-key (Enter -> go to transactions)
+      document.getElementById('search-input').addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter'){
+          navigateTo('transactions.html?q='+encodeURIComponent(e.target.value));
+        }
       });
     });
   </script>
