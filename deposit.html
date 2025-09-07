@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Deposit - EnglaBet</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    /* Reset & mobile-first base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0d47a1, #1976d2, #2196f3);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+    }
+
+    header {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 20px;
+      animation: fadeInDown 0.8s ease-in-out;
+    }
+
+    header img {
+      width: 110px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+    }
+
+    p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .deposit-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 360px;
+      animation: fadeInUp 1s ease-in-out;
+    }
+
+    .option-card {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 18px;
+      border-radius: 14px;
+      text-align: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: transform 0.3s ease, background 0.3s ease;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+    }
+
+    .option-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .option-card i {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .option-card h3 {
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      padding: 15px;
+    }
+
+    .modal-content {
+      background: #fff;
+      color: #333;
+      border-radius: 14px;
+      padding: 20px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+      animation: slideUp 0.4s ease;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #0d47a1;
+    }
+
+    .close {
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: #444;
+    }
+
+    .modal form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal form input {
+      padding: 11px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.3s ease;
+      width: 100%;
+    }
+
+    .modal form input:focus {
+      border: 1px solid #1976d2;
+    }
+
+    .modal form button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #0d47a1, #1976d2);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .modal form button:hover {
+      background: linear-gradient(135deg, #1565c0, #1e88e5);
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="englabet.png" alt="EnglaBet Logo">
+    <h1>Deposit Funds</h1>
+    <p>Select your preferred method to deposit securely</p>
+  </header>
+
+  <div class="deposit-options">
+    <div class="option-card" id="cardOption">
+      <i class="fas fa-credit-card"></i>
+      <h3>Deposit with Card</h3>
+    </div>
+    <div class="option-card" onclick="window.location.href='bank.html'">
+      <i class="fas fa-university"></i>
+      <h3>Deposit with Bank</h3>
+    </div>
+  </div>
+
+  <!-- Modal for Card -->
+  <div class="modal" id="cardModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Enter Card Details</h2>
+        <span class="close" id="closeModal">&times;</span>
+      </div>
+      <form>
+        <input type="text" placeholder="Cardholder Name" required>
+        <input type="text" placeholder="Card Number" maxlength="16" required>
+        <input type="text" placeholder="Expiry Date (MM/YY)" required>
+        <input type="text" placeholder="CVV" maxlength="3" required>
+        <button type="submit">Proceed</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const cardOption = document.getElementById("cardOption");
+    const cardModal = document.getElementById("cardModal");
+    const closeModal = document.getElementById("closeModal");
+
+    cardOption.addEventListener("click", () => {
+      cardModal.style.display = "flex";
+    });
+
+    closeModal.addEventListener("click", () => {
+      cardModal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target === cardModal) {
+        cardModal.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
