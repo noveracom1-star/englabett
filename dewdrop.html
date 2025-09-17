@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
   <style>
     :root{
@@ -262,6 +265,29 @@
     .tag{padding:3px 6px;border-radius:999px;font-size:0.75rem;font-weight:900}
     .tag.win{background:rgba(25,195,125,.18);border:1px solid rgba(25,195,125,.45);color:#bff3dd}
     .tag.lose{background:rgba(242,95,92,.18);border:1px solid rgba(242,95,92,.45);color:#ffd3d2}
+    
+    /* Word bag display in results */
+    .word-bag-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 15px 0;
+      padding: 10px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .letter-chip {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: linear-gradient(145deg, rgba(168,230,207,.20), rgba(168,230,207,.08));
+      border: 1px solid rgba(168,230,207,.35);
+      font-weight: 900;
+      font-size: 1rem;
+    }
 
     footer{opacity:.8;text-align:center;margin-top:6px; font-size: 0.8rem;}
 
@@ -339,6 +365,75 @@
       transform: translateY(-2px);
       box-shadow: 0 12px 26px rgba(0,0,0,.30);
     }
+    
+    /* Ads modal */
+    .ads-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      z-index: 3000;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+    }
+    .ads-container {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      max-width: 90%;
+      width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .ads-content {
+      padding: 20px;
+      text-align: center;
+      color: #00324d;
+    }
+    .ads-content h3 {
+      margin-bottom: 15px;
+      font-weight: 900;
+    }
+    .ads-media {
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+    .ads-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .ads-timer {
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: #006aa6;
+    }
+    
+    /* Three words button */
+    .three-words-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 900;
+      color: var(--ink);
+      background: linear-gradient(90deg, #ffb347, #ffcc33);
+      box-shadow: 0 8px 20px rgba(0,0,0,.22);
+      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+      margin-top: 10px;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+    .three-words-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(0,0,0,.30);
+    }
   </style>
 </head>
 <body>
@@ -354,7 +449,9 @@
     <!-- nav -->
     <div class="nav" aria-label="Top Navigation">
       <div class="brand">
-        <div class="logo">O₂</div>
+        <div class="logo" style="background: transparent; box-shadow: none;">
+          <img src="englabet.png" alt="Englabet Logo" style="width: 32px; height: 32px; border-radius: 10px;">
+        </div>
         <div>
           <div style="font-size:0.9rem">Dewdrop</div>
           <small style="opacity:.8;font-weight:700; font-size: 0.7rem;">Ocean Blue Edition</small>
@@ -389,7 +486,7 @@
               </linearGradient>
             </defs>
           </svg>
-          <div class="num" id="timer">01:30</div>
+          <div class="num" id="timer">03:00</div>
         </div>
       </div>
       <div class="pill"><i class="fa-solid fa-key"></i> Key Letter: <b>O</b></div>
@@ -437,6 +534,11 @@
             <button id="play-again" class="btn ghost"><i class="fa-solid fa-rotate-right"></i> New Round</button>
           </div>
           
+          <!-- Three Words Button -->
+          <button id="three-words-btn" class="three-words-btn">
+            <i class="fa-solid fa-3"></i> 3 Words
+          </button>
+          
           <!-- View Results Button -->
           <button id="view-results" class="view-results-btn">
             <i class="fa-solid fa-chart-simple"></i> View Results
@@ -468,10 +570,11 @@
     <section id="result" class="result" aria-live="polite">
       <h2>Result</h2>
       <div id="result-msg" class="big"></div>
+      <div id="word-bag-result" class="word-bag-display"></div>
       <div id="result-list" class="result-list"></div>
     </section>
 
-    <footer><p>Dewdrop Challenge © 2025 • Ocean Blue Edition • Crafted for clarity, speed, and thrill.</p></footer>
+    <footer><p>From ENGLAGIP powered by AITECH • Dewdrop Challenge © 2025 • Ocean Blue Edition • Crafted for clarity, speed, and thrill.</p></footer>
   </div>
 
   <!-- Help modal -->
@@ -500,6 +603,21 @@
     </div>
   </div>
 
+  <!-- Ads modal -->
+  <div id="ads-modal" class="ads-modal">
+    <div class="ads-container">
+      <div class="ads-content">
+        <h3>Watch an Ad for Another Hint</h3>
+        <div id="ads-timer" class="ads-timer">Ad will play in 5 seconds</div>
+        <div id="ads-media-container"></div>
+        <div class="ads-actions">
+          <button id="ads-cancel" class="btn secondary">Cancel</button>
+          <button id="ads-watch" class="btn">Watch Ad</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast" class="toast" role="status" aria-live="assertive"></div>
 
@@ -511,7 +629,23 @@
   let roundActive=true, timerInterval=null;
   const MAX_SLIP = 10;
   let slip = []; // selected words
-  const ROUND_SECONDS = 90;
+  const ROUND_SECONDS = 180; // 3 minutes
+  let hintUsed = false;
+  let betHistory = JSON.parse(localStorage.getItem('dewdrop_bet_history') || '[]');
+  
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+  
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
   // ---- DOM ----
   const els = {
@@ -524,6 +658,7 @@
     result: document.getElementById('result'),
     resultMsg: document.getElementById('result-msg'),
     resultList: document.getElementById('result-list'),
+    wordBagResult: document.getElementById('word-bag-result'),
     search: document.getElementById('search-words'),
     toast: document.getElementById('toast'),
     hintModal: document.getElementById('hint-modal'),
@@ -543,7 +678,13 @@
     bg: document.getElementById('bg-music'),
     slipMeta: document.getElementById('slip-meta'),
     bubbles: document.getElementById('bubbles'),
-    viewResults: document.getElementById('view-results')
+    viewResults: document.getElementById('view-results'),
+    threeWordsBtn: document.getElementById('three-words-btn'),
+    adsModal: document.getElementById('ads-modal'),
+    adsMediaContainer: document.getElementById('ads-media-container'),
+    adsTimer: document.getElementById('ads-timer'),
+    adsCancel: document.getElementById('ads-cancel'),
+    adsWatch: document.getElementById('ads-watch')
   };
 
   // ---- UTIL ----
@@ -661,11 +802,22 @@
   function setLettersBag(letters){
     els.bag.textContent = letters.map(x=>x.toUpperCase()).join(" ");
   }
+  
+  function displayWordBag(letters) {
+    els.wordBagResult.innerHTML = "";
+    letters.forEach(letter => {
+      const chip = document.createElement('div');
+      chip.className = 'letter-chip';
+      chip.textContent = letter.toUpperCase();
+      els.wordBagResult.appendChild(chip);
+    });
+  }
 
   function startNewRound(){
     els.result.style.display="none";
     els.result.classList.remove('win','lose');
     roundActive=true;
+    hintUsed = false;
     els.input.value="";
     updateReview();
     clearSlip();
@@ -682,6 +834,102 @@
     startTimer();
   }
 
+  // Save bet history
+  function saveBetHistory(result) {
+    betHistory.unshift({
+      date: new Date().toISOString(),
+      words: slip,
+      betAmount: parseInt(els.bet.value, 10),
+      result: result,
+      balance: balance,
+      wordBag: availableLetters
+    });
+    
+    // Keep only last 20 bets
+    if (betHistory.length > 20) {
+      betHistory = betHistory.slice(0, 20);
+    }
+    
+    localStorage.setItem('dewdrop_bet_history', JSON.stringify(betHistory));
+  }
+
+  // Load ads from Firestore
+  async function loadAds() {
+    try {
+      const snapshot = await db.collection('ads').get();
+      const ads = [];
+      snapshot.forEach(doc => {
+        ads.push(doc.data());
+      });
+      return ads;
+    } catch (error) {
+      console.error("Error loading ads:", error);
+      return [];
+    }
+  }
+
+  // Show ad for hint
+  async function showAdForHint() {
+    const ads = await loadAds();
+    if (ads.length === 0) {
+      notify("No ads available at the moment", "error");
+      return false;
+    }
+    
+    const randomAd = ads[Math.floor(Math.random() * ads.length)];
+    els.adsMediaContainer.innerHTML = '';
+    
+    // Create appropriate media element based on file type
+    let mediaElement;
+    if (randomAd.url.endsWith('.mp4')) {
+      mediaElement = document.createElement('video');
+      mediaElement.controls = true;
+      mediaElement.autoplay = true;
+      mediaElement.style.width = '100%';
+    } else if (randomAd.url.endsWith('.mp3')) {
+      mediaElement = document.createElement('audio');
+      mediaElement.controls = true;
+      mediaElement.autoplay = true;
+    } else if (randomAd.url.endsWith('.png') || randomAd.url.endsWith('.jpg') || randomAd.url.endsWith('.jpeg')) {
+      mediaElement = document.createElement('img');
+      mediaElement.style.maxWidth = '100%';
+      mediaElement.style.maxHeight = '150px';
+    }
+    
+    mediaElement.src = randomAd.url;
+    els.adsMediaContainer.appendChild(mediaElement);
+    
+    // Show ad modal
+    els.adsModal.style.display = 'grid';
+    
+    // Countdown timer
+    let countdown = 5;
+    const countdownInterval = setInterval(() => {
+      els.adsTimer.textContent = `Ad will play in ${countdown} seconds`;
+      countdown--;
+      
+      if (countdown < 0) {
+        clearInterval(countdownInterval);
+        els.adsWatch.click();
+      }
+    }, 1000);
+    
+    // Return a promise that resolves when the ad is watched
+    return new Promise((resolve) => {
+      els.adsWatch.onclick = () => {
+        clearInterval(countdownInterval);
+        els.adsModal.style.display = 'none';
+        resolve(true);
+      };
+      
+      els.adsCancel.onclick = () => {
+        clearInterval(countdownInterval);
+        els.adsModal.style.display = 'none';
+        resolve(false);
+      };
+    });
+  }
+
   // ---- EVENTS ----
   els.input.addEventListener('input', updateReview);
   els.addWord.addEventListener('click', ()=>{ addToSlip(els.input.value); });
@@ -692,7 +940,67 @@
   
   // View Results Button
   els.viewResults.addEventListener('click', () => {
-    window.location.href = 'result.html';
+    // Create a results page in the same HTML file
+    document.body.innerHTML = `
+      <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+        <h1 style="text-align: center; color: white; margin-bottom: 20px;">Your Bet History</h1>
+        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+          <button id="back-to-game" style="padding: 10px 20px; background: #6ed3cf; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+            Back to Game
+          </button>
+        </div>
+        <div id="results-container" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px;"></div>
+      </div>
+    `;
+    
+    const resultsContainer = document.getElementById('results-container');
+    const backButton = document.getElementById('back-to-game');
+    
+    if (betHistory.length === 0) {
+      resultsContainer.innerHTML = '<p style="text-align: center; color: white;">No bet history yet.</p>';
+    } else {
+      let html = '';
+      betHistory.forEach(bet => {
+        const date = new Date(bet.date).toLocaleString();
+        const netResult = bet.result >= 0 ? 
+          `<span style="color: #19c37d;">+₦${bet.result}</span>` : 
+          `<span style="color: #f25f5c;">-₦${Math.abs(bet.result)}</span>`;
+        
+        // Display word bag
+        let wordBagHtml = '<div style="display: flex; gap: 5px; margin: 10px 0;">';
+        if (bet.wordBag) {
+          bet.wordBag.forEach(letter => {
+            wordBagHtml += `<div style="width: 30px; height: 30px; display: grid; place-items: center; background: rgba(168,230,207,.2); border-radius: 6px; font-weight: bold;">${letter.toUpperCase()}</div>`;
+          });
+        }
+        wordBagHtml += '</div>';
+        
+        html += `
+          <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+              <strong style="color: white;">${date}</strong>
+              <strong>${netResult}</strong>
+            </div>
+            <div>Word Bag: ${wordBagHtml}</div>
+            <div style="color: #ccc;">
+              <div>Words: ${bet.words.join(', ').toUpperCase()}</div>
+              <div>Bet Amount: ₦${bet.betAmount} per word</div>
+              <div>Final Balance: ₦${bet.balance}</div>
+            </div>
+          </div>
+        `;
+      });
+      resultsContainer.innerHTML = html;
+    }
+    
+    backButton.addEventListener('click', () => {
+      location.reload();
+    });
+  });
+  
+  // Three Words Button
+  els.threeWordsBtn.addEventListener('click', () => {
+    window.location.href = 'dewdrop3.html';
   });
 
   document.getElementById('submit-btn').addEventListener('click', async ()=>{
@@ -716,6 +1024,7 @@
     els.result.classList.remove('win','lose');
     els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s) in <b>5</b>…`;
     els.resultList.innerHTML = "";
+    displayWordBag(availableLetters);
     els.result.scrollIntoView({behavior:"smooth",block:"start"});
 
     roundActive=false;
@@ -746,15 +1055,34 @@
     balance += net;
     els.balance.textContent = currency + balance;
     localStorage.setItem('dewdrop_balance', String(balance));
+    
+    // Save to bet history
+    saveBetHistory(net);
 
-    if(net>=0){
+    // Custom congratulations based on result
+    if (net > 0) {
       els.result.classList.add('win');
-      els.resultMsg.innerHTML = `🎉 Done! You netted <b>+${currency}${net}</b> on ${slip.length} word(s).`;
+      if (net >= 500) {
+        els.resultMsg.innerHTML = `🎉 AMAZING! You won <b>+${currency}${net}</b>! You're a word master!`;
+      } else if (net >= 200) {
+        els.resultMsg.innerHTML = `🎉 GREAT JOB! You won <b>+${currency}${net}</b>! Keep it up!`;
+      } else {
+        els.resultMsg.innerHTML = `🎉 Well done! You netted <b>+${currency}${net}</b> on ${slip.length} word(s).`;
+      }
       notify("✅ You won!");
-    }else{
+    } else if (net < 0) {
       els.result.classList.add('lose');
-      els.resultMsg.innerHTML = `❌ Done! You lost <b>${currency}${Math.abs(net)}</b> on ${slip.length} word(s).`;
+      if (net <= -500) {
+        els.resultMsg.innerHTML = `😢 Tough luck! You lost <b>${currency}${Math.abs(net)}</b>. Better luck next time!`;
+      } else if (net <= -200) {
+        els.resultMsg.innerHTML = `😕 Unfortunate! You lost <b>${currency}${Math.abs(net)}</b>. Try again!`;
+      } else {
+        els.resultMsg.innerHTML = `❌ Done! You lost <b>${currency}${Math.abs(net)}</b> on ${slip.length} word(s).`;
+      }
       notify("✖️ Better luck next time");
+    } else {
+      els.resultMsg.innerHTML = `➖ Break even! No gain, no loss on ${slip.length} word(s).`;
+      notify("➖ Break even!");
     }
   });
 
@@ -774,11 +1102,18 @@
   els.helpOk.addEventListener('click', ()=> els.helpModal.style.display='none');
 
   // hint
-  document.getElementById('hint-btn').addEventListener('click', ()=>{
-    if(!keyword){ return; }
+  document.getElementById('hint-btn').addEventListener('click', async ()=>{
+    if (!keyword) return;
+    
+    if (hintUsed) {
+      const watched = await showAdForHint();
+      if (!watched) return;
+    }
+    
     const hintLetter = keyword[rand(keyword.length)].toUpperCase();
     els.hintText.innerHTML = `💡 The keyword contains the letter <b>${hintLetter}</b>`;
     els.hintModal.style.display='grid';
+    hintUsed = true;
   });
   document.getElementById('hint-ok').addEventListener('click', ()=> els.hintModal.style.display='none');
 
