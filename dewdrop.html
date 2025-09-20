@@ -11,6 +11,7 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
   <style>
     :root{
@@ -342,8 +343,8 @@
       display: none;
     }
     
-    /* View Results Button */
-    .view-results-btn {
+    /* Three words button */
+    .three-words-btn {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -354,14 +355,14 @@
       cursor: pointer;
       font-weight: 900;
       color: var(--ink);
-      background: linear-gradient(90deg, #ff9a8b, #ff6b6b);
+      background: linear-gradient(90deg, #ffb347, #ffcc33);
       box-shadow: 0 8px 20px rgba(0,0,0,.22);
       transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
       margin-top: 10px;
       width: 100%;
       font-size: 0.9rem;
     }
-    .view-results-btn:hover {
+    .three-words-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 12px 26px rgba(0,0,0,.30);
     }
@@ -374,7 +375,7 @@
       place-items: center;
       z-index: 3000;
       background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur: 4px;
     }
     .ads-container {
       background: #fff;
@@ -411,28 +412,21 @@
       color: #006aa6;
     }
     
-    /* Three words button */
-    .three-words-btn {
+    /* User info */
+    .user-info {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      font-weight: 900;
-      color: var(--ink);
-      background: linear-gradient(90deg, #ffb347, #ffcc33);
-      box-shadow: 0 8px 20px rgba(0,0,0,.22);
-      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
-      margin-top: 10px;
-      width: 100%;
-      font-size: 0.9rem;
+      gap: 8px;
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
     }
-    .three-words-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 26px rgba(0,0,0,.30);
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
     }
   </style>
 </head>
@@ -458,11 +452,16 @@
         </div>
       </div>
       <div class="nav-ctas">
+        <div class="user-info" id="user-info" style="display: none;">
+          <img src="" alt="User Avatar" class="user-avatar" id="user-avatar">
+          <span id="user-name"></span>
+        </div>
         <div class="pill" title="Session Window"><i class="fa-solid fa-calendar-days"></i> 08:00am – 10:00am</div>
         <button id="music-toggle" class="action" aria-pressed="true" title="Toggle Ocean Ambience">
           <i class="fa-solid fa-music"></i> <span>Sound On</span>
         </button>
         <button id="help-btn" class="action" title="How to play" aria-haspopup="dialog"><i class="fa-regular fa-circle-question"></i> Help</button>
+        <button id="logout-btn" class="action" title="Logout" style="display: none;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
       </div>
     </div>
 
@@ -486,7 +485,7 @@
               </linearGradient>
             </defs>
           </svg>
-          <div class="num" id="timer">03:00</div>
+          <div class="num" id="timer">02:00:00</div>
         </div>
       </div>
       <div class="pill"><i class="fa-solid fa-key"></i> Key Letter: <b>O</b></div>
@@ -531,17 +530,11 @@
 
           <div style="display:flex; gap:8px; flex-wrap:wrap">
             <button id="hint-btn" class="btn secondary"><i class="fa-regular fa-lightbulb"></i> Give Me a Hint</button>
-            <button id="play-again" class="btn ghost"><i class="fa-solid fa-rotate-right"></i> New Round</button>
           </div>
           
           <!-- Three Words Button -->
           <button id="three-words-btn" class="three-words-btn">
             <i class="fa-solid fa-3"></i> 3 Words
-          </button>
-          
-          <!-- View Results Button -->
-          <button id="view-results" class="view-results-btn">
-            <i class="fa-solid fa-chart-simple"></i> View Results
           </button>
         </div>
       </section>
@@ -629,23 +622,26 @@
   let roundActive=true, timerInterval=null;
   const MAX_SLIP = 10;
   let slip = []; // selected words
-  const ROUND_SECONDS = 180; // 3 minutes
+  const ROUND_SECONDS = 7200; // 2 hours (7200 seconds)
   let hintUsed = false;
   let betHistory = JSON.parse(localStorage.getItem('dewdrop_bet_history') || '[]');
+  let currentUser = null;
   
   // Firebase configuration
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyDivFTAKUznc1xryU8marfMDZG3v1eYsl8",
+    authDomain: "englabet-ad1fe.firebaseapp.com",
+    projectId: "englabet-ad1fe",
+    storageBucket: "englabet-ad1fe.firebasestorage.app",
+    messagingSenderId: "124544822433",
+    appId: "1:124544822433:web:c77c980f28c99364c214e0",
+    measurementId: "G-JMYYM433R7"
   };
   
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
+  const auth = firebase.auth();
 
   // ---- DOM ----
   const els = {
@@ -670,7 +666,6 @@
     addWord: document.getElementById('add-word'),
     clearSlip: document.getElementById('clear-slip'),
     bag: document.getElementById('bag-letters'),
-    playAgain: document.getElementById('play-again'),
     helpBtn: document.getElementById('help-btn'),
     helpModal: document.getElementById('help-modal'),
     helpOk: document.getElementById('help-ok'),
@@ -678,13 +673,16 @@
     bg: document.getElementById('bg-music'),
     slipMeta: document.getElementById('slip-meta'),
     bubbles: document.getElementById('bubbles'),
-    viewResults: document.getElementById('view-results'),
     threeWordsBtn: document.getElementById('three-words-btn'),
     adsModal: document.getElementById('ads-modal'),
     adsMediaContainer: document.getElementById('ads-media-container'),
     adsTimer: document.getElementById('ads-timer'),
     adsCancel: document.getElementById('ads-cancel'),
-    adsWatch: document.getElementById('ads-watch')
+    adsWatch: document.getElementById('ads-watch'),
+    userInfo: document.getElementById('user-info'),
+    userAvatar: document.getElementById('user-avatar'),
+    userName: document.getElementById('user-name'),
+    logoutBtn: document.getElementById('logout-btn')
   };
 
   // ---- UTIL ----
@@ -790,8 +788,8 @@
     let t=ROUND_SECONDS;
     clearInterval(timerInterval);
     function tick(){
-      const m=Math.floor(t/60), s=t%60;
-      els.timer.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      const h=Math.floor(t/3600), m=Math.floor((t%3600)/60), s=t%60;
+      els.timer.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
       setRing(t/ROUND_SECONDS);
       if(t<=0){ clearInterval(timerInterval); roundActive=false; notify("⏱️ Time up!", "error"); }
       t--;
@@ -834,23 +832,57 @@
     startTimer();
   }
 
-  // Save bet history
-  function saveBetHistory(result) {
-    betHistory.unshift({
-      date: new Date().toISOString(),
-      words: slip,
-      betAmount: parseInt(els.bet.value, 10),
-      result: result,
-      balance: balance,
-      wordBag: availableLetters
-    });
-    
-    // Keep only last 20 bets
-    if (betHistory.length > 20) {
-      betHistory = betHistory.slice(0, 20);
+  // Save bet history to Firestore under the user's document
+  async function saveBetToFirestore(result) {
+    if (!currentUser) {
+      console.error("No user logged in");
+      return;
     }
     
-    localStorage.setItem('dewdrop_bet_history', JSON.stringify(betHistory));
+    try {
+      const betData = {
+        date: new Date().toISOString(),
+        words: slip,
+        betAmount: parseInt(els.bet.value, 10),
+        result: result,
+        balance: balance,
+        wordBag: availableLetters,
+        validWords: validWords,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      // Save to user's bet_history subcollection
+      await db.collection('users').doc(currentUser.uid)
+        .collection('bet_history').add(betData);
+        
+      console.log("Bet saved to user's Firestore history");
+    } catch (error) {
+      console.error("Error saving bet to Firestore:", error);
+    }
+  }
+
+  // Save words formed from letters bag to Firestore under the user's document
+  async function saveWordsToFirestore() {
+    if (!currentUser) {
+      console.error("No user logged in");
+      return;
+    }
+    
+    try {
+      const wordsData = {
+        letters: availableLetters,
+        validWords: validWords,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      // Save to user's word_combinations subcollection
+      await db.collection('users').doc(currentUser.uid)
+        .collection('word_combinations').add(wordsData);
+        
+      console.log("Words saved to user's Firestore");
+    } catch (error) {
+      console.error("Error saving words to Firestore:", error);
+    }
   }
 
   // Load ads from Firestore
@@ -930,73 +962,51 @@
     });
   }
 
+  // Check authentication state
+  function checkAuthState() {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        currentUser = user;
+        // Show user info
+        els.userInfo.style.display = 'flex';
+        els.userName.textContent = user.displayName || user.email;
+        els.userAvatar.src = user.photoURL || 'https://via.placeholder.com/24';
+        els.logoutBtn.style.display = 'block';
+        
+        // Load user balance from Firestore
+        try {
+          const userDoc = await db.collection('users').doc(user.uid).get();
+          if (userDoc.exists) {
+            const userData = userDoc.data();
+            balance = userData.balance || 1000;
+            els.balance.textContent = currency + balance;
+          }
+        } catch (error) {
+          console.error("Error loading user data:", error);
+        }
+      } else {
+        // No user is signed in, redirect to login
+        window.location.href = 'login.html';
+      }
+    });
+  }
+
+  // Logout function
+  function logout() {
+    auth.signOut().then(() => {
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      console.error("Logout error:", error);
+    });
+  }
+
   // ---- EVENTS ----
   els.input.addEventListener('input', updateReview);
   els.addWord.addEventListener('click', ()=>{ addToSlip(els.input.value); });
   els.input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addToSlip(els.input.value); }});
   els.clearSlip.addEventListener('click', clearSlip);
   els.bet.addEventListener('input', renderSlip);
-  els.playAgain.addEventListener('click', startNewRound);
-  
-  // View Results Button
-  els.viewResults.addEventListener('click', () => {
-    // Create a results page in the same HTML file
-    document.body.innerHTML = `
-      <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
-        <h1 style="text-align: center; color: white; margin-bottom: 20px;">Your Bet History</h1>
-        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-          <button id="back-to-game" style="padding: 10px 20px; background: #6ed3cf; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-            Back to Game
-          </button>
-        </div>
-        <div id="results-container" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px;"></div>
-      </div>
-    `;
-    
-    const resultsContainer = document.getElementById('results-container');
-    const backButton = document.getElementById('back-to-game');
-    
-    if (betHistory.length === 0) {
-      resultsContainer.innerHTML = '<p style="text-align: center; color: white;">No bet history yet.</p>';
-    } else {
-      let html = '';
-      betHistory.forEach(bet => {
-        const date = new Date(bet.date).toLocaleString();
-        const netResult = bet.result >= 0 ? 
-          `<span style="color: #19c37d;">+₦${bet.result}</span>` : 
-          `<span style="color: #f25f5c;">-₦${Math.abs(bet.result)}</span>`;
-        
-        // Display word bag
-        let wordBagHtml = '<div style="display: flex; gap: 5px; margin: 10px 0;">';
-        if (bet.wordBag) {
-          bet.wordBag.forEach(letter => {
-            wordBagHtml += `<div style="width: 30px; height: 30px; display: grid; place-items: center; background: rgba(168,230,207,.2); border-radius: 6px; font-weight: bold;">${letter.toUpperCase()}</div>`;
-          });
-        }
-        wordBagHtml += '</div>';
-        
-        html += `
-          <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-              <strong style="color: white;">${date}</strong>
-              <strong>${netResult}</strong>
-            </div>
-            <div>Word Bag: ${wordBagHtml}</div>
-            <div style="color: #ccc;">
-              <div>Words: ${bet.words.join(', ').toUpperCase()}</div>
-              <div>Bet Amount: ₦${bet.betAmount} per word</div>
-              <div>Final Balance: ₦${bet.balance}</div>
-            </div>
-          </div>
-        `;
-      });
-      resultsContainer.innerHTML = html;
-    }
-    
-    backButton.addEventListener('click', () => {
-      location.reload();
-    });
-  });
+  els.logoutBtn.addEventListener('click', logout);
   
   // Three Words Button
   els.threeWordsBtn.addEventListener('click', () => {
@@ -1022,16 +1032,12 @@
 
     els.result.style.display="block";
     els.result.classList.remove('win','lose');
-    els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s) in <b>5</b>…`;
+    els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s)...`;
     els.resultList.innerHTML = "";
     displayWordBag(availableLetters);
     els.result.scrollIntoView({behavior:"smooth",block:"start"});
 
     roundActive=false;
-    for(let c=5;c>=1;c--){
-      els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s) in <b>${c}</b>…`;
-      await sleep(600);
-    }
 
     // Evaluate each word
     let net = 0;
@@ -1054,10 +1060,21 @@
 
     balance += net;
     els.balance.textContent = currency + balance;
-    localStorage.setItem('dewdrop_balance', String(balance));
     
-    // Save to bet history
-    saveBetHistory(net);
+    // Update user balance in Firestore
+    if (currentUser) {
+      try {
+        await db.collection('users').doc(currentUser.uid).update({
+          balance: balance
+        });
+      } catch (error) {
+        console.error("Error updating user balance:", error);
+      }
+    }
+    
+    // Save to Firestore
+    await saveBetToFirestore(net);
+    await saveWordsToFirestore();
 
     // Custom congratulations based on result
     if (net > 0) {
@@ -1084,6 +1101,11 @@
       els.resultMsg.innerHTML = `➖ Break even! No gain, no loss on ${slip.length} word(s).`;
       notify("➖ Break even!");
     }
+    
+    // Clear input field and start new round immediately
+    els.input.value = "";
+    updateReview();
+    startNewRound();
   });
 
   // search
@@ -1153,6 +1175,9 @@
   }
 
   (async function init(){
+    // Check authentication
+    checkAuthState();
+    
     // restore balance
     const saved = parseInt(localStorage.getItem('dewdrop_balance')||"0",10);
     if(!isNaN(saved) && saved>0){ balance = saved; }

@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Results - Dewdrop Challenge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <style>
+    :root {
+      --bg1: #006aa6;
+      --bg2: #003f63;
+      --panel: #012a3f;
+      --mint: #a8e6cf;
+      --mint-2: #6ed3cf;
+      --ink: #032538;
+      --good: #19c37d;
+      --bad: #f25f5c;
+      --chip: #0a3a53;
+      --txt: #e8fbff;
+      --glow: 0 20px 50px rgba(0,0,0,.35);
+      --ring: #bfeee0;
+      --accent: #4fc3f7;
+      --accent-dark: #029be5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      height: 100%;
+      font-family: 'Inter', ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial;
+      color: var(--txt);
+      background: radial-gradient(1200px 700px at 15% -10%, #0287cc 0%, #015f91 35%, #003a58 100%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      background-attachment: fixed;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+
+    /* Animated ocean gradient sheen */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      background: conic-gradient(from 180deg at 50% 50%, rgba(255,255,255,.06), rgba(255,255,255,0) 35%, rgba(255,255,255,.07) 55%, rgba(255,255,255,0) 85%);
+      filter: blur(60px);
+      animation: drift 26s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .5;
+    }
+    
+    @keyframes drift {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Floating bubbles */
+    .bubbles {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .bubble {
+      position: absolute;
+      bottom: -120px;
+      border-radius: 999px;
+      opacity: .15;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,255,255,.2) 40%, rgba(255,255,255,0) 65%);
+      filter: blur(0.2px);
+      animation: rise var(--dur) linear infinite, sway calc(var(--dur)*.6) ease-in-out infinite;
+    }
+    
+    @keyframes rise {
+      to { transform: translateY(-115vh) translateZ(0); }
+    }
+    
+    @keyframes sway {
+     50% { transform: translateX(18px); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0,33,51,.55);
+      border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(6px);
+      padding: 15px 20px;
+      border-radius: 16px;
+      box-shadow: var(--glow);
+      margin-bottom: 20px;
+    }
+    
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: .4px;
+    }
+    
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--mint), var(--mint-2));
+      color: var(--ink);
+      font-weight: 900;
+      box-shadow: 0 6px 18px rgba(0,0,0,.25);
+    }
+    
+    .logo img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+    
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--mint), #d7f7e9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,.25));
+    }
+    
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--ink);
+      background: linear-gradient(90deg, var(--mint), var(--mint-2));
+      box-shadow: 0 8px 20px rgba(0,0,0,.22);
+      transition: transform .15s ease, box-shadow .15s ease;
+      text-decoration: none;
+    }
+    
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(0,0,0,.30);
+    }
+
+    /* User info */
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      margin-left: auto;
+      margin-right: 15px;
+    }
+    
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    .logout-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(168,230,207,.35);
+      background: rgba(255,255,255,.06);
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--txt);
+      transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(255,255,255,.1);
+      transform: translateY(-1px);
+    }
+
+    /* Round Selector */
+    .round-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(0,33,51,.55);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px;
+      backdrop-filter: blur(6px);
+    }
+    
+    .round-label {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    
+    .round-select {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(168,230,207,.35);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    
+    .round-select:focus {
+      border-color: var(--mint);
+      box-shadow: 0 0 0 3px rgba(168,230,207,.20);
+    }
+
+    /* Results Container */
+    .results-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    @media (min-width: 992px) {
+      .results-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Panel Styling */
+    .panel {
+      background: linear-gradient(180deg, rgba(1,33,51,.7), rgba(1,26,40,.7));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--glow);
+      transform: translateY(0);
+      animation: fadeUp .5s ease both;
+    }
+    
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    
+    .panel-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--mint);
+      letter-spacing: .35px;
+      text-transform: uppercase;
+    }
+    
+    .panel-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(168,230,207,.15);
+      color: var(--mint);
+    }
+
+    /* Word Bag Display */
+    .word-bag {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .letter-chip {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(145deg, rgba(168,230,207,.20), rgba(168,230,207,.08));
+      border: 1px solid rgba(168,230,207,.35);
+      font-weight: 900;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .letter-chip:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,.3);
+    }
+    
+    .letter-chip.key-letter {
+      background: linear-gradient(145deg, rgba(79,195,247,.25), rgba(79,195,247,.15));
+      border: 1px solid rgba(79,195,247,.5);
+      color: var(--accent);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(79,195,247,0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(79,195,247,0); }
+      100% { box-shadow: 0 0 0 0 rgba(79,195,247,0); }
+    }
+
+    /* Word List */
+    .word-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .word-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 5px;
+      border-radius: 8px;
+      background: linear-gradient(145deg, rgba(168,230,207,.15), rgba(168,230,207,.08));
+      border: 1px solid rgba(168,230,207,.35);
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: .35px;
+      font-size: 0.85rem;
+      text-shadow: 0 1px 0 rgba(0,0,0,.25);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .word-item:hover {
+      background: rgba(168,230,207,.32);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,.2);
+    }
+    
+    .word-item.valid {
+      background: linear-gradient(145deg, rgba(25,195,125,.15), rgba(25,195,125,.08));
+      border: 1px solid rgba(25,195,125,.35);
+      color: #bff3dd;
+    }
+    
+    .word-item.invalid {
+      background: linear-gradient(145deg, rgba(242,95,92,.15), rgba(242,95,92,.08));
+      border: 1px solid rgba(242,95,92,.35);
+      color: #ffd3d2;
+    }
+
+    /* Stats Panel */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 15px;
+      border: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 5px;
+      background: linear-gradient(90deg, var(--mint), var(--mint-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .stat-label {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      font-weight: 600;
+    }
+    
+    .stat-card.total-words .stat-value {
+      color: var(--mint);
+    }
+    
+    .stat-card.valid-words .stat-value {
+      color: var(--good);
+    }
+    
+    .stat-card.invalid-words .stat-value {
+      color: var(--bad);
+    }
+    
+    .stat-card.percentage .stat-value {
+      color: var(--accent);
+    }
+
+    /* Bet History */
+    .bet-history {
+      margin-top: 20px;
+    }
+    
+    .bet-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .bet-word {
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    
+    .bet-amount {
+      font-weight: 800;
+    }
+    
+    .bet-win {
+      color: var(--good);
+    }
+    
+    .bet-loss {
+      color: var(--bad);
+    }
+
+    /* Word Details Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      z-index: 2600;
+      background: rgba(0,0,0,.7);
+      backdrop-filter: blur(4px);
+    }
+    
+    .modal-content {
+      background: linear-gradient(180deg, rgba(1,33,51,.95), rgba(1,26,40,.95));
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px;
+      padding: 25px;
+      max-width: 90%;
+      width: 500px;
+      box-shadow: 0 25px 50px rgba(0,0,0,.5);
+      position: relative;
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .modal-close:hover {
+      background: rgba(255,255,255,0.2);
+      transform: rotate(90deg);
+    }
+    
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: var(--mint);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .word-detail {
+      font-size: 2.5rem;
+      font-weight: 900;
+      text-align: center;
+      margin: 15px 0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    
+    .word-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    .word-stat {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .word-stat-value {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+    
+    .word-stat-label {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+    
+    .word-letters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 15px 0;
+    }
+    
+    .word-letter {
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: linear-gradient(145deg, rgba(168,230,207,.20), rgba(168,230,207,.08));
+      border: 1px solid rgba(168,230,207,.35);
+      font-weight: 800;
+    }
+    
+    .word-letter.key-letter {
+      background: linear-gradient(145deg, rgba(79,195,247,.25), rgba(79,195,247,.15));
+      border: 1px solid rgba(79,195,247,.5);
+      color: var(--accent);
+    }
+
+    /* Filter Controls */
+    .filter-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 8px 15px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.1);
+      color: var(--txt);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .filter-btn.active {
+      background: linear-gradient(90deg, var(--mint), var(--mint-2));
+      color: var(--ink);
+      border-color: transparent;
+    }
+    
+    .filter-btn:hover:not(.active) {
+      background: rgba(255,255,255,.2);
+    }
+
+    /* Search Box */
+    .search-box {
+      position: relative;
+      margin-bottom: 15px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 12px 15px 12px 40px;
+      border-radius: 10px;
+      border: 1px solid rgba(168,230,207,.35);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    
+    .search-input:focus {
+      border-color: var(--mint);
+      box-shadow: 0 0 0 3px rgba(168,230,207,.20);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,.6);
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      left: 50%;
+      top: 20px;
+      transform: translateX(-50%);
+      background: #fff;
+      color: #00324d;
+      border-radius: 12px;
+      padding: 12px 20px;
+      box-shadow: 0 10px 26px rgba(0,0,0,.30);
+      z-index: 3000;
+      display: none;
+      max-width: 92%;
+      font-weight: 800;
+    }
+    
+    .toast.show {
+      display: block;
+      animation: drop .24s ease-out;
+    }
+    
+    @keyframes drop {
+      from { transform: translate(-50%,-14px); opacity: 0; }
+      to { transform: translate(-50%,0); opacity: 1; }
+    }
+
+    /* Loading spinner */
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-left: 4px solid var(--mint);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      text-align: center;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      
+      .header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .user-info {
+        margin: 0;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .word-list {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Bubbles background -->
+  <div class="bubbles" aria-hidden="true" id="bubbles"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="brand">
+        <div class="logo">
+          <img src="englabet.png" alt="Englabet Logo">
+        </div>
+        <div>
+          <div>Dewdrop</div>
+          <small style="opacity:.8;font-weight:700; font-size: 0.7rem;">Results Analysis</small>
+        </div>
+      </div>
+      <h1 class="header-title">Word Formation Results</h1>
+      <div class="user-info" id="user-info" style="display: none;">
+        <img src="" alt="User Avatar" class="user-avatar" id="user-avatar">
+        <span id="user-name"></span>
+      </div>
+      <button id="logout-btn" class="logout-btn" style="display: none;">
+        <i class="fas fa-right-from-bracket"></i> Logout
+      </button>
+      <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Game
+      </a>
+    </div>
+
+    <!-- Round Selector -->
+    <div class="round-selector">
+      <span class="round-label">Select Round:</span>
+      <select class="round-select" id="round-select">
+        <option value="">Loading rounds...</option>
+      </select>
+    </div>
+
+    <!-- Results Container -->
+    <div class="results-container">
+      <!-- Word Bag Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Word Bag Analysis</h2>
+          <div class="panel-icon">
+            <i class="fas fa-scroll"></i>
+          </div>
+        </div>
+        
+        <div id="loading-bag" class="loading-text">
+          <div class="spinner"></div>
+          <p>Loading word bag data...</p>
+        </div>
+        
+        <div class="word-bag" id="word-bag" style="display: none;">
+          <!-- Letters will be populated by JavaScript -->
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card total-words">
+            <div class="stat-value" id="total-words">0</div>
+            <div class="stat-label">Total Words</div>
+          </div>
+          <div class="stat-card valid-words">
+            <div class="stat-value" id="valid-words">0</div>
+            <div class="stat-label">Valid Words</div>
+          </div>
+          <div class="stat-card invalid-words">
+            <div class="stat-value" id="invalid-words">0</div>
+            <div class="stat-label">Invalid Words</div>
+          </div>
+          <div class="stat-card percentage">
+            <div class="stat-value" id="success-rate">0%</div>
+            <div class="stat-label">Success Rate</div>
+          </div>
+        </div>
+
+        <!-- Bet History -->
+        <div class="bet-history" id="bet-history" style="display: none;">
+          <h3 style="margin-bottom: 15px; color: var(--mint);">Your Bets</h3>
+          <div id="bet-list">
+            <!-- Bet items will be populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Word List Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">All Possible Words</h2>
+          <div class="panel-icon">
+            <i class="fas fa-list"></i>
+          </div>
+        </div>
+        
+        <div id="loading-words" class="loading-text">
+          <div class="spinner"></div>
+          <p>Loading word data...</p>
+        </div>
+        
+        <div id="content-area" style="display: none;">
+          <div class="filter-controls">
+            <button class="filter-btn active" data-filter="all">All Words</button>
+            <button class="filter-btn" data-filter="valid">Valid Only</button>
+            <button class="filter-btn" data-filter="invalid">Invalid Only</button>
+          </div>
+          
+          <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="word-search" placeholder="Search words...">
+          </div>
+          
+          <div class="word-list" id="all-words-list">
+            <!-- Words will be populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Word Detail Modal -->
+  <div class="modal" id="word-modal">
+    <div class="modal-content">
+      <div class="modal-close" id="modal-close">
+        <i class="fas fa-times"></i>
+      </div>
+      <h2 class="modal-title">Word Details</h2>
+      <div class="word-detail" id="modal-word"></div>
+      
+      <div class="word-stats">
+        <div class="word-stat">
+          <div class="word-stat-value" id="modal-length">0</div>
+          <div class="word-stat-label">Letters</div>
+        </div>
+        <div class="word-stat">
+          <div class="word-stat-value" id="modal-points">0</div>
+          <div class="word-stat-label">Points</div>
+        </div>
+        <div class="word-stat">
+          <div class="word-stat-value" id="modal-status">Valid</div>
+          <div class="word-stat-label">Status</div>
+        </div>
+        <div class="word-stat">
+          <div class="word-stat-value" id="modal-frequency">0</div>
+          <div class="word-stat-label">Frequency</div>
+        </div>
+      </div>
+      
+      <h3 style="margin: 15px 0 10px; text-align: center; font-weight: 700;">Letters Used</h3>
+      <div class="word-letters" id="modal-letters">
+        <!-- Letters will be populated by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (() => {
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDivFTAKUznc1xryU8marfMDZG3v1eYsl8",
+        authDomain: "englabet-ad1fe.firebaseapp.com",
+        projectId: "englabet-ad1fe",
+        storageBucket: "englabet-ad1fe.firebasestorage.app",
+        messagingSenderId: "124544822433",
+        appId: "1:124544822433:web:c77c980f28c99364c214e0",
+        measurementId: "G-JMYYM433R7"
+      };
+      
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const auth = firebase.auth();
+
+      // DOM Elements
+      const els = {
+        wordBag: document.getElementById('word-bag'),
+        allWordsList: document.getElementById('all-words-list'),
+        totalWords: document.getElementById('total-words'),
+        validWords: document.getElementById('valid-words'),
+        invalidWords: document.getElementById('invalid-words'),
+        successRate: document.getElementById('success-rate'),
+        wordSearch: document.getElementById('word-search'),
+        filterBtns: document.querySelectorAll('.filter-btn'),
+        wordModal: document.getElementById('word-modal'),
+        modalClose: document.getElementById('modal-close'),
+        modalWord: document.getElementById('modal-word'),
+        modalLength: document.getElementById('modal-length'),
+        modalPoints: document.getElementById('modal-points'),
+        modalStatus: document.getElementById('modal-status'),
+        modalFrequency: document.getElementById('modal-frequency'),
+        modalLetters: document.getElementById('modal-letters'),
+        toast: document.getElementById('toast'),
+        bubbles: document.getElementById('bubbles'),
+        loadingBag: document.getElementById('loading-bag'),
+        loadingWords: document.getElementById('loading-words'),
+        contentArea: document.getElementById('content-area'),
+        roundSelect: document.getElementById('round-select'),
+        userInfo: document.getElementById('user-info'),
+        userAvatar: document.getElementById('user-avatar'),
+        userName: document.getElementById('user-name'),
+        logoutBtn: document.getElementById('logout-btn'),
+        betHistory: document.getElementById('bet-history'),
+        betList: document.getElementById('bet-list')
+      };
+
+      // Application State
+      let state = {
+        wordBag: [],
+        allWords: [],
+        validWords: [],
+        invalidWords: [],
+        currentFilter: 'all',
+        searchQuery: '',
+        wordCombinations: [],
+        betHistory: [],
+        currentUser: null,
+        rounds: [],
+        selectedRoundId: null
+      };
+
+      // Utility Functions
+      const notify = (msg, type = "info") => {
+        els.toast.textContent = msg;
+        els.toast.style.background = type === "error" ? "#ff6b6b" : "#4fc3f7";
+        els.toast.classList.add('show');
+        setTimeout(() => els.toast.classList.remove('show'), 3000);
+      };
+
+      const canFormWord = (word, letters) => {
+        const letterCounts = {};
+        letters.forEach(l => {
+          letterCounts[l] = (letterCounts[l] || 0) + 1;
+        });
+        
+        for (const char of word) {
+          if (!letterCounts[char] || letterCounts[char] <= 0) {
+            return false;
+          }
+          letterCounts[char]--;
+        }
+        return true;
+      };
+
+      const calculatePoints = (word) => {
+        // Simple scoring: longer words = more points
+        const basePoints = word.length * 10;
+        // Bonus for using the key letter 'O'
+        const oBonus = word.includes('o') ? 50 : 0;
+        return basePoints + oBonus;
+      };
+
+      const wordFrequency = (word) => {
+        // Simulate word frequency based on length and letters
+        let frequency = 100 - (word.length * 5);
+        if (word.includes('q') || word.includes('z') || word.includes('x')) frequency += 20;
+        if (word.includes('e') || word.includes('a') || word.includes('i')) frequency -= 10;
+        return Math.max(5, Math.min(100, frequency));
+      };
+
+      const formatDate = (timestamp) => {
+        if (!timestamp) return 'Unknown date';
+        
+        let date;
+        if (timestamp.toDate) {
+          date = timestamp.toDate();
+        } else if (typeof timestamp === 'string') {
+          date = new Date(timestamp);
+        } else {
+          date = new Date(timestamp);
+        }
+        
+        return date.toLocaleString();
+      };
+
+      // Check authentication state
+      function checkAuthState() {
+        auth.onAuthStateChanged(async (user) => {
+          if (user) {
+            state.currentUser = user;
+            // Show user info
+            els.userInfo.style.display = 'flex';
+            els.userName.textContent = user.displayName || user.email;
+            els.userAvatar.src = user.photoURL || 'https://via.placeholder.com/24';
+            els.logoutBtn.style.display = 'block';
+            
+            // Load user's rounds
+            await loadUserRounds();
+          } else {
+            // No user is signed in, redirect to login
+            window.location.href = 'login.html';
+          }
+        });
+      }
+
+      // Load user's rounds from Firestore
+      const loadUserRounds = async () => {
+        try {
+          if (!state.currentUser) return;
+          
+          // Fetch word combinations for this user
+          const wordCombinationsSnapshot = await db.collection('users')
+            .doc(state.currentUser.uid)
+            .collection('word_combinations')
+            .orderBy('timestamp', 'desc')
+            .get();
+          
+          if (wordCombinationsSnapshot.empty) {
+            notify("No rounds found for this user", "error");
+            return;
+          }
+          
+          // Populate rounds dropdown
+          els.roundSelect.innerHTML = '';
+          state.rounds = [];
+          
+          wordCombinationsSnapshot.forEach(doc => {
+            const roundData = doc.data();
+            state.rounds.push({
+              id: doc.id,
+              timestamp: roundData.timestamp,
+              letters: roundData.letters,
+              validWords: roundData.validWords
+            });
+            
+            const option = document.createElement('option');
+            option.value = doc.id;
+            option.textContent = formatDate(roundData.timestamp);
+            els.roundSelect.appendChild(option);
+          });
+          
+          // Select the first round by default
+          if (state.rounds.length > 0) {
+            state.selectedRoundId = state.rounds[0].id;
+            await loadRoundData(state.rounds[0].id);
+          }
+        } catch (error) {
+          console.error("Error loading user rounds:", error);
+          notify("Error loading your rounds", "error");
+        }
+      };
+
+      // Load data for a specific round
+      const loadRoundData = async (roundId) => {
+        try {
+          // Find the round data
+          const round = state.rounds.find(r => r.id === roundId);
+          if (!round) return;
+          
+          state.wordBag = round.letters || [];
+          state.validWords = round.validWords || [];
+          
+          // Fetch bet history for this round
+          const betHistorySnapshot = await db.collection('users')
+            .doc(state.currentUser.uid)
+            .collection('bet_history')
+            .where('wordBag', '==', state.wordBag)
+            .get();
+          
+          state.betHistory = [];
+          if (!betHistorySnapshot.empty) {
+            betHistorySnapshot.forEach(doc => {
+              const betData = doc.data();
+              state.betHistory.push(betData);
+            });
+          }
+          
+          // Create allWords array with validity status from bet history
+          let userWords = [];
+          state.betHistory.forEach(bet => {
+            if (bet.words && Array.isArray(bet.words)) {
+              userWords = [...userWords, ...bet.words];
+            }
+          });
+          
+          // Remove duplicates
+          userWords = [...new Set(userWords)];
+          
+          // Create allWords array with validity status
+          state.allWords = userWords.map(word => ({
+            word,
+            valid: state.validWords.includes(word),
+            points: calculatePoints(word),
+            frequency: wordFrequency(word)
+          }));
+          
+          // Render the data
+          renderWordBag();
+          renderWordList();
+          renderStats();
+          renderBetHistory();
+          
+          notify("Round data loaded successfully!");
+        } catch (error) {
+          console.error("Error loading round data:", error);
+          notify("Error loading round data", "error");
+        }
+      };
+
+      // Render Functions
+      const renderWordBag = () => {
+        els.wordBag.innerHTML = '';
+        state.wordBag.forEach(letter => {
+          const letterChip = document.createElement('div');
+          letterChip.className = `letter-chip ${letter === 'o' ? 'key-letter' : ''}`;
+          letterChip.textContent = letter.toUpperCase();
+          els.wordBag.appendChild(letterChip);
+        });
+        
+        // Show the word bag and hide loading
+        els.loadingBag.style.display = 'none';
+        els.wordBag.style.display = 'flex';
+      };
+
+      const renderWordList = () => {
+        els.allWordsList.innerHTML = '';
+        
+        let wordsToShow = [];
+        
+        // Apply filter
+        if (state.currentFilter === 'valid') {
+          wordsToShow = state.allWords.filter(w => w.valid);
+        } else if (state.currentFilter === 'invalid') {
+          wordsToShow = state.allWords.filter(w => !w.valid);
+        } else {
+          wordsToShow = state.allWords;
+        }
+        
+        // Apply search
+        if (state.searchQuery) {
+          const query = state.searchQuery.toLowerCase();
+          wordsToShow = wordsToShow.filter(w => 
+            w.word.toLowerCase().includes(query)
+          );
+        }
+        
+        // Sort by validity then by length
+        wordsToShow.sort((a, b) => {
+          if (a.valid !== b.valid) return b.valid ? 1 : -1;
+          return b.word.length - a.word.length;
+        });
+        
+        // Render words
+        if (wordsToShow.length === 0) {
+          els.allWordsList.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; opacity: 0.7;">No words found</div>';
+          return;
+        }
+        
+        wordsToShow.forEach(wordData => {
+          const wordEl = document.createElement('div');
+          wordEl.className = `word-item ${wordData.valid ? 'valid' : 'invalid'}`;
+          wordEl.textContent = wordData.word.toUpperCase();
+          wordEl.title = `${wordData.word.toUpperCase()} - ${wordData.valid ? 'Valid' : 'Invalid'}`;
+          
+          wordEl.addEventListener('click', () => {
+            showWordDetails(wordData);
+          });
+          
+          els.allWordsList.appendChild(wordEl);
+        });
+      };
+
+      const renderStats = () => {
+        els.totalWords.textContent = state.allWords.length;
+        els.validWords.textContent = state.allWords.filter(w => w.valid).length;
+        els.invalidWords.textContent = state.allWords.filter(w => !w.valid).length;
+        
+        const successRate = state.allWords.length > 0 
+          ? Math.round((state.allWords.filter(w => w.valid).length / state.allWords.length) * 100) 
+          : 0;
+        els.successRate.textContent = `${successRate}%`;
+        
+        // Show the content area and hide loading
+        els.loadingWords.style.display = 'none';
+        els.contentArea.style.display = 'block';
+      };
+
+      const renderBetHistory = () => {
+        els.betList.innerHTML = '';
+        
+        if (state.betHistory.length === 0) {
+          els.betList.innerHTML = '<div style="text-align: center; padding: 15px; opacity: 0.7;">No bet history for this round</div>';
+          return;
+        }
+        
+        // Show the bet history section
+        els.betHistory.style.display = 'block';
+        
+        // Group words by bet
+        const allBetWords = [];
+        state.betHistory.forEach(bet => {
+          if (bet.words && Array.isArray(bet.words)) {
+            bet.words.forEach(word => {
+              allBetWords.push({
+                word,
+                valid: state.validWords.includes(word),
+                betAmount: bet.betAmount || 0,
+                timestamp: bet.timestamp
+              });
+            });
+          }
+        });
+        
+        // Remove duplicates while keeping the latest
+        const uniqueWords = [];
+        const wordMap = new Map();
+        
+        allBetWords.forEach(item => {
+          if (!wordMap.has(item.word) || wordMap.get(item.word).timestamp < item.timestamp) {
+            wordMap.set(item.word, item);
+          }
+        });
+        
+        wordMap.forEach(value => {
+          uniqueWords.push(value);
+        });
+        
+        // Sort by word
+        uniqueWords.sort((a, b) => a.word.localeCompare(b.word));
+        
+        // Render bet items
+        uniqueWords.forEach(item => {
+          const betEl = document.createElement('div');
+          betEl.className = 'bet-item';
+          
+          const wordSpan = document.createElement('span');
+          wordSpan.className = 'bet-word';
+          wordSpan.textContent = item.word.toUpperCase();
+          
+          const amountSpan = document.createElement('span');
+          amountSpan.className = `bet-amount ${item.valid ? 'bet-win' : 'bet-loss'}`;
+          amountSpan.textContent = item.valid ? `+₦${item.betAmount}` : `-₦${item.betAmount}`;
+          
+          betEl.appendChild(wordSpan);
+          betEl.appendChild(amountSpan);
+          els.betList.appendChild(betEl);
+        });
+      };
+
+      const showWordDetails = (wordData) => {
+        els.modalWord.textContent = wordData.word.toUpperCase();
+        els.modalLength.textContent = wordData.word.length;
+        els.modalPoints.textContent = wordData.points;
+        els.modalStatus.textContent = wordData.valid ? 'Valid' : 'Invalid';
+        els.modalFrequency.textContent = `${wordData.frequency}%`;
+        
+        // Style status based on validity
+        els.modalStatus.style.color = wordData.valid ? '#19c37d' : '#f25f5c';
+        
+        els.modalLetters.innerHTML = '';
+        
+        // Create letter chips for the word
+        Array.from(wordData.word).forEach(letter => {
+          const letterEl = document.createElement('div');
+          letterEl.className = `word-letter ${letter === 'o' ? 'key-letter' : ''}`;
+          letterEl.textContent = letter.toUpperCase();
+          els.modalLetters.appendChild(letterEl);
+        });
+        
+        els.wordModal.style.display = 'grid';
+      };
+
+      // Initialize Bubbles
+      const spawnBubbles = () => {
+        const n = 18;
+        for (let i = 0; i < n; i++) {
+          const b = document.createElement('div');
+          b.className = 'bubble';
+          const size = 10 + Math.random() * 26;
+          b.style.width = size + 'px';
+          b.style.height = size + 'px';
+          b.style.left = (Math.random() * 100) + '%';
+          b.style.setProperty('--dur', (12 + Math.random() * 18) + 's');
+          b.style.animationDelay = (-Math.random() * 20) + 's';
+          els.bubbles.appendChild(b);
+        }
+      };
+
+      // Logout function
+      const logout = () => {
+        auth.signOut().then(() => {
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          console.error("Logout error:", error);
+          notify("Logout error", "error");
+        });
+      };
+
+      // Event Handlers
+      const setupEventListeners = () => {
+        // Filter buttons
+        els.filterBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            els.filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.currentFilter = btn.dataset.filter;
+            renderWordList();
+          });
+        });
+        
+        // Search input
+        els.wordSearch.addEventListener('input', (e) => {
+          state.searchQuery = e.target.value;
+          renderWordList();
+        });
+        
+        // Modal close
+        els.modalClose.addEventListener('click', () => {
+          els.wordModal.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+          if (e.target === els.wordModal) {
+            els.wordModal.style.display = 'none';
+          }
+        });
+        
+        // Round selection
+        els.roundSelect.addEventListener('change', (e) => {
+          state.selectedRoundId = e.target.value;
+          if (state.selectedRoundId) {
+            loadRoundData(state.selectedRoundId);
+          }
+        });
+        
+        // Logout button
+        els.logoutBtn.addEventListener('click', logout);
+      };
+
+      // Initialize Application
+      const init = async () => {
+        spawnBubbles();
+        checkAuthState();
+        setupEventListeners();
+      };
+
+      // Start the application
+      init();
+    })();
+  </script>
+</body>
+</html>

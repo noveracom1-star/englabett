@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MIDDAY - Ocean Blue Edition</title>
+  <title>Dewdrop - Ocean Blue Edition</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,6 +11,7 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
   <style>
     :root{
       --bg1:#006aa6;
@@ -26,6 +27,7 @@
       --glow:0 20px 50px rgba(0,0,0,.35);
       --ring:#bfeee0;
     }
+
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%}
     body{
@@ -39,6 +41,7 @@
       overflow-x:hidden;
       font-size:16px;
     }
+
     /* animated ocean gradient sheen */
     body::before{
       content:""; position:fixed; inset:-20%;
@@ -49,6 +52,7 @@
       opacity:.5;
     }
     @keyframes drift{to{transform:rotate(360deg)}}
+
     /* floating bubbles */
     .bubbles{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
     .bubble{
@@ -59,7 +63,9 @@
     }
     @keyframes rise{ to { transform: translateY(-115vh) translateZ(0) } }
     @keyframes sway{ 50% { transform: translateX(18px) } }
+
     .container{max-width:100%;margin:0 auto;display:flex;flex-direction:column;gap:14px; position:relative; z-index:2;}
+
     /* top nav */
     .nav{
       display:flex; align-items:center; gap:10px; justify-content:space-between;
@@ -90,6 +96,7 @@
       font-size: 0.85rem;
     }
     .action:hover{ transform: translateY(-1px); box-shadow:0 10px 18px rgba(0,0,0,.22) }
+
     header{text-align:center;padding-top:2px}
     h1{
       font-size:1.8rem;
@@ -115,8 +122,10 @@
       box-shadow:0 10px 28px rgba(0,0,0,.25) inset, 0 6px 16px rgba(0,0,0,.18)
     }
     .top-bar .pill{font-weight:800}
+
     /* GAME LAYOUT */
     .game{display:grid;grid-template-columns:1fr;gap:14px; align-items:start}
+
     .panel{
       background:linear-gradient(180deg,rgba(1,33,51,.7),rgba(1,26,40,.7));
       border:1px solid rgba(255,255,255,.08);
@@ -134,6 +143,7 @@
       font-size:1.1rem;margin-bottom:10px;color:var(--mint);letter-spacing:.35px; text-transform:uppercase
     }
     .lede{font-size:0.9rem; opacity:.88; margin:-2px 0 10px; line-height:1.45}
+
     /* inputs */
     .input{display:grid;gap:10px}
     .field label{display:block;margin:2px 0 6px 2px;opacity:.98; font-weight:700; font-size: 0.9rem;}
@@ -143,6 +153,7 @@
       transition:box-shadow .2s,border-color .2s;text-transform:uppercase
     }
     .field input:focus{ border-color:var(--mint); box-shadow:0 0 0 4px rgba(168,230,207,.20) }
+
     .btn{
       display:flex;align-items:center;justify-content:center;gap:6px;
       padding:10px 12px;border-radius:10px;border:none;cursor:pointer;
@@ -160,6 +171,7 @@
       background:transparent;color:#e5f9ff;border:1px dashed rgba(168,230,207,.35)
     }
     .btn:disabled{ opacity:.6; cursor:not-allowed }
+
     /* WORD GRID */
     .search{margin-bottom:10px; display:flex; gap:6px; align-items:center}
     .search input{
@@ -176,6 +188,7 @@
       gap:6px;
       min-height: 180px;
     }
+
     .word-item{
       display:flex; align-items:center; justify-content:center;
       padding:8px 4px; border-radius:6px;
@@ -198,6 +211,7 @@
       opacity:0; transition: opacity .2s ease;
     }
     .word-item:hover::after{ opacity:1 }
+
     /* bet slip (selected words) */
     .slip{
       display:flex;flex-wrap:wrap;gap:6px;align-items:center;
@@ -222,12 +236,14 @@
       background:rgba(255,255,255,.12);font-size:0.7rem;line-height:1
     }
     .slip-meta{opacity:.9;font-size:0.85rem;margin-left:auto; font-weight:800}
+
     /* review box */
     .review{
       padding:8px;border-radius:10px;background:rgba(255,255,255,.05);
       border:1px dashed rgba(168,230,207,.35);font-weight:800;letter-spacing:.5px;
       font-size: 0.9rem;
     }
+
     /* result section */
     .result{
       display:none; text-align:left; padding:18px; border-radius:14px;
@@ -249,6 +265,7 @@
     .tag{padding:3px 6px;border-radius:999px;font-size:0.75rem;font-weight:900}
     .tag.win{background:rgba(25,195,125,.18);border:1px solid rgba(25,195,125,.45);color:#bff3dd}
     .tag.lose{background:rgba(242,95,92,.18);border:1px solid rgba(242,95,92,.45);color:#ffd3d2}
+    
     /* Word bag display in results */
     .word-bag-display {
       display: flex;
@@ -271,7 +288,9 @@
       font-weight: 900;
       font-size: 1rem;
     }
+
     footer{opacity:.8;text-align:center;margin-top:6px; font-size: 0.8rem;}
+
     /* toast popup */
     .toast{
       position:fixed;left:50%;top:20px;transform:translateX(-50%);
@@ -282,6 +301,7 @@
     }
     .toast.show{display:block;animation:drop .24s ease-out}
     @keyframes drop{from{transform:translate(-50%,-14px);opacity:.0}to{transform:translate(-50%,0);opacity:1}}
+
     /* modal hint */
     .modal{
       position:fixed;inset:0;display:none;place-items:center;z-index:2600;
@@ -292,12 +312,14 @@
       box-shadow:0 18px 48px rgba(0,0,0,.35);text-align:center
     }
     .modal .btn{width:auto}
+
     /* progress ring timer */
     .ring{
       position:relative; width:48px; height:48px; display:grid; place-items:center;
     }
     .ring svg{ transform: rotate(-90deg) }
     .ring .num{ position:absolute; font-size:.7rem; font-weight:900; letter-spacing:.3px }
+
     /* subtle shimmering highlight for primary CTA */
     .shimmer{
       position:relative; overflow:hidden;
@@ -309,16 +331,19 @@
       animation: shimmer 3.2s ease-in-out infinite;
     }
     @keyframes shimmer{ 50% { left:160% } }
+
     /* reduced motion */
     @media (prefers-reduced-motion: reduce){
       *{animation:none!important; transition:none!important}
     }
+    
     /* Hidden letters bag */
     #letters-bag {
       display: none;
     }
-    /* View Results Button */
-    .view-results-btn {
+    
+    /* Three words button */
+    .three-words-btn {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -329,17 +354,18 @@
       cursor: pointer;
       font-weight: 900;
       color: var(--ink);
-      background: linear-gradient(90deg, #ff9a8b, #ff6b6b);
+      background: linear-gradient(90deg, #ffb347, #ffcc33);
       box-shadow: 0 8px 20px rgba(0,0,0,.22);
       transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
       margin-top: 10px;
       width: 100%;
       font-size: 0.9rem;
     }
-    .view-results-btn:hover {
+    .three-words-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 12px 26px rgba(0,0,0,.30);
     }
+    
     /* Ads modal */
     .ads-modal {
       position: fixed;
@@ -384,29 +410,6 @@
       margin-bottom: 10px;
       color: #006aa6;
     }
-    /* Three words button */
-    .three-words-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      font-weight: 900;
-      color: var(--ink);
-      background: linear-gradient(90deg, #ffb347, #ffcc33);
-      box-shadow: 0 8px 20px rgba(0,0,0,.22);
-      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
-      margin-top: 10px;
-      width: 100%;
-      font-size: 0.9rem;
-    }
-    .three-words-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 26px rgba(0,0,0,.30);
-    }
   </style>
 </head>
 <body>
@@ -414,8 +417,10 @@
   <audio id="bg-music" loop>
     <source src="dewdrop.mp3" type="audio/mpeg">
   </audio>
+
   <!-- bubbles -->
   <div class="bubbles" aria-hidden="true" id="bubbles"></div>
+
   <div class="container" role="application">
     <!-- nav -->
     <div class="nav" aria-label="Top Navigation">
@@ -424,22 +429,24 @@
           <img src="englabet.png" alt="Englabet Logo" style="width: 32px; height: 32px; border-radius: 10px;">
         </div>
         <div>
-          <div style="font-size:0.9rem">MIDDAY</div>
+          <div style="font-size:0.9rem">Dewdrop</div>
           <small style="opacity:.8;font-weight:700; font-size: 0.7rem;">Ocean Blue Edition</small>
         </div>
       </div>
       <div class="nav-ctas">
-        <div class="pill" title="Session Window"><i class="fa-solid fa-calendar-days"></i> 12:00pm – 2:00pm</div>
+        <div class="pill" title="Session Window"><i class="fa-solid fa-calendar-days"></i> 08:00am – 10:00am</div>
         <button id="music-toggle" class="action" aria-pressed="true" title="Toggle Ocean Ambience">
           <i class="fa-solid fa-music"></i> <span>Sound On</span>
         </button>
         <button id="help-btn" class="action" title="How to play" aria-haspopup="dialog"><i class="fa-regular fa-circle-question"></i> Help</button>
       </div>
     </div>
+
     <header>
-      <h1>MIDDAY Challenge</h1>
+      <h1>Dewdrop Challenge</h1>
       <p class="subtitle">Form valid words using the available letters. <strong>Key letter = E</strong>. Win per correct word, lose per incorrect pick. Choose wisely.</p>
     </header>
+
     <div class="top-bar" role="status" aria-live="polite">
       <div class="pill"><i class="fa-solid fa-wallet"></i> Balance: <span id="balance">₦1000</span></div>
       <div class="pill" style="gap:10px">
@@ -455,28 +462,33 @@
               </linearGradient>
             </defs>
           </svg>
-          <div class="num" id="timer">03:00</div>
+          <div class="num" id="timer">02:00:00</div>
         </div>
       </div>
       <div class="pill"><i class="fa-solid fa-key"></i> Key Letter: <b>E</b></div>
     </div>
+
     <div class="game">
       <!-- Left: input / actions -->
       <section class="panel" aria-labelledby="guess-title">
         <h2 id="guess-title">Your Guess</h2>
         <p class="lede">Enter a word built from the current letter bag. Each correct guess earns your bet; each miss deducts it. Add up to 10 picks per round.</p>
+
         <div class="input">
           <div class="field">
             <label for="word-input">Enter Word</label>
             <input id="word-input" type="text" placeholder="Enter word..." autocomplete="off" aria-describedby="review-text" />
           </div>
+
           <div class="review" id="review-box" aria-live="polite">
             Review: <span id="review-text">—</span>
           </div>
+
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button id="add-word" class="btn secondary" style="flex:1"><i class="fa-solid fa-plus"></i> Add to Bet Slip</button>
             <button id="clear-slip" class="btn ghost" style="flex:0 0 auto"><i class="fa-regular fa-trash-can"></i> Clear</button>
           </div>
+
           <div class="field">
             <label>Bet Slip (<span id="slip-count">0</span>/10)</label>
             <div id="bet-slip" class="slip">
@@ -484,6 +496,7 @@
             </div>
             <div class="slip-meta" id="slip-meta">Total: ₦0</div>
           </div>
+
           <div class="field" style="display:grid; grid-template-columns: 1fr auto; gap:8px; align-items:center">
             <div>
               <label for="bet-amount">Bet Amount <small>(per word, Min 50)</small></label>
@@ -491,36 +504,38 @@
             </div>
             <button id="submit-btn" class="btn shimmer" title="Place your bet now"><i class="fa-solid fa-coins"></i> Place Bet</button>
           </div>
+
           <div style="display:flex; gap:8px; flex-wrap:wrap">
             <button id="hint-btn" class="btn secondary"><i class="fa-regular fa-lightbulb"></i> Give Me a Hint</button>
-            <button id="play-again" class="btn ghost"><i class="fa-solid fa-rotate-right"></i> New Round</button>
           </div>
+          
           <!-- Three Words Button -->
           <button id="three-words-btn" class="three-words-btn">
             <i class="fa-solid fa-3"></i> 3 Words
           </button>
-          <!-- View Results Button -->
-          <button id="view-results" class="view-results-btn">
-            <i class="fa-solid fa-chart-simple"></i> View Results
-          </button>
         </div>
       </section>
+
       <!-- Right: word list -->
       <section class="panel" aria-labelledby="list-title">
         <h2 id="list-title">E-Words</h2>
         <p class="lede">Browse curated "E" starters. Tap to add instantly to your slip.</p>
+
         <div class="search">
           <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
           <input id="search-words" type="text" placeholder="Search words..." aria-label="Search E-words"/>
         </div>
+
         <!-- Hidden letters bag -->
         <div id="letters-bag" class="pill" style="display:none; margin-bottom:10px; font-weight:900">
           Letters Bag: <span id="bag-letters" style="margin-left:6px; letter-spacing:4px">—</span>
         </div>
+
         <div id="word-grid" class="word-grid" role="list"><div class="word-item">Loading…</div></div>
         <p style="opacity:.85;margin-top:10px;font-size:.85rem">Tip: Tap a word to add it to your bet slip. Max 10 words.</p>
       </section>
     </div>
+
     <!-- Result / countdown -->
     <section id="result" class="result" aria-live="polite">
       <h2>Result</h2>
@@ -528,8 +543,10 @@
       <div id="word-bag-result" class="word-bag-display"></div>
       <div id="result-list" class="result-list"></div>
     </section>
-    <footer><p>From ENGLAGIP powered by AITECH • MIDDAY Challenge © 2025 • Ocean Blue Edition • Crafted for clarity, speed, and thrill.</p></footer>
+
+    <footer><p>From ENGLAGIP powered by AITECH • Dewdrop Challenge © 2025 • Ocean Blue Edition • Crafted for clarity, speed, and thrill.</p></footer>
   </div>
+
   <!-- Help modal -->
   <div id="help-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
     <div class="modal-card">
@@ -546,6 +563,7 @@
       <button id="help-ok" class="btn">Got it</button>
     </div>
   </div>
+
   <!-- Hint modal -->
   <div id="hint-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="hint-title">
     <div class="modal-card">
@@ -554,6 +572,7 @@
       <button id="hint-ok" class="btn">OK</button>
     </div>
   </div>
+
   <!-- Ads modal -->
   <div id="ads-modal" class="ads-modal">
     <div class="ads-container">
@@ -568,8 +587,10 @@
       </div>
     </div>
   </div>
+
   <!-- Toast -->
   <div id="toast" class="toast" role="status" aria-live="assertive"></div>
+
 <script>
 (() => {
   // ---- STATE ----
@@ -578,21 +599,25 @@
   let roundActive=true, timerInterval=null;
   const MAX_SLIP = 10;
   let slip = []; // selected words
-  const ROUND_SECONDS = 180; // 3 minutes
+  const ROUND_SECONDS = 7200; // 2 hours (7200 seconds)
   let hintUsed = false;
   let betHistory = JSON.parse(localStorage.getItem('dewdrop_bet_history') || '[]');
+  
   // Firebase configuration
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyDivFTAKUznc1xryU8marfMDZG3v1eYsl8",
+    authDomain: "englabet-ad1fe.firebaseapp.com",
+    projectId: "englabet-ad1fe",
+    storageBucket: "englabet-ad1fe.firebasestorage.app",
+    messagingSenderId: "124544822433",
+    appId: "1:124544822433:web:c77c980f28c99364c214e0",
+    measurementId: "G-JMYYM433R7"
   };
+  
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
+
   // ---- DOM ----
   const els = {
     balance: document.getElementById('balance'),
@@ -616,7 +641,6 @@
     addWord: document.getElementById('add-word'),
     clearSlip: document.getElementById('clear-slip'),
     bag: document.getElementById('bag-letters'),
-    playAgain: document.getElementById('play-again'),
     helpBtn: document.getElementById('help-btn'),
     helpModal: document.getElementById('help-modal'),
     helpOk: document.getElementById('help-ok'),
@@ -624,7 +648,6 @@
     bg: document.getElementById('bg-music'),
     slipMeta: document.getElementById('slip-meta'),
     bubbles: document.getElementById('bubbles'),
-    viewResults: document.getElementById('view-results'),
     threeWordsBtn: document.getElementById('three-words-btn'),
     adsModal: document.getElementById('ads-modal'),
     adsMediaContainer: document.getElementById('ads-media-container'),
@@ -632,6 +655,7 @@
     adsCancel: document.getElementById('ads-cancel'),
     adsWatch: document.getElementById('ads-watch')
   };
+
   // ---- UTIL ----
   const sleep = ms => new Promise(r=>setTimeout(r,ms));
   const shuffle = a => {for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
@@ -641,12 +665,14 @@
     let bag=[...letters]; for(const ch of word){const k=bag.indexOf(ch); if(k<0) return false; bag.splice(k,1);} return true;
   };
   const formatMoney = (n)=> currency + n.toLocaleString();
+
   function notify(msg, type="info"){
     els.toast.textContent = msg;
     els.toast.style.color = type==="error" ? "#6a0000" : "#00324d";
     els.toast.classList.add('show');
     setTimeout(()=>els.toast.classList.remove('show'), 1400);
   }
+
   // progress ring (circumference 2πr with r=21 ≈ 132)
   const RING_LEN = 132;
   function setRing(progress){ // 1.0 -> full, 0 -> empty
@@ -654,6 +680,7 @@
     els.ringArc.setAttribute('stroke-dasharray', RING_LEN);
     els.ringArc.setAttribute('stroke-dashoffset', offset.toFixed(2));
   }
+
   function renderGrid(words){
     const list = words.slice(0, 30);
     els.grid.innerHTML = "";
@@ -675,6 +702,7 @@
       els.grid.appendChild(d);
     });
   }
+
   function renderSlip(){
     els.betSlip.innerHTML = "";
     if(slip.length === 0){
@@ -700,6 +728,7 @@
     const bet = Math.max(50, parseInt(els.bet.value||"0",10) || 0);
     els.slipMeta.textContent = "Total: " + formatMoney(bet * slip.length);
   }
+
   function addToSlip(raw){
     const w = (raw||"").trim().toLowerCase();
     if(!w) return notify("Type a word first");
@@ -710,33 +739,39 @@
     slip.push(w);
     renderSlip();
   }
+
   function removeFromSlip(index){
     slip.splice(index,1);
     renderSlip();
   }
+
   function clearSlip(){
     slip = [];
     renderSlip();
   }
+
   function updateReview(){
     const val = els.input.value.trim().toUpperCase();
     els.reviewText.textContent = val || "—";
   }
+
   function startTimer(){
     let t=ROUND_SECONDS;
     clearInterval(timerInterval);
     function tick(){
-      const m=Math.floor(t/60), s=t%60;
-      els.timer.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      const h=Math.floor(t/3600), m=Math.floor((t%3600)/60), s=t%60;
+      els.timer.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
       setRing(t/ROUND_SECONDS);
       if(t<=0){ clearInterval(timerInterval); roundActive=false; notify("⏱️ Time up!", "error"); }
       t--;
     }
     tick(); timerInterval=setInterval(tick,1000);
   }
+
   function setLettersBag(letters){
     els.bag.textContent = letters.map(x=>x.toUpperCase()).join(" ");
   }
+  
   function displayWordBag(letters) {
     els.wordBagResult.innerHTML = "";
     letters.forEach(letter => {
@@ -746,6 +781,7 @@
       els.wordBagResult.appendChild(chip);
     });
   }
+
   function startNewRound(){
     els.result.style.display="none";
     els.result.classList.remove('win','lose');
@@ -754,32 +790,56 @@
     els.input.value="";
     updateReview();
     clearSlip();
-    // keyword from E words;  ensure presence of 'e'
-    keyword = (eWords[rand(eWords.length)] || "end");
+
+    // keyword from E words; ensure presence of 'e'
+    keyword = (eWords[rand(eWords.length)] || "eel");
     const extra = randomLetters(rand(2)+2);
     availableLetters = shuffle((keyword+extra).split(""));
     validWords = dict.filter(w => w.length>=3 && canFormWord(w, availableLetters));
+
     // UI
     setLettersBag(availableLetters);
     renderGrid(shuffle(eWords).slice(0,30));
     startTimer();
   }
-  // Save bet history
-  function saveBetHistory(result) {
-    betHistory.unshift({
-      date: new Date().toISOString(),
-      words: slip,
-      betAmount: parseInt(els.bet.value, 10),
-      result: result,
-      balance: balance,
-      wordBag: availableLetters
-    });
-    // Keep only last 20 bets
-    if (betHistory.length > 20) {
-      betHistory = betHistory.slice(0, 20);
+
+  // Save bet history to Firestore
+  async function saveBetToFirestore(result) {
+    try {
+      const betData = {
+        date: new Date().toISOString(),
+        words: slip,
+        betAmount: parseInt(els.bet.value, 10),
+        result: result,
+        balance: balance,
+        wordBag: availableLetters,
+        validWords: validWords,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      await db.collection('bet_history').add(betData);
+      console.log("Bet saved to Firestore");
+    } catch (error) {
+      console.error("Error saving bet to Firestore:", error);
     }
-    localStorage.setItem('dewdrop_bet_history', JSON.stringify(betHistory));
   }
+
+  // Save words formed from letters bag to Firestore
+  async function saveWordsToFirestore() {
+    try {
+      const wordsData = {
+        letters: availableLetters,
+        validWords: validWords,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      await db.collection('word_combinations').add(wordsData);
+      console.log("Words saved to Firestore");
+    } catch (error) {
+      console.error("Error saving words to Firestore:", error);
+    }
+  }
+
   // Load ads from Firestore
   async function loadAds() {
     try {
@@ -794,6 +854,7 @@
       return [];
     }
   }
+
   // Show ad for hint
   async function showAdForHint() {
     const ads = await loadAds();
@@ -801,8 +862,10 @@
       notify("No ads available at the moment", "error");
       return false;
     }
+    
     const randomAd = ads[Math.floor(Math.random() * ads.length)];
     els.adsMediaContainer.innerHTML = '';
+    
     // Create appropriate media element based on file type
     let mediaElement;
     if (randomAd.url.endsWith('.mp4')) {
@@ -819,20 +882,25 @@
       mediaElement.style.maxWidth = '100%';
       mediaElement.style.maxHeight = '150px';
     }
+    
     mediaElement.src = randomAd.url;
     els.adsMediaContainer.appendChild(mediaElement);
+    
     // Show ad modal
     els.adsModal.style.display = 'grid';
+    
     // Countdown timer
     let countdown = 5;
     const countdownInterval = setInterval(() => {
       els.adsTimer.textContent = `Ad will play in ${countdown} seconds`;
       countdown--;
+      
       if (countdown < 0) {
         clearInterval(countdownInterval);
         els.adsWatch.click();
       }
     }, 1000);
+    
     // Return a promise that resolves when the ad is watched
     return new Promise((resolve) => {
       els.adsWatch.onclick = () => {
@@ -840,6 +908,7 @@
         els.adsModal.style.display = 'none';
         resolve(true);
       };
+      
       els.adsCancel.onclick = () => {
         clearInterval(countdownInterval);
         els.adsModal.style.display = 'none';
@@ -847,96 +916,45 @@
       };
     });
   }
+
   // ---- EVENTS ----
   els.input.addEventListener('input', updateReview);
   els.addWord.addEventListener('click', ()=>{ addToSlip(els.input.value); });
   els.input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addToSlip(els.input.value); }});
   els.clearSlip.addEventListener('click', clearSlip);
   els.bet.addEventListener('input', renderSlip);
-  els.playAgain.addEventListener('click', startNewRound);
-  // View Results Button
-  els.viewResults.addEventListener('click', () => {
-    // Create a results page in the same HTML file
-    document.body.innerHTML = `
-      <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
-        <h1 style="text-align: center; color: white; margin-bottom: 20px;">Your Bet History</h1>
-        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-          <button id="back-to-game" style="padding: 10px 20px; background: #6ed3cf; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-            Back to Game
-          </button>
-        </div>
-        <div id="results-container" style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px;"></div>
-      </div>
-    `;
-    const resultsContainer = document.getElementById('results-container');
-    const backButton = document.getElementById('back-to-game');
-    if (betHistory.length === 0) {
-      resultsContainer.innerHTML = '<p style="text-align: center; color: white;">No bet history yet.</p>';
-    } else {
-      let html = '';
-      betHistory.forEach(bet => {
-        const date = new Date(bet.date).toLocaleString();
-        const netResult = bet.result >= 0 ? 
-          `<span style="color: #19c37d;">+₦${bet.result}</span>` : 
-          `<span style="color: #f25f5c;">-₦${Math.abs(bet.result)}</span>`;
-        // Display word bag
-        let wordBagHtml = '<div style="display: flex; gap: 5px; margin: 10px 0;">';
-        if (bet.wordBag) {
-          bet.wordBag.forEach(letter => {
-            wordBagHtml += `<div style="width: 30px; height: 30px; display: grid; place-items: center; background: rgba(168,230,207,.2); border-radius: 6px; font-weight: bold;">${letter.toUpperCase()}</div>`;
-          });
-        }
-        wordBagHtml += '</div>';
-        html += `
-          <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-              <strong style="color: white;">${date}</strong>
-              <strong>${netResult}</strong>
-            </div>
-            <div>Word Bag: ${wordBagHtml}</div>
-            <div style="color: #ccc;">
-              <div>Words: ${bet.words.join(', ').toUpperCase()}</div>
-              <div>Bet Amount: ₦${bet.betAmount} per word</div>
-              <div>Final Balance: ₦${bet.balance}</div>
-            </div>
-          </div>
-        `;
-      });
-      resultsContainer.innerHTML = html;
-    }
-    backButton.addEventListener('click', () => {
-      location.reload();
-    });
-  });
+  
   // Three Words Button
   els.threeWordsBtn.addEventListener('click', () => {
     window.location.href = 'dewdrop3.html';
   });
+
   document.getElementById('submit-btn').addEventListener('click', async ()=>{
     if(!roundActive){
       notify("Round finished. Start a new one.", "error");
       els.result.scrollIntoView({behavior:"smooth",block:"center"});
       return;
     }
+
     if(slip.length===0 && els.input.value.trim()){
       addToSlip(els.input.value);
     }
     if(slip.length===0){ notify("Add at least one word to bet on","error"); return; }
+
     const bet = parseInt(els.bet.value,10);
     if(isNaN(bet) || bet<50){ notify("Minimum bet is ₦50", "error"); return; }
     const totalCost = bet * slip.length;
     if(totalCost>balance){ notify("Insufficient balance for all words", "error"); return; }
+
     els.result.style.display="block";
     els.result.classList.remove('win','lose');
-    els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s) in <b>5</b>…`;
+    els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s)…`;
     els.resultList.innerHTML = "";
     displayWordBag(availableLetters);
     els.result.scrollIntoView({behavior:"smooth",block:"start"});
+
     roundActive=false;
-    for(let c=5;c>=1;c--){
-      els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s) in <b>${c}</b>…`;
-      await sleep(600);
-    }
+
     // Evaluate each word
     let net = 0;
     slip.forEach(w=>{
@@ -955,11 +973,15 @@
       els.resultList.appendChild(item);
       net += ok ? bet : -bet;
     });
+
     balance += net;
     els.balance.textContent = currency + balance;
     localStorage.setItem('dewdrop_balance', String(balance));
-    // Save to bet history
-    saveBetHistory(net);
+    
+    // Save to Firestore
+    await saveBetToFirestore(net);
+    await saveWordsToFirestore();
+
     // Custom congratulations based on result
     if (net > 0) {
       els.result.classList.add('win');
@@ -985,7 +1007,13 @@
       els.resultMsg.innerHTML = `➖ Break even! No gain, no loss on ${slip.length} word(s).`;
       notify("➖ Break even!");
     }
+    
+    // Clear input field and start new round immediately
+    els.input.value = "";
+    updateReview();
+    startNewRound();
   });
+
   // search
   let tId=null;
   els.search.addEventListener('input', (e)=>{
@@ -996,22 +1024,27 @@
       renderGrid(filtered.slice(0,30));
     },120);
   });
+
   // help
   els.helpBtn.addEventListener('click', ()=> els.helpModal.style.display='grid');
   els.helpOk.addEventListener('click', ()=> els.helpModal.style.display='none');
+
   // hint
   document.getElementById('hint-btn').addEventListener('click', async ()=>{
     if (!keyword) return;
+    
     if (hintUsed) {
       const watched = await showAdForHint();
       if (!watched) return;
     }
+    
     const hintLetter = keyword[rand(keyword.length)].toUpperCase();
     els.hintText.innerHTML = `💡 The keyword contains the letter <b>${hintLetter}</b>`;
     els.hintModal.style.display='grid';
     hintUsed = true;
   });
   document.getElementById('hint-ok').addEventListener('click', ()=> els.hintModal.style.display='none');
+
   // music toggle
   function syncMusicUI(){
     const on = !els.bg.paused;
@@ -1023,6 +1056,7 @@
     if(els.bg.paused){ try{ await els.bg.play(); }catch(e){} } else { els.bg.pause(); }
     syncMusicUI();
   });
+
   // bubbles
   function spawnBubbles(){
     const n = 18;
@@ -1038,18 +1072,20 @@
       els.bubbles.appendChild(b);
     }
   }
+
   // dictionary
   async function loadDict(){
     const res = await fetch("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt");
     const text = await res.text();
-    return text.split("
-").map(x=>x.trim().toLowerCase());
+    return text.split("\n").map(x=>x.trim().toLowerCase());
   }
+
   (async function init(){
     // restore balance
     const saved = parseInt(localStorage.getItem('dewdrop_balance')||"0",10);
     if(!isNaN(saved) && saved>0){ balance = saved; }
     els.balance.textContent = currency + balance;
+
     notify("Loading dictionary…");
     try{
       dict = await loadDict();
@@ -1058,9 +1094,10 @@
     }catch(e){
       notify("Failed to load dictionary","error");
       // fallback minimal dictionary if fetch fails
-      dict = ["end","ends","send","see","seen","seem","seed","need","needy","deep","deed","feed","feel","eel","eels","eel","eerie","free","freed","tree"];
+      dict = ["eel","eels","feel","seem","seen","seemest","stone","one","ones","nose","son","sonic","ionic","icon","icons"];
       eWords = dict.filter(w=>w.startsWith('e') && w.length>=3);
     }
+
     // start audio automatically on init (attempt autoplay)
     try{ 
       await els.bg.play(); 
@@ -1069,8 +1106,10 @@
       console.warn("Autoplay failed, user interaction may be required.");
       syncMusicUI(); // still sync UI in case it was paused
     }
+
     // visuals
     spawnBubbles();
+
     // kick off round
     startNewRound();
     updateReview();
