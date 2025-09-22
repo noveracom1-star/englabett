@@ -375,7 +375,7 @@
       place-items: center;
       z-index: 3000;
       background: rgba(0,0,0,0.8);
-      backdrop-filter: blur: 4px;
+      backdrop-filter: blur(4px);
     }
     .ads-container {
       background: #fff;
@@ -428,6 +428,66 @@
       border-radius: 50%;
       object-fit: cover;
     }
+    
+    /* Bet History Modal */
+    .history-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      z-index: 3000;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+    }
+    .history-container {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      max-width: 90%;
+      width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .history-header {
+      background: var(--bg1);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .history-content {
+      padding: 20px;
+      color: #00324d;
+    }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .history-item:last-child {
+      border-bottom: none;
+    }
+    .history-date {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+    .history-words {
+      font-weight: 700;
+      margin: 5px 0;
+    }
+    .history-result {
+      font-weight: 900;
+    }
+    .history-result.win {
+      color: var(--good);
+    }
+    .history-result.lose {
+      color: var(--bad);
+    }
   </style>
 </head>
 <body>
@@ -460,6 +520,7 @@
         <button id="music-toggle" class="action" aria-pressed="true" title="Toggle Ocean Ambience">
           <i class="fa-solid fa-music"></i> <span>Sound On</span>
         </button>
+        <button id="history-btn" class="action" title="Bet History"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
         <button id="help-btn" class="action" title="How to play" aria-haspopup="dialog"><i class="fa-regular fa-circle-question"></i> Help</button>
         <button id="logout-btn" class="action" title="Logout" style="display: none;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
       </div>
@@ -611,6 +672,20 @@
     </div>
   </div>
 
+  <!-- Bet History Modal -->
+  <div id="history-modal" class="history-modal">
+    <div class="history-container">
+      <div class="history-header">
+        <h3 style="margin:0">Bet History</h3>
+        <button id="history-close" class="action" style="background:transparent;color:white;border:none;font-size:1.2rem">&times;</button>
+      </div>
+      <div class="history-content">
+        <div id="history-list"></div>
+        <div id="no-history" style="text-align:center;padding:20px;opacity:0.7">No bet history yet</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast" class="toast" role="status" aria-live="assertive"></div>
 
@@ -624,7 +699,7 @@
   let slip = []; // selected words
   const ROUND_SECONDS = 7200; // 2 hours (7200 seconds)
   let hintUsed = false;
-  let betHistory = JSON.parse(localStorage.getItem('dewdrop_bet_history') || '[]');
+  let betHistory = [];
   let currentUser = null;
   
   // Firebase configuration
@@ -682,7 +757,12 @@
     userInfo: document.getElementById('user-info'),
     userAvatar: document.getElementById('user-avatar'),
     userName: document.getElementById('user-name'),
-    logoutBtn: document.getElementById('logout-btn')
+    logoutBtn: document.getElementById('logout-btn'),
+    historyBtn: document.getElementById('history-btn'),
+    historyModal: document.getElementById('history-modal'),
+    historyList: document.getElementById('history-list'),
+    historyClose: document.getElementById('history-close'),
+    noHistory: document.getElementById('no-history')
   };
 
   // ---- UTIL ----
@@ -784,17 +864,73 @@
     els.reviewText.textContent = val || "—";
   }
 
+  // Calculate remaining time from 8:00 AM to 10:00 AM
+  function getRemainingTime() {
+    const now = new Date();
+    const startTime = new Date(now);
+    startTime.setHours(8, 0, 0, 0); // 8:00 AM
+    
+    const endTime = new Date(now);
+    endTime.setHours(10, 0, 0, 0); // 10:00 AM
+    
+    // If it's after 10:00 AM, set end time to tomorrow's 10:00 AM
+    if (now > endTime) {
+      endTime.setDate(endTime.getDate() + 1);
+    }
+    
+    // If it's before 8:00 AM, set start time to today's 8:00 AM
+    if (now < startTime) {
+      startTime.setDate(startTime.getDate() - 1);
+    }
+    
+    const totalDuration = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+    const elapsed = now.getTime() - startTime.getTime();
+    const remaining = Math.max(0, totalDuration - elapsed);
+    
+    return Math.floor(remaining / 1000); // Convert to seconds
+  }
+
   function startTimer(){
-    let t=ROUND_SECONDS;
+    // Get remaining time from 8:00 AM to 10:00 AM
+    let t = getRemainingTime();
+    
+    // Save the current time to localStorage for persistence
+    localStorage.setItem('dewdrop_timer_start', Date.now().toString());
+    localStorage.setItem('dewdrop_timer_remaining', t.toString());
+    
     clearInterval(timerInterval);
+    
     function tick(){
+      // Update time from localStorage to handle page refreshes
+      const savedStart = parseInt(localStorage.getItem('dewdrop_timer_start') || "0", 10);
+      const savedRemaining = parseInt(localStorage.getItem('dewdrop_timer_remaining') || "0", 10);
+      
+      if (savedStart > 0 && savedRemaining > 0) {
+        const elapsedSinceSave = Math.floor((Date.now() - savedStart) / 1000);
+        t = Math.max(0, savedRemaining - elapsedSinceSave);
+        
+        // Update localStorage with current values
+        localStorage.setItem('dewdrop_timer_start', Date.now().toString());
+        localStorage.setItem('dewdrop_timer_remaining', t.toString());
+      }
+      
       const h=Math.floor(t/3600), m=Math.floor((t%3600)/60), s=t%60;
       els.timer.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
       setRing(t/ROUND_SECONDS);
-      if(t<=0){ clearInterval(timerInterval); roundActive=false; notify("⏱️ Time up!", "error"); }
-      t--;
+      
+      if(t<=0){ 
+        clearInterval(timerInterval); 
+        roundActive=false; 
+        notify("⏱️ Time up!", "error"); 
+        
+        // Clear localStorage when timer ends
+        localStorage.removeItem('dewdrop_timer_start');
+        localStorage.removeItem('dewdrop_timer_remaining');
+      }
     }
-    tick(); timerInterval=setInterval(tick,1000);
+    
+    tick(); 
+    timerInterval=setInterval(tick,1000);
   }
 
   function setLettersBag(letters){
@@ -859,6 +995,73 @@
     } catch (error) {
       console.error("Error saving bet to Firestore:", error);
     }
+  }
+
+  // Load bet history from Firestore
+  async function loadBetHistory() {
+    if (!currentUser) {
+      console.error("No user logged in");
+      return [];
+    }
+    
+    try {
+      const snapshot = await db.collection('users').doc(currentUser.uid)
+        .collection('bet_history')
+        .orderBy('timestamp', 'desc')
+        .limit(20)
+        .get();
+      
+      const history = [];
+      snapshot.forEach(doc => {
+        history.push({ id: doc.id, ...doc.data() });
+      });
+      
+      return history;
+    } catch (error) {
+      console.error("Error loading bet history:", error);
+      return [];
+    }
+  }
+
+  // Display bet history in modal
+  async function showBetHistory() {
+    const history = await loadBetHistory();
+    els.historyList.innerHTML = '';
+    
+    if (history.length === 0) {
+      els.noHistory.style.display = 'block';
+    } else {
+      els.noHistory.style.display = 'none';
+      history.forEach(bet => {
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        
+        const left = document.createElement('div');
+        const date = document.createElement('div');
+        date.className = 'history-date';
+        date.textContent = new Date(bet.date).toLocaleString();
+        
+        const words = document.createElement('div');
+        words.className = 'history-words';
+        words.textContent = bet.words.map(w => w.toUpperCase()).join(', ');
+        
+        left.appendChild(date);
+        left.appendChild(words);
+        
+        const right = document.createElement('div');
+        const result = document.createElement('div');
+        result.className = `history-result ${bet.result >= 0 ? 'win' : 'lose'}`;
+        result.textContent = (bet.result >= 0 ? '+' : '') + formatMoney(bet.result);
+        
+        right.appendChild(result);
+        
+        item.appendChild(left);
+        item.appendChild(right);
+        els.historyList.appendChild(item);
+      });
+    }
+    
+    els.historyModal.style.display = 'grid';
   }
 
   // Save words formed from letters bag to Firestore under the user's document
@@ -1007,6 +1210,10 @@
   els.clearSlip.addEventListener('click', clearSlip);
   els.bet.addEventListener('input', renderSlip);
   els.logoutBtn.addEventListener('click', logout);
+  els.historyBtn.addEventListener('click', showBetHistory);
+  els.historyClose.addEventListener('click', () => {
+    els.historyModal.style.display = 'none';
+  });
   
   // Three Words Button
   els.threeWordsBtn.addEventListener('click', () => {

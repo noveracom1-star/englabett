@@ -686,6 +686,71 @@
       opacity: 0.8;
     }
 
+    /* Bet History Section */
+    .bet-history-section {
+      margin-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+    }
+    
+    .bet-history-item {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .bet-history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .bet-date {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+    
+    .bet-result {
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+    
+    .bet-result.win {
+      color: var(--good);
+    }
+    
+    .bet-result.loss {
+      color: var(--bad);
+    }
+    
+    .bet-words {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    
+    .bet-word-chip {
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.1);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
+    .bet-word-chip.valid {
+      background: rgba(25,195,125,0.2);
+      color: #bff3dd;
+    }
+    
+    .bet-word-chip.invalid {
+      background: rgba(242,95,92,0.2);
+      color: #ffd3d2;
+    }
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
       .container {
@@ -837,6 +902,20 @@
         </div>
       </div>
     </div>
+
+    <!-- Bet History Section -->
+    <div class="panel bet-history-section" id="bet-history-section" style="display: none;">
+      <div class="panel-header">
+        <h2 class="panel-title">Bet History</h2>
+        <div class="panel-icon">
+          <i class="fas fa-history"></i>
+        </div>
+      </div>
+      
+      <div id="bet-history-container">
+        <!-- Bet history items will be populated by JavaScript -->
+      </div>
+    </div>
   </div>
 
   <!-- Word Detail Modal -->
@@ -924,7 +1003,9 @@
         userName: document.getElementById('user-name'),
         logoutBtn: document.getElementById('logout-btn'),
         betHistory: document.getElementById('bet-history'),
-        betList: document.getElementById('bet-list')
+        betList: document.getElementById('bet-list'),
+        betHistorySection: document.getElementById('bet-history-section'),
+        betHistoryContainer: document.getElementById('bet-history-container')
       };
 
       // Application State
@@ -1074,19 +1155,7 @@
           state.validWords = round.validWords || [];
           
           // Fetch bet history for this round
-          const betHistorySnapshot = await db.collection('users')
-            .doc(state.currentUser.uid)
-            .collection('bet_history')
-            .where('wordBag', '==', state.wordBag)
-            .get();
-          
-          state.betHistory = [];
-          if (!betHistorySnapshot.empty) {
-            betHistorySnapshot.forEach(doc => {
-              const betData = doc.data();
-              state.betHistory.push(betData);
-            });
-          }
+          await loadBetHistoryForRound(roundId);
           
           // Create allWords array with validity status from bet history
           let userWords = [];
@@ -1117,6 +1186,49 @@
         } catch (error) {
           console.error("Error loading round data:", error);
           notify("Error loading round data", "error");
+        }
+      };
+
+      // Load bet history for a specific round
+      const loadBetHistoryForRound = async (roundId) => {
+        try {
+          if (!state.currentUser) return;
+          
+          // Find the round data to get the word bag
+          const round = state.rounds.find(r => r.id === roundId);
+          if (!round) return;
+          
+          // Fetch bet history for this user
+          const betHistorySnapshot = await db.collection('users')
+            .doc(state.currentUser.uid)
+            .collection('bet_history')
+            .orderBy('timestamp', 'desc')
+            .get();
+          
+          state.betHistory = [];
+          if (!betHistorySnapshot.empty) {
+            betHistorySnapshot.forEach(doc => {
+              const betData = doc.data();
+              
+              // Check if this bet matches the current round's word bag
+              if (JSON.stringify(betData.wordBag) === JSON.stringify(round.letters)) {
+                state.betHistory.push({
+                  id: doc.id,
+                  ...betData
+                });
+              }
+            });
+          }
+          
+          // Show the bet history section if we have data
+          if (state.betHistory.length > 0) {
+            renderBetHistorySection();
+          } else {
+            els.betHistorySection.style.display = 'none';
+          }
+        } catch (error) {
+          console.error("Error loading bet history:", error);
+          notify("Error loading bet history", "error");
         }
       };
 
@@ -1257,6 +1369,56 @@
           betEl.appendChild(wordSpan);
           betEl.appendChild(amountSpan);
           els.betList.appendChild(betEl);
+        });
+      };
+
+      const renderBetHistorySection = () => {
+        els.betHistoryContainer.innerHTML = '';
+        
+        if (state.betHistory.length === 0) {
+          els.betHistorySection.style.display = 'none';
+          return;
+        }
+        
+        // Show the bet history section
+        els.betHistorySection.style.display = 'block';
+        
+        // Render each bet history item
+        state.betHistory.forEach(bet => {
+          const betEl = document.createElement('div');
+          betEl.className = 'bet-history-item';
+          
+          // Header with date and result
+          const headerEl = document.createElement('div');
+          headerEl.className = 'bet-history-header';
+          
+          const dateEl = document.createElement('div');
+          dateEl.className = 'bet-date';
+          dateEl.textContent = formatDate(bet.timestamp);
+          
+          const resultEl = document.createElement('div');
+          resultEl.className = `bet-result ${bet.result >= 0 ? 'win' : 'loss'}`;
+          resultEl.textContent = bet.result >= 0 ? `+₦${bet.result}` : `-₦${Math.abs(bet.result)}`;
+          
+          headerEl.appendChild(dateEl);
+          headerEl.appendChild(resultEl);
+          
+          // Words section
+          const wordsEl = document.createElement('div');
+          wordsEl.className = 'bet-words';
+          
+          if (bet.words && Array.isArray(bet.words)) {
+            bet.words.forEach(word => {
+              const wordChip = document.createElement('div');
+              wordChip.className = `bet-word-chip ${state.validWords.includes(word) ? 'valid' : 'invalid'}`;
+              wordChip.textContent = word.toUpperCase();
+              wordsEl.appendChild(wordChip);
+            });
+          }
+          
+          betEl.appendChild(headerEl);
+          betEl.appendChild(wordsEl);
+          els.betHistoryContainer.appendChild(betEl);
         });
       };
 

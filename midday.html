@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dewdrop - Ocean Blue Edition</title>
+  <title>MIDDAY - Emerald Edition</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,21 +11,22 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
   <style>
     :root{
-      --bg1:#006aa6;
-      --bg2:#003f63;
-      --panel:#012a3f;
-      --mint:#a8e6cf;
-      --mint-2:#6ed3cf;
-      --ink:#032538;
+      --bg1:#00a66a;
+      --bg2:#00633f;
+      --panel:#013f2a;
+      --mint:#e6cfa8;
+      --mint-2:#d3cf6e;
+      --ink:#253803;
       --good:#19c37d;
       --bad:#f25f5c;
-      --chip:#0a3a53;
-      --txt:#e8fbff;
+      --chip:#3a530a;
+      --txt:#fbffe8;
       --glow:0 20px 50px rgba(0,0,0,.35);
-      --ring:#bfeee0;
+      --ring:#eee0bf;
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
@@ -34,7 +35,7 @@
       font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial;
       color:var(--txt);
       background:
-        radial-gradient(1200px 700px at 15% -10%, #0287cc 0%, #015f91 35%, #003a58 100%),
+        radial-gradient(1200px 700px at 15% -10%, #02cc87 0%, #01915f 35%, #00583a 100%),
         linear-gradient(135deg,var(--bg1),var(--bg2));
       background-attachment: fixed;
       padding:12px;
@@ -42,7 +43,7 @@
       font-size:16px;
     }
 
-    /* animated ocean gradient sheen */
+    /* animated gradient sheen */
     body::before{
       content:""; position:fixed; inset:-20%;
       background: conic-gradient(from 180deg at 50% 50%, rgba(255,255,255,.06), rgba(255,255,255,0) 35%, rgba(255,255,255,.07) 55%, rgba(255,255,255,0) 85%);
@@ -53,9 +54,9 @@
     }
     @keyframes drift{to{transform:rotate(360deg)}}
 
-    /* floating bubbles */
-    .bubbles{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
-    .bubble{
+    /* floating elements */
+    .floating-elements{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+    .floating-element{
       position:absolute; bottom:-120px; border-radius:999px; opacity:.15;
       background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,255,255,.2) 40%, rgba(255,255,255,0) 65%);
       filter: blur(0.2px);
@@ -69,7 +70,7 @@
     /* top nav */
     .nav{
       display:flex; align-items:center; gap:10px; justify-content:space-between;
-      background:rgba(0,33,51,.55);
+      background:rgba(0,51,33,.55);
       border:1px solid rgba(255,255,255,.08);
       backdrop-filter: blur(6px);
       padding:10px 12px; border-radius:14px; box-shadow: var(--glow);
@@ -90,7 +91,7 @@
     }
     .action{
       display:inline-flex;align-items:center;gap:6px; padding:6px 8px;
-      border-radius:10px; border:1px solid rgba(168,230,207,.35); background:rgba(255,255,255,.06);
+      border-radius:10px; border:1px solid rgba(230,207,168,.35); background:rgba(255,255,255,.06);
       cursor:pointer; font-weight:700;
       transition:transform .15s ease, box-shadow .15s ease, background .2s ease;
       font-size: 0.85rem;
@@ -101,7 +102,7 @@
     h1{
       font-size:1.8rem;
       letter-spacing:.5px;
-      background:linear-gradient(90deg,var(--mint),#d7f7e9);
+      background:linear-gradient(90deg,var(--mint),#f7e9d7);
       -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
       filter:drop-shadow(0 6px 18px rgba(0,0,0,.25));
       position:relative;display:inline-block
@@ -109,13 +110,13 @@
     h1::after{
       content:"";position:absolute;left:50%;transform:translateX(-50%);
       bottom:-8px;width:100px;height:3px;border-radius:3px;
-      background:linear-gradient(90deg,var(--mint),#d7f7e9);
+      background:linear-gradient(90deg,var(--mint),#f7e9d7);
       opacity:.9
     }
     .subtitle{opacity:.92;margin-top:8px; font-weight:600; font-size: 0.9rem;}
     .top-bar{
       display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;
-      background:rgba(0,33,51,.55);
+      background:rgba(0,51,33,.55);
       border:1px solid rgba(255,255,255,.08);
       backdrop-filter: blur(6px);
       padding:10px 12px;border-radius:12px;
@@ -127,7 +128,7 @@
     .game{display:grid;grid-template-columns:1fr;gap:14px; align-items:start}
 
     .panel{
-      background:linear-gradient(180deg,rgba(1,33,51,.7),rgba(1,26,40,.7));
+      background:linear-gradient(180deg,rgba(1,51,33,.7),rgba(1,40,26,.7));
       border:1px solid rgba(255,255,255,.08);
       border-radius:16px;
       padding:16px;
@@ -148,11 +149,11 @@
     .input{display:grid;gap:10px}
     .field label{display:block;margin:2px 0 6px 2px;opacity:.98; font-weight:700; font-size: 0.9rem;}
     .field input, .field select{
-      width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(168,230,207,.35);
+      width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(230,207,168,.35);
       background:rgba(255,255,255,.06);color:#fff;font-size:0.95rem;outline:none;
       transition:box-shadow .2s,border-color .2s;text-transform:uppercase
     }
-    .field input:focus{ border-color:var(--mint); box-shadow:0 0 0 4px rgba(168,230,207,.20) }
+    .field input:focus{ border-color:var(--mint); box-shadow:0 0 0 4px rgba(230,207,168,.20) }
 
     .btn{
       display:flex;align-items:center;justify-content:center;gap:6px;
@@ -165,10 +166,10 @@
     }
     .btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(0,0,0,.30)}
     .btn.secondary{
-      background:transparent;color:#e5f9ff;border:1px solid rgba(168,230,207,.35)
+      background:transparent;color:#f9ffe5;border:1px solid rgba(230,207,168,.35)
     }
     .btn.ghost{
-      background:transparent;color:#e5f9ff;border:1px dashed rgba(168,230,207,.35)
+      background:transparent;color:#f9ffe5;border:1px dashed rgba(230,207,168,.35)
     }
     .btn:disabled{ opacity:.6; cursor:not-allowed }
 
@@ -176,7 +177,7 @@
     .search{margin-bottom:10px; display:flex; gap:6px; align-items:center}
     .search input{
       width:100%;padding:10px 12px;border-radius:10px;
-      border:1px solid rgba(168,230,207,.35);
+      border:1px solid rgba(230,207,168,.35);
       background:rgba(255,255,255,.06);color:#fff;outline:none;
       font-size: 0.95rem;
     }
@@ -192,8 +193,8 @@
     .word-item{
       display:flex; align-items:center; justify-content:center;
       padding:8px 4px; border-radius:6px;
-      background:linear-gradient(145deg, rgba(168,230,207,.20), rgba(168,230,207,.08));
-      border:1px solid rgba(168,230,207,.35);
+      background:linear-gradient(145deg, rgba(230,207,168,.20), rgba(230,207,168,.08));
+      border:1px solid rgba(230,207,168,.35);
       text-align:center; font-weight:800; letter-spacing:.35px; user-select:none;
       cursor:pointer; transition:transform .12s ease, background .2s ease, box-shadow .2s ease;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
@@ -201,7 +202,7 @@
       position:relative; isolation:isolate;
     }
     .word-item:hover{
-      background:rgba(168,230,207,.32);
+      background:rgba(230,207,168,.32);
       transform:translateY(-1px);
       box-shadow:0 2px 6px rgba(0,0,0,.18)
     }
@@ -217,14 +218,14 @@
       display:flex;flex-wrap:wrap;gap:6px;align-items:center;
       padding:8px;border-radius:10px;
       background:rgba(255,255,255,.05);
-      border:1px solid rgba(168,230,207,.25);
+      border:1px solid rgba(230,207,168,.25);
       min-height:42px;
     }
     .chip{
       display:inline-flex;align-items:center;gap:6px;
       padding:6px 8px;border-radius:999px;
-      background:linear-gradient(145deg, rgba(168,230,207,.15), rgba(168,230,207,.06));
-      border:1px solid rgba(168,230,207,.35);
+      background:linear-gradient(145deg, rgba(230,207,168,.15), rgba(230,207,168,.06));
+      border:1px solid rgba(230,207,168,.35);
       font-weight:900;font-size:0.85rem; letter-spacing:.3px;
       box-shadow:0 4px 10px rgba(0,0,0,.18) inset;
       animation: pop .2s ease;
@@ -232,7 +233,7 @@
     @keyframes pop{ from{ transform:scale(.92); opacity:0 } to { transform:scale(1); opacity:1 } }
     .chip .x{
       width:16px;height:16px;display:grid;place-items:center;cursor:pointer;
-      border-radius:50%;border:1px solid rgba(168,230,207,.4);
+      border-radius:50%;border:1px solid rgba(230,207,168,.4);
       background:rgba(255,255,255,.12);font-size:0.7rem;line-height:1
     }
     .slip-meta{opacity:.9;font-size:0.85rem;margin-left:auto; font-weight:800}
@@ -240,14 +241,14 @@
     /* review box */
     .review{
       padding:8px;border-radius:10px;background:rgba(255,255,255,.05);
-      border:1px dashed rgba(168,230,207,.35);font-weight:800;letter-spacing:.5px;
+      border:1px dashed rgba(230,207,168,.35);font-weight:800;letter-spacing:.5px;
       font-size: 0.9rem;
     }
 
     /* result section */
     .result{
       display:none; text-align:left; padding:18px; border-radius:14px;
-      background:linear-gradient(180deg, rgba(1,33,51,.85), rgba(1,26,40,.85));
+      background:linear-gradient(180deg, rgba(1,51,33,.85), rgba(1,40,26,.85));
       border:1px solid rgba(255,255,255,.08);
       box-shadow: var(--glow);
     }
@@ -283,8 +284,8 @@
       display: grid;
       place-items: center;
       border-radius: 8px;
-      background: linear-gradient(145deg, rgba(168,230,207,.20), rgba(168,230,207,.08));
-      border: 1px solid rgba(168,230,207,.35);
+      background: linear-gradient(145deg, rgba(230,207,168,.20), rgba(230,207,168,.08));
+      border: 1px solid rgba(230,207,168,.35);
       font-weight: 900;
       font-size: 1rem;
     }
@@ -294,7 +295,7 @@
     /* toast popup */
     .toast{
       position:fixed;left:50%;top:20px;transform:translateX(-50%);
-      background:#fff;color:#00324d;border-radius:12px;padding:10px 12px;
+      background:#fff;color:#324d00;border-radius:12px;padding:10px 12px;
       box-shadow:0 10px 26px rgba(0,0,0,.30);z-index:3000;display:none;max-width:92%;
       font-weight:900;
       font-size: 0.9rem;
@@ -308,7 +309,7 @@
       background:rgba(0,0,0,.35);backdrop-filter:blur(2px)
     }
     .modal-card{
-      background:#fff;color:#00324d;border-radius:14px;padding:16px;max-width:90%;width:92%;
+      background:#fff;color:#324d00;border-radius:14px;padding:16px;max-width:90%;width:92%;
       box-shadow:0 18px 48px rgba(0,0,0,.35);text-align:center
     }
     .modal .btn{width:auto}
@@ -387,7 +388,7 @@
     .ads-content {
       padding: 20px;
       text-align: center;
-      color: #00324d;
+      color: #324d00;
     }
     .ads-content h3 {
       margin-bottom: 15px;
@@ -408,18 +409,95 @@
     .ads-timer {
       font-weight: 800;
       margin-bottom: 10px;
-      color: #006aa6;
+      color: #00a66a;
+    }
+    
+    /* User info */
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    /* Bet History Modal */
+    .history-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      z-index: 3000;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+    }
+    .history-container {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      max-width: 90%;
+      width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .history-header {
+      background: var(--bg1);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .history-content {
+      padding: 20px;
+      color: #324d00;
+    }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .history-item:last-child {
+      border-bottom: none;
+    }
+    .history-date {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+    .history-words {
+      font-weight: 700;
+      margin: 5px 0;
+    }
+    .history-result {
+      font-weight: 900;
+    }
+    .history-result.win {
+      color: var(--good);
+    }
+    .history-result.lose {
+      color: var(--bad);
     }
   </style>
 </head>
 <body>
   <!-- ambient audio -->
   <audio id="bg-music" loop>
-    <source src="dewdrop.mp3" type="audio/mpeg">
+    <source src="midday.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- bubbles -->
-  <div class="bubbles" aria-hidden="true" id="bubbles"></div>
+  <!-- floating elements -->
+  <div class="floating-elements" aria-hidden="true" id="floating-elements"></div>
 
   <div class="container" role="application">
     <!-- nav -->
@@ -429,21 +507,27 @@
           <img src="englabet.png" alt="Englabet Logo" style="width: 32px; height: 32px; border-radius: 10px;">
         </div>
         <div>
-          <div style="font-size:0.9rem">Dewdrop</div>
-          <small style="opacity:.8;font-weight:700; font-size: 0.7rem;">Ocean Blue Edition</small>
+          <div style="font-size:0.9rem">MIDDAY</div>
+          <small style="opacity:.8;font-weight:700; font-size: 0.7rem;">Emerald Edition</small>
         </div>
       </div>
       <div class="nav-ctas">
-        <div class="pill" title="Session Window"><i class="fa-solid fa-calendar-days"></i> 08:00am – 10:00am</div>
-        <button id="music-toggle" class="action" aria-pressed="true" title="Toggle Ocean Ambience">
+        <div class="user-info" id="user-info" style="display: none;">
+          <img src="" alt="User Avatar" class="user-avatar" id="user-avatar">
+          <span id="user-name"></span>
+        </div>
+        <div class="pill" title="Session Window"><i class="fa-solid fa-calendar-days"></i> 12:00pm – 02:00pm</div>
+        <button id="music-toggle" class="action" aria-pressed="true" title="Toggle Ambience">
           <i class="fa-solid fa-music"></i> <span>Sound On</span>
         </button>
+        <button id="history-btn" class="action" title="Bet History"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
         <button id="help-btn" class="action" title="How to play" aria-haspopup="dialog"><i class="fa-regular fa-circle-question"></i> Help</button>
+        <button id="logout-btn" class="action" title="Logout" style="display: none;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
       </div>
     </div>
 
     <header>
-      <h1>Dewdrop Challenge</h1>
+      <h1>MIDDAY Challenge</h1>
       <p class="subtitle">Form valid words using the available letters. <strong>Key letter = E</strong>. Win per correct word, lose per incorrect pick. Choose wisely.</p>
     </header>
 
@@ -457,8 +541,8 @@
             <circle id="ring-arc" cx="24" cy="24" r="21" stroke="url(#grad)" stroke-width="5" stroke-linecap="round" fill="none" stroke-dasharray="132" stroke-dashoffset="0"/>
             <defs>
               <linearGradient id="grad" x1="0" x2="1">
-                <stop offset="0%" stop-color="#a8e6cf"/>
-                <stop offset="100%" stop-color="#6ed3cf"/>
+                <stop offset="0%" stop-color="#e6cfa8"/>
+                <stop offset="100%" stop-color="#d3cf6e"/>
               </linearGradient>
             </defs>
           </svg>
@@ -544,7 +628,7 @@
       <div id="result-list" class="result-list"></div>
     </section>
 
-    <footer><p>From ENGLAGIP powered by AITECH • Dewdrop Challenge © 2025 • Ocean Blue Edition • Crafted for clarity, speed, and thrill.</p></footer>
+    <footer><p>From ENGLAGIP powered by AITECH • MIDDAY Challenge © 2025 • Emerald Edition • Crafted for clarity, speed, and thrill.</p></footer>
   </div>
 
   <!-- Help modal -->
@@ -588,6 +672,20 @@
     </div>
   </div>
 
+  <!-- Bet History Modal -->
+  <div id="history-modal" class="history-modal">
+    <div class="history-container">
+      <div class="history-header">
+        <h3 style="margin:0">Bet History</h3>
+        <button id="history-close" class="action" style="background:transparent;color:white;border:none;font-size:1.2rem">&times;</button>
+      </div>
+      <div class="history-content">
+        <div id="history-list"></div>
+        <div id="no-history" style="text-align:center;padding:20px;opacity:0.7">No bet history yet</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast" class="toast" role="status" aria-live="assertive"></div>
 
@@ -601,7 +699,8 @@
   let slip = []; // selected words
   const ROUND_SECONDS = 7200; // 2 hours (7200 seconds)
   let hintUsed = false;
-  let betHistory = JSON.parse(localStorage.getItem('dewdrop_bet_history') || '[]');
+  let betHistory = [];
+  let currentUser = null;
   
   // Firebase configuration
   const firebaseConfig = {
@@ -617,6 +716,7 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
+  const auth = firebase.auth();
 
   // ---- DOM ----
   const els = {
@@ -647,13 +747,22 @@
     musicToggle: document.getElementById('music-toggle'),
     bg: document.getElementById('bg-music'),
     slipMeta: document.getElementById('slip-meta'),
-    bubbles: document.getElementById('bubbles'),
+    floatingElements: document.getElementById('floating-elements'),
     threeWordsBtn: document.getElementById('three-words-btn'),
     adsModal: document.getElementById('ads-modal'),
     adsMediaContainer: document.getElementById('ads-media-container'),
     adsTimer: document.getElementById('ads-timer'),
     adsCancel: document.getElementById('ads-cancel'),
-    adsWatch: document.getElementById('ads-watch')
+    adsWatch: document.getElementById('ads-watch'),
+    userInfo: document.getElementById('user-info'),
+    userAvatar: document.getElementById('user-avatar'),
+    userName: document.getElementById('user-name'),
+    logoutBtn: document.getElementById('logout-btn'),
+    historyBtn: document.getElementById('history-btn'),
+    historyModal: document.getElementById('history-modal'),
+    historyList: document.getElementById('history-list'),
+    historyClose: document.getElementById('history-close'),
+    noHistory: document.getElementById('no-history')
   };
 
   // ---- UTIL ----
@@ -668,7 +777,7 @@
 
   function notify(msg, type="info"){
     els.toast.textContent = msg;
-    els.toast.style.color = type==="error" ? "#6a0000" : "#00324d";
+    els.toast.style.color = type==="error" ? "#6a0000" : "#324d00";
     els.toast.classList.add('show');
     setTimeout(()=>els.toast.classList.remove('show'), 1400);
   }
@@ -755,17 +864,73 @@
     els.reviewText.textContent = val || "—";
   }
 
+  // Calculate remaining time from 12:00 PM to 2:00 PM
+  function getRemainingTime() {
+    const now = new Date();
+    const startTime = new Date(now);
+    startTime.setHours(12, 0, 0, 0); // 12:00 PM
+    
+    const endTime = new Date(now);
+    endTime.setHours(14, 0, 0, 0); // 2:00 PM
+    
+    // If it's after 2:00 PM, set end time to tomorrow's 2:00 PM
+    if (now > endTime) {
+      endTime.setDate(endTime.getDate() + 1);
+    }
+    
+    // If it's before 12:00 PM, set start time to today's 12:00 PM
+    if (now < startTime) {
+      startTime.setDate(startTime.getDate() - 1);
+    }
+    
+    const totalDuration = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+    const elapsed = now.getTime() - startTime.getTime();
+    const remaining = Math.max(0, totalDuration - elapsed);
+    
+    return Math.floor(remaining / 1000); // Convert to seconds
+  }
+
   function startTimer(){
-    let t=ROUND_SECONDS;
+    // Get remaining time from 12:00 PM to 2:00 PM
+    let t = getRemainingTime();
+    
+    // Save the current time to localStorage for persistence
+    localStorage.setItem('midday_timer_start', Date.now().toString());
+    localStorage.setItem('midday_timer_remaining', t.toString());
+    
     clearInterval(timerInterval);
+    
     function tick(){
+      // Update time from localStorage to handle page refreshes
+      const savedStart = parseInt(localStorage.getItem('midday_timer_start') || "0", 10);
+      const savedRemaining = parseInt(localStorage.getItem('midday_timer_remaining') || "0", 10);
+      
+      if (savedStart > 0 && savedRemaining > 0) {
+        const elapsedSinceSave = Math.floor((Date.now() - savedStart) / 1000);
+        t = Math.max(0, savedRemaining - elapsedSinceSave);
+        
+        // Update localStorage with current values
+        localStorage.setItem('midday_timer_start', Date.now().toString());
+        localStorage.setItem('midday_timer_remaining', t.toString());
+      }
+      
       const h=Math.floor(t/3600), m=Math.floor((t%3600)/60), s=t%60;
       els.timer.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
       setRing(t/ROUND_SECONDS);
-      if(t<=0){ clearInterval(timerInterval); roundActive=false; notify("⏱️ Time up!", "error"); }
-      t--;
+      
+      if(t<=0){ 
+        clearInterval(timerInterval); 
+        roundActive=false; 
+        notify("⏱️ Time up!", "error"); 
+        
+        // Clear localStorage when timer ends
+        localStorage.removeItem('midday_timer_start');
+        localStorage.removeItem('midday_timer_remaining');
+      }
     }
-    tick(); timerInterval=setInterval(tick,1000);
+    
+    tick(); 
+    timerInterval=setInterval(tick,1000);
   }
 
   function setLettersBag(letters){
@@ -792,7 +957,7 @@
     clearSlip();
 
     // keyword from E words; ensure presence of 'e'
-    keyword = (eWords[rand(eWords.length)] || "eel");
+    keyword = (eWords[rand(eWords.length)] || "eagle");
     const extra = randomLetters(rand(2)+2);
     availableLetters = shuffle((keyword+extra).split(""));
     validWords = dict.filter(w => w.length>=3 && canFormWord(w, availableLetters));
@@ -803,8 +968,13 @@
     startTimer();
   }
 
-  // Save bet history to Firestore
+  // Save bet history to Firestore under the user's document
   async function saveBetToFirestore(result) {
+    if (!currentUser) {
+      console.error("No user logged in");
+      return;
+    }
+    
     try {
       const betData = {
         date: new Date().toISOString(),
@@ -817,15 +987,90 @@
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       };
       
-      await db.collection('bet_history').add(betData);
-      console.log("Bet saved to Firestore");
+      // Save to user's bet_history subcollection
+      await db.collection('users').doc(currentUser.uid)
+        .collection('bet_history').add(betData);
+        
+      console.log("Bet saved to user's Firestore history");
     } catch (error) {
       console.error("Error saving bet to Firestore:", error);
     }
   }
 
-  // Save words formed from letters bag to Firestore
+  // Load bet history from Firestore
+  async function loadBetHistory() {
+    if (!currentUser) {
+      console.error("No user logged in");
+      return [];
+    }
+    
+    try {
+      const snapshot = await db.collection('users').doc(currentUser.uid)
+        .collection('bet_history')
+        .orderBy('timestamp', 'desc')
+        .limit(20)
+        .get();
+      
+      const history = [];
+      snapshot.forEach(doc => {
+        history.push({ id: doc.id, ...doc.data() });
+      });
+      
+      return history;
+    } catch (error) {
+      console.error("Error loading bet history:", error);
+      return [];
+    }
+  }
+
+  // Display bet history in modal
+  async function showBetHistory() {
+    const history = await loadBetHistory();
+    els.historyList.innerHTML = '';
+    
+    if (history.length === 0) {
+      els.noHistory.style.display = 'block';
+    } else {
+      els.noHistory.style.display = 'none';
+      history.forEach(bet => {
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        
+        const left = document.createElement('div');
+        const date = document.createElement('div');
+        date.className = 'history-date';
+        date.textContent = new Date(bet.date).toLocaleString();
+        
+        const words = document.createElement('div');
+        words.className = 'history-words';
+        words.textContent = bet.words.map(w => w.toUpperCase()).join(', ');
+        
+        left.appendChild(date);
+        left.appendChild(words);
+        
+        const right = document.createElement('div');
+        const result = document.createElement('div');
+        result.className = `history-result ${bet.result >= 0 ? 'win' : 'lose'}`;
+        result.textContent = (bet.result >= 0 ? '+' : '') + formatMoney(bet.result);
+        
+        right.appendChild(result);
+        
+        item.appendChild(left);
+        item.appendChild(right);
+        els.historyList.appendChild(item);
+      });
+    }
+    
+    els.historyModal.style.display = 'grid';
+  }
+
+  // Save words formed from letters bag to Firestore under the user's document
   async function saveWordsToFirestore() {
+    if (!currentUser) {
+      console.error("No user logged in");
+      return;
+    }
+    
     try {
       const wordsData = {
         letters: availableLetters,
@@ -833,8 +1078,11 @@
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       };
       
-      await db.collection('word_combinations').add(wordsData);
-      console.log("Words saved to Firestore");
+      // Save to user's word_combinations subcollection
+      await db.collection('users').doc(currentUser.uid)
+        .collection('word_combinations').add(wordsData);
+        
+      console.log("Words saved to user's Firestore");
     } catch (error) {
       console.error("Error saving words to Firestore:", error);
     }
@@ -917,16 +1165,59 @@
     });
   }
 
+  // Check authentication state
+  function checkAuthState() {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        currentUser = user;
+        // Show user info
+        els.userInfo.style.display = 'flex';
+        els.userName.textContent = user.displayName || user.email;
+        els.userAvatar.src = user.photoURL || 'https://via.placeholder.com/24';
+        els.logoutBtn.style.display = 'block';
+        
+        // Load user balance from Firestore
+        try {
+          const userDoc = await db.collection('users').doc(user.uid).get();
+          if (userDoc.exists) {
+            const userData = userDoc.data();
+            balance = userData.balance || 1000;
+            els.balance.textContent = currency + balance;
+          }
+        } catch (error) {
+          console.error("Error loading user data:", error);
+        }
+      } else {
+        // No user is signed in, redirect to login
+        window.location.href = 'login.html';
+      }
+    });
+  }
+
+  // Logout function
+  function logout() {
+    auth.signOut().then(() => {
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      console.error("Logout error:", error);
+    });
+  }
+
   // ---- EVENTS ----
   els.input.addEventListener('input', updateReview);
   els.addWord.addEventListener('click', ()=>{ addToSlip(els.input.value); });
   els.input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addToSlip(els.input.value); }});
   els.clearSlip.addEventListener('click', clearSlip);
   els.bet.addEventListener('input', renderSlip);
+  els.logoutBtn.addEventListener('click', logout);
+  els.historyBtn.addEventListener('click', showBetHistory);
+  els.historyClose.addEventListener('click', () => {
+    els.historyModal.style.display = 'none';
+  });
   
   // Three Words Button
   els.threeWordsBtn.addEventListener('click', () => {
-    window.location.href = 'dewdrop3.html';
+    window.location.href = 'midday3.html';
   });
 
   document.getElementById('submit-btn').addEventListener('click', async ()=>{
@@ -948,7 +1239,7 @@
 
     els.result.style.display="block";
     els.result.classList.remove('win','lose');
-    els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s)…`;
+    els.resultMsg.innerHTML = `⏳ Checking <b>${slip.length}</b> word(s)...`;
     els.resultList.innerHTML = "";
     displayWordBag(availableLetters);
     els.result.scrollIntoView({behavior:"smooth",block:"start"});
@@ -976,7 +1267,17 @@
 
     balance += net;
     els.balance.textContent = currency + balance;
-    localStorage.setItem('dewdrop_balance', String(balance));
+    
+    // Update user balance in Firestore
+    if (currentUser) {
+      try {
+        await db.collection('users').doc(currentUser.uid).update({
+          balance: balance
+        });
+      } catch (error) {
+        console.error("Error updating user balance:", error);
+      }
+    }
     
     // Save to Firestore
     await saveBetToFirestore(net);
@@ -1057,19 +1358,19 @@
     syncMusicUI();
   });
 
-  // bubbles
-  function spawnBubbles(){
+  // floating elements
+  function spawnFloatingElements(){
     const n = 18;
     for(let i=0;i<n;i++){
       const b = document.createElement('div');
-      b.className='bubble';
+      b.className='floating-element';
       const size = 10 + Math.random()*26;
       b.style.width = size+'px';
       b.style.height = size+'px';
       b.style.left = (Math.random()*100)+'%';
       b.style.setProperty('--dur', (12 + Math.random()*18) + 's');
       b.style.animationDelay = (-Math.random()*20)+'s';
-      els.bubbles.appendChild(b);
+      els.floatingElements.appendChild(b);
     }
   }
 
@@ -1081,8 +1382,11 @@
   }
 
   (async function init(){
+    // Check authentication
+    checkAuthState();
+    
     // restore balance
-    const saved = parseInt(localStorage.getItem('dewdrop_balance')||"0",10);
+    const saved = parseInt(localStorage.getItem('midday_balance')||"0",10);
     if(!isNaN(saved) && saved>0){ balance = saved; }
     els.balance.textContent = currency + balance;
 
@@ -1094,7 +1398,7 @@
     }catch(e){
       notify("Failed to load dictionary","error");
       // fallback minimal dictionary if fetch fails
-      dict = ["eel","eels","feel","seem","seen","seemest","stone","one","ones","nose","son","sonic","ionic","icon","icons"];
+      dict = ["eagle","earth","east","easy","eat","echo","edge","edit","eel","egg","ego","eight","elbow","elder","elect","elegant","element","elephant","elevator","elite","else","email","embrace","emerge","emotion","empire","employ","empty","enable","enact","end","enemy","energy","engage","engine","enjoy","enlarge","enormous","enough","enrich","enroll","ensure","enter","entire","entry","envelope","epic","equal","equip","era","erase","erect","erode","error","erupt","escape","essay","essence","estate","eternal","ethics","evaluate","even","event","ever","every","evidence","evil","evoke","exact","exam","example","exceed","excel","except","excess","exchange","excite","exclude","excuse","execute","exercise","exhaust","exhibit","exile","exist","exit","exotic","expand","expect","expense","expert","expire","explain","expose","express","extend","extra","eye"];
       eWords = dict.filter(w=>w.startsWith('e') && w.length>=3);
     }
 
@@ -1108,7 +1412,7 @@
     }
 
     // visuals
-    spawnBubbles();
+    spawnFloatingElements();
 
     // kick off round
     startNewRound();
