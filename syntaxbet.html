@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyntaxBet - Word Formation Challenge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <style>
+        :root {
+            --ocean-blue: #0077be;
+            --ocean-dark: #005a87;
+            --ocean-light: #4a9fe3;
+            --ocean-accent: #00a8e8;
+            --seafoam: #a0e6ff;
+            --sand: #f5f0e1;
+            --coral: #ff6b6b;
+            --seagrass: #2e8b57;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #e63946;
+            --gray: #6c757d;
+            --gray-light: #adb5bd;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0077be 0%, #00a8e8 50%, #a0e6ff 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            animation: fadeIn 0.8s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            color: var(--ocean-blue);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        h1 i {
+            color: var(--ocean-accent);
+        }
+
+        .subtitle {
+            color: var(--gray);
+            font-size: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .game-area {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            animation: slideUp 0.5s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 119, 190, 0.2);
+            color: var(--ocean-blue);
+        }
+
+        .panel-title i {
+            font-size: 1.2rem;
+        }
+
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+            gap: 8px;
+            margin-bottom: 20px;
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(160, 230, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .number {
+            background: var(--light);
+            border: 2px solid rgba(0, 119, 190, 0.2);
+            border-radius: 8px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+            color: var(--ocean-dark);
+        }
+
+        .number:hover {
+            transform: translateY(-3px);
+            border-color: var(--ocean-blue);
+            box-shadow: 0 5px 15px rgba(0, 119, 190, 0.2);
+        }
+
+        .number.selected {
+            background: var(--ocean-blue);
+            color: white;
+            border-color: var(--ocean-blue);
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            min-height: 60px;
+            padding: 15px;
+            background: rgba(160, 230, 255, 0.2);
+            border-radius: 8px;
+            border: 2px dashed rgba(0, 119, 190, 0.3);
+        }
+
+        .word {
+            background: var(--ocean-blue);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            animation: popIn 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 119, 190, 0.3);
+        }
+
+        .word i {
+            cursor: pointer;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .word i:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .sentence-area {
+            min-height: 120px;
+            padding: 20px;
+            background: rgba(160, 230, 255, 0.2);
+            border-radius: 8px;
+            border: 2px dashed rgba(0, 119, 190, 0.3);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sentence-word {
+            background: white;
+            border: 2px solid var(--ocean-blue);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: popIn 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 119, 190, 0.1);
+            color: var(--ocean-dark);
+        }
+
+        .sentence-word i {
+            color: var(--danger);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .sentence-word i:hover {
+            transform: scale(1.2);
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--ocean-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--ocean-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 119, 190, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--ocean-accent);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #0090cc;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 168, 232, 0.3);
+        }
+
+        .btn-success {
+            background: var(--seagrass);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #26734d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 139, 87, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--coral);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e05555;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .ai-response {
+            background: rgba(160, 230, 255, 0.3);
+            border-left: 4px solid var(--ocean-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .ai-response.show {
+            display: block;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--ocean-blue);
+        }
+
+        .ai-header i {
+            font-size: 1.5rem;
+        }
+
+        .score-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 119, 190, 0.2);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .score-item {
+            text-align: center;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .score-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--ocean-blue);
+        }
+
+        .score-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .examples {
+            margin-top: 25px;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .example {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--ocean-accent);
+            font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .rules {
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .rules ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .rules li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 119, 190, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 119, 190, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 119, 190, 0); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+        }
+
+        .notification.success {
+            background: var(--seagrass);
+        }
+
+        .notification.error {
+            background: var(--coral);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .panel {
+                padding: 15px;
+            }
+            
+            .numbers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+                gap: 6px;
+            }
+            
+            .number {
+                height: 50px;
+                font-size: 1rem;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .controls {
+                gap: 8px;
+            }
+            
+            .score-item {
+                min-width: 80px;
+            }
+            
+            .score-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 15px 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .game-area {
+                gap: 15px;
+            }
+            
+            .numbers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+            }
+            
+            .number {
+                height: 45px;
+                font-size: 0.9rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-water"></i> SyntaxBet</h1>
+            <p class="subtitle">Form meaningful phrases, clauses, or sentences by selecting words in the rightward order. Challenge your syntax skills with our AI-powered evaluation system.</p>
+        </header>
+
+        <div class="game-area">
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-th-large"></i> Word Selection</h2>
+                <p>Select between 3 and 10 words to form your sentence:</p>
+                
+                <div class="numbers-grid" id="numbersGrid">
+                    <!-- Numbers 1-100 will be generated by JavaScript -->
+                </div>
+
+                <div class="word-bank" id="wordBank">
+                    <!-- Selected words will appear here -->
+                </div>
+
+                <div class="controls">
+                    <button class="btn-primary" id="clearSelection">
+                        <i class="fas fa-eraser"></i> Clear Selection
+                    </button>
+                    <button class="btn-secondary" id="submitSentence" disabled>
+                        <i class="fas fa-robot"></i> AI Evaluation
+                    </button>
+                    <button class="btn-success" id="newGame">
+                        <i class="fas fa-sync-alt"></i> New Game
+                    </button>
+                </div>
+
+                <div class="ai-response" id="aiResponse">
+                    <div class="ai-header">
+                        <i class="fas fa-robot"></i>
+                        <h3>AI Evaluation</h3>
+                    </div>
+                    <div id="aiText">Waiting for evaluation...</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-pencil-alt"></i> Sentence Construction</h2>
+                <p>Drag words from your selection to form a sentence in the correct order:</p>
+                
+                <div class="sentence-area" id="sentenceArea">
+                    <!-- Words will be dragged here to form sentences -->
+                    <p id="placeholderText">Drag words here to build your sentence...</p>
+                </div>
+
+                <div class="controls">
+                    <button class="btn-success" id="validateSentence">
+                        <i class="fas fa-check-circle"></i> Validate Sentence
+                    </button>
+                    <button class="btn-danger" id="clearSentence">
+                        <i class="fas fa-trash"></i> Clear Sentence
+                    </button>
+                </div>
+
+                <div class="score-display">
+                    <div class="score-item">
+                        <div class="score-value" id="scoreValue">0</div>
+                        <div class="score-label">Current Score</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value" id="attemptsValue">0</div>
+                        <div class="score-label">Attempts</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value" id="accuracyValue">0%</div>
+                        <div class="score-label">Accuracy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="examples">
+            <h2 class="panel-title"><i class="fas fa-lightbulb"></i> Example Sentences</h2>
+            <div class="examples-grid">
+                <div class="example">W3: [I] [AM] [HERE]</div>
+                <div class="example">W4: [BRING] [BACK] [MY] [PHONE]</div>
+                <div class="example">W5: [STAY] [WITH] [US] [FOR] [NOW]</div>
+                <div class="example">W6: [IT] [ONLY] [WORKS] [FOR] [YOUNG] [PEOPLE]</div>
+                <div class="example">W7: [YOU] [CANNOT] [GO] [TO] [THE] [GYM] [ALONE]</div>
+                <div class="example">W8: [WHY] [IS] [IT] [TAKING] [TOO] [LONG] [TO] [LAND]</div>
+            </div>
+        </div>
+
+        <div class="rules">
+            <h2 class="panel-title"><i class="fas fa-info-circle"></i> Game Rules</h2>
+            <ul>
+                <li>Select between 3 and 10 words from the number grid</li>
+                <li>Drag the selected words to the sentence area to form a meaningful phrase, clause, or sentence</li>
+                <li>Words must be arranged in the correct grammatical order</li>
+                <li>Use the AI evaluation to check your sentence's correctness</li>
+                <li>Earn points based on the complexity and correctness of your sentences</li>
+                <li>Challenge yourself to create more complex sentences for higher scores</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>SyntaxBet &copy; 2023 | Part of the EnglaBet Language Learning System</p>
+        </footer>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBOwdgpt4PSo_MLMmz716zswPnpInaXfok",
+            authDomain: "lumora-b227c.firebaseapp.com",
+            projectId: "lumora-b227c",
+            storageBucket: "lumora-b227c.firebasestorage.app",
+            messagingSenderId: "126529099616",
+            appId: "1:126529099616:web:303e8d8c987ecd6ba1b005"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Game state
+        let selectedNumbers = [];
+        let selectedWords = [];
+        let sentenceWords = [];
+        let score = 0;
+        let attempts = 0;
+        let correctAttempts = 0;
+        let wordDatabase = {};
+
+        // Open source dictionary words (1 letter and above)
+        const dictionaryWords = [
+            "a", "I", "am", "is", "be", "to", "of", "and", "in", "it", "you", "that", "he", "was", "for", "on", "are", "as", "with", "his", "they", "at", "this", "have", "from", "or", "one", "had", "by", "word", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use", "an", "each", "which", "she", "do", "how", "their", "if", "will", "up", "other", "about", "out", "many", "then", "them", "these", "so", "some", "her", "would", "make", "like", "him", "into", "time", "has", "look", "two", "more", "write", "go", "see", "number", "no", "way", "could", "people", "my", "than", "first", "water", "been", "call", "who", "oil", "its", "now", "find", "long", "down", "day", "did", "get", "come", "made", "may", "part", "over", "new", "sound", "take", "only", "little", "work", "know", "place", "year", "live", "me", "back", "give", "most", "very", "after", "thing", "our", "just", "name", "good", "sentence", "man", "think", "say", "great", "where", "help", "through", "much", "before", "line", "right", "too", "mean", "old", "any", "same", "tell", "boy", "follow", "came", "want", "show", "also", "around", "form", "three", "small", "set", "put", "end", "does", "another", "well", "large", "must", "big", "even", "such", "because", "turn", "here", "why", "ask", "went", "men", "read", "need", "land", "different", "home", "us", "move", "try", "kind", "hand", "picture", "again", "change", "off", "play", "spell", "air", "away", "animal", "house", "point", "page", "letter", "mother", "answer", "found", "study", "still", "learn", "should", "America", "world", "high", "every", "near", "add", "food", "between", "own", "below", "country", "plant", "last", "school", "father", "keep", "tree", "never", "start", "city", "earth", "eye", "light", "thought", "head", "under", "story", "saw", "left", "don't", "few", "while", "along", "might", "close", "something", "seem", "next", "hard", "open", "example", "begin", "life", "always", "those", "both", "paper", "together", "got", "group", "often", "run", "important", "until", "children", "side", "feet", "car", "mile", "night", "walk", "white", "sea", "began", "grow", "took", "river", "four", "carry", "state", "once", "book", "hear", "stop", "without", "second", "later", "miss", "idea", "enough", "eat", "face", "watch", "far", "Indian", "really", "almost", "let", "above", "girl", "sometimes", "mountain", "cut", "young", "talk", "soon", "list", "song", "being", "leave", "family", "it's", "body", "music", "color", "stand", "sun", "question", "fish", "area", "mark", "dog", "horse", "birds", "problem", "complete", "room", "knew", "since", "ever", "piece", "told", "usually", "didn't", "friends", "easy", "heard", "order", "red", "door", "sure", "become", "top", "ship", "across", "today", "during", "short", "better", "best", "however", "low", "hours", "black", "products", "happened", "whole", "measure", "remember", "early", "waves", "reached", "listen", "wind", "rock", "space", "covered", "fast", "several", "hold", "himself", "toward", "five", "step", "morning", "passed", "vowel", "true", "hundred", "against", "pattern", "numeral", "table", "north", "slowly", "money", "map", "farm", "pulled", "draw", "voice", "seen", "cold", "cried", "plan", "notice", "south", "sing", "war", "ground", "fall", "king", "town", "I'll", "unit", "figure", "certain", "field", "travel", "wood", "fire", "upon", "done", "English", "road", "halt", "ten", "fly", "gave", "box", "finally", "wait", "correct", "oh", "quickly", "person", "became", "shown", "minutes", "strong", "verb", "stars", "front", "feel", "fact", "inches", "street", "decided", "contain", "course", "surface", "produce", "building", "ocean", "class", "note", "nothing", "rest", "carefully", "scientists", "inside", "wheels", "stay", "green", "known", "island", "week", "less", "machine", "base", "ago", "stood", "plane", "system", "behind", "ran", "round", "boat", "game", "force", "brought", "understand", "warm", "common", "bring", "explain", "dry", "though", "language", "shape", "deep", "thousands", "yes", "clear", "equation", "yet", "government", "filled", "heat", "full", "hot", "check", "object", "am", "rule", "among", "noun", "power", "cannot", "able", "six", "size", "dark", "ball", "material", "special", "heavy", "fine", "pair", "circle", "include", "built", "can't", "matter", "square", "syllables", "perhaps", "bill", "felt", "suddenly", "test", "direction", "center", "farmers", "ready", "anything", "divided", "general", "energy", "subject", "Europe", "moon", "region", "return", "believe", "dance", "members", "picked", "simple", "cells", "paint", "mind", "love", "cause", "rain", "exercise", "eggs", "train", "blue", "wish", "drop", "developed", "window", "difference", "distance", "heart", "site", "sum", "summer", "wall", "forest", "probably", "legs", "sat", "main", "winter", "wide", "written", "length", "reason", "kept", "interest", "arms", "brother", "race", "present", "beautiful", "store", "job", "edge", "past", "sign", "record", "finished", "discovered", "wild", "happy", "beside", "gone", "sky", "glass", "million", "west", "lay", "weather", "root", "instruments", "meet", "third", "months", "paragraph", "raised", "represent", "soft", "whether", "clothes", "flowers", "shall", "teacher", "held", "describe", "drive", "cross", "speak", "solve", "appear", "metal", "son", "either", "ice", "sleep", "village", "factors", "result", "jumped", "snow", "ride", "care", "floor", "hill", "pushed", "baby", "buy", "century", "outside", "everything", "tall", "already", "instead", "phrase", "soil", "bed", "copy", "free", "hope", "spring", "case", "laughed", "nation", "quite", "type", "themselves", "temperature", "bright", "lead", "everyone", "method", "section", "lake", "consonant", "within", "dictionary", "hair", "age", "amount", "scale", "pounds", "although", "per", "broken", "moment", "tiny", "possible", "gold", "milk", "quiet", "natural", "lot", "stone", "act", "build", "middle", "speed", "count", "cat", "someone", "sail", "rolled", "bear", "wonder", "smiled", "angle", "fraction", "Africa", "killed", "melody", "bottom", "trip", "hole", "poor", "let's", "fight", "surprise", "French", "died", "beat", "exactly", "remain", "dress", "iron", "couldn't", "fingers", "row", "least", "catch", "climbed", "wrote", "shouted", "continued", "itself", "else", "plains", "gas", "England", "burning", "design", "joined", "foot", "law", "ears", "grass", "you're", "grew", "skin", "valley", "cents", "key", "president", "brown", "trouble", "cool", "cloud", "lost", "sent", "symbols", "wear", "bad", "save", "experiment", "engine", "alone", "drawing", "east", "pay", "single", "touch", "information", "express", "mouth", "yard", "equal", "decimal", "yourself", "control", "practice", "report", "straight", "rise", "statement", "stick", "party", "seeds", "suppose", "woman", "coast", "bank", "period", "wire", "choose", "clean", "visit", "bit", "whose", "received", "garden", "please", "strange", "caught", "fell", "team", "God", "captain", "direct", "ring", "serve", "child", "desert", "increase", "history", "cost", "maybe", "business", "separate", "break", "uncle", "hunting", "flow", "lady", "students", "human", "art", "feeling", "supply", "corner", "electric", "insects", "crops", "tone", "hit", "sand", "doctor", "provide", "thus", "won't", "cook", "bones", "tail", "board", "modern", "compound", "mine", "wasn't", "fit", "addition", "belong", "safe", "soldiers", "guess", "silent", "trade", "rather", "compare", "crowd", "poem", "enjoy", "elements", "indicate", "except", "expect", "flat", "seven", "interesting", "sense", "string", "blow", "famous", "value", "wings", "movement", "pole", "exciting", "branches", "thick", "blood", "lie", "spot", "bell", "fun", "loud", "consider", "suggested", "thin", "position", "entered", "fruit", "tied", "rich", "dollars", "send", "sight", "chief", "Japanese", "stream", "planets", "rhythm", "eight", "science", "major", "observe", "tube", "necessary", "weight", "meat", "lifted", "process", "army", "hat", "property", "particular", "swim", "terms", "current", "park", "sell", "shoulder", "industry", "wash", "block", "spread", "cattle", "wife", "sharp", "company", "radio", "we'll", "action", "capital", "factories", "settled", "yellow", "isn't", "southern", "truck", "fair", "printed", "wouldn't", "ahead", "chance", "born", "level", "triangle", "molecules", "France", "repeated", "column", "western", "church", "sister", "oxygen", "plural", "various", "agreed", "opposite", "wrong", "chart", "prepared", "pretty", "solution", "fresh", "shop", "suffix", "especially", "shoes", "actually", "nose", "afraid", "dead", "sugar", "adjective", "fig", "office", "huge", "gun", "similar", "death", "score", "forward", "stretched", "experience", "rose", "allow", "fear", "workers", "Washington", "Greek", "women", "bought", "led", "march", "northern", "create", "British", "difficult", "match", "win", "doesn't", "steel", "total", "deal", "determine", "evening", "hoe", "rope", "cotton", "apple", "details", "entire", "corn", "substances", "smell", "tools", "conditions", "cows", "track", "arrived", "located", "sir", "seat", "division", "effect", "underline", "view", "overall", "society", "shape", "activity", "bee", "due", "depend", "exactly", "tone", "existence", "feature", "sharp", "direction", "meat", "quiet", "notice", "finish", "theory", "property", "choose", "cause", "coast", "ancient", "silent", "bright", "fresh", "allow", "doctor", "pound", "basic", "smile", "angle", "clock", "famous", "blood", "occur", "oxygen", "pretty", "skill", "women", "season", "solution", "magnet", "silver", "thank", "branch", "match", "suffix", "especially", "fig", "afraid", "huge", "sister", "steel", "discuss", "forward", "similar", "guide", "experience", "score", "apple", "bought", "led", "pitch", "coat", "mass", "card", "band", "rope", "slip", "win", "dream", "evening", "condition", "feed", "tool", "total", "basic", "smell", "valley", "nor", "double", "seat", "arrive", "master", "track", "parent", "shore", "division", "sheet", "substance", "favor", "connect", "post", "spend", "chord", "fat", "glad", "original", "share", "station", "dad", "bread", "charge", "proper", "bar", "offer", "segment", "slave", "duck", "instant", "market", "degree", "populate", "chick", "dear", "enemy", "reply", "drink", "occur", "support", "speech", "nature", "range", "steam", "motion", "path", "liquid", "log", "meant", "quotient", "teeth", "shell", "neck", "oxygen", "sugar", "death", "pretty", "skill", "women", "season", "solution", "magnet", "silver", "thank", "branch", "match", "suffix", "especially", "fig", "afraid", "huge", "sister", "steel", "discuss", "forward", "similar", "guide", "experience", "score", "apple", "bought", "led", "pitch", "coat", "mass", "card", "band", "rope", "slip", "win", "dream", "evening", "condition", "feed", "tool", "total", "basic", "smell", "valley", "nor", "double", "seat", "arrive", "master", "track", "parent", "shore", "division", "sheet", "substance", "favor", "connect", "post", "spend", "chord", "fat", "glad", "original", "share", "station", "dad", "bread", "charge", "proper", "bar", "offer", "segment", "slave", "duck", "instant", "market", "degree", "populate", "chick", "dear", "enemy", "reply", "drink", "occur", "support", "speech", "nature", "range", "steam", "motion", "path", "liquid", "log", "meant", "quotient", "teeth", "shell", "neck"
+        ];
+
+        // DOM elements
+        const numbersGrid = document.getElementById('numbersGrid');
+        const wordBank = document.getElementById('wordBank');
+        const sentenceArea = document.getElementById('sentenceArea');
+        const placeholderText = document.getElementById('placeholderText');
+        const clearSelectionBtn = document.getElementById('clearSelection');
+        const submitSentenceBtn = document.getElementById('submitSentence');
+        const validateSentenceBtn = document.getElementById('validateSentence');
+        const clearSentenceBtn = document.getElementById('clearSentence');
+        const newGameBtn = document.getElementById('newGame');
+        const aiResponse = document.getElementById('aiResponse');
+        const aiText = document.getElementById('aiText');
+        const scoreValue = document.getElementById('scoreValue');
+        const attemptsValue = document.getElementById('attemptsValue');
+        const accuracyValue = document.getElementById('accuracyValue');
+
+        // Initialize the game
+        function initGame() {
+            // Generate random word database
+            generateWordDatabase();
+            
+            // Create number grid
+            numbersGrid.innerHTML = '';
+            for (let i = 1; i <= 100; i++) {
+                const numberElement = document.createElement('div');
+                numberElement.className = 'number';
+                numberElement.textContent = i;
+                numberElement.dataset.number = i;
+                
+                numberElement.addEventListener('click', () => {
+                    toggleNumberSelection(i, numberElement);
+                });
+                
+                numbersGrid.appendChild(numberElement);
+            }
+
+            // Event listeners
+            clearSelectionBtn.addEventListener('click', clearSelection);
+            submitSentenceBtn.addEventListener('click', submitToAI);
+            validateSentenceBtn.addEventListener('click', validateSentence);
+            clearSentenceBtn.addEventListener('click', clearSentence);
+            newGameBtn.addEventListener('click', startNewGame);
+
+            // Enable drag and drop
+            enableDragAndDrop();
+        }
+
+        // Generate random word database
+        function generateWordDatabase() {
+            wordDatabase = {};
+            const shuffledWords = [...dictionaryWords].sort(() => 0.5 - Math.random());
+            
+            for (let i = 1; i <= 100; i++) {
+                wordDatabase[i] = shuffledWords[i - 1] || "word";
+            }
+        }
+
+        // Start a new game
+        function startNewGame() {
+            clearSelection();
+            generateWordDatabase();
+            aiResponse.classList.remove('show');
+            showNotification('New game started with random words!', 'success');
+        }
+
+        // Toggle number selection
+        function toggleNumberSelection(number, element) {
+            const index = selectedNumbers.indexOf(number);
+            
+            if (index === -1) {
+                // Check if we've reached the maximum
+                if (selectedNumbers.length >= 10) {
+                    showNotification('Maximum of 10 words allowed', 'error');
+                    return;
+                }
+                
+                // Add to selection
+                selectedNumbers.push(number);
+                element.classList.add('selected');
+                
+                // Add word to word bank
+                addWordToBank(number);
+            } else {
+                // Remove from selection
+                selectedNumbers.splice(index, 1);
+                element.classList.remove('selected');
+                
+                // Remove word from word bank
+                removeWordFromBank(number);
+            }
+            
+            // Update submit button state
+            updateSubmitButton();
+        }
+
+        // Add word to word bank
+        function addWordToBank(number) {
+            const word = wordDatabase[number];
+            
+            const wordElement = document.createElement('div');
+            wordElement.className = 'word';
+            wordElement.textContent = word;
+            wordElement.dataset.number = number;
+            wordElement.draggable = true;
+            
+            const removeIcon = document.createElement('i');
+            removeIcon.className = 'fas fa-times';
+            removeIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const number = parseInt(wordElement.dataset.number);
+                removeWordFromBank(number);
+                
+                // Also remove from selected numbers
+                const index = selectedNumbers.indexOf(number);
+                if (index !== -1) {
+                    selectedNumbers.splice(index, 1);
+                    document.querySelector(`.number[data-number="${number}"]`).classList.remove('selected');
+                }
+                
+                updateSubmitButton();
+            });
+            
+            wordElement.appendChild(removeIcon);
+            wordBank.appendChild(wordElement);
+            
+            selectedWords.push({ number, word, element: wordElement });
+            
+            // Enable drag and drop for the new word
+            wordElement.addEventListener('dragstart', handleDragStart);
+        }
+
+        // Remove word from word bank
+        function removeWordFromBank(number) {
+            const wordElement = document.querySelector(`.word[data-number="${number}"]`);
+            if (wordElement) {
+                wordElement.remove();
+            }
+            
+            // Remove from selectedWords array
+            selectedWords = selectedWords.filter(item => item.number !== number);
+            
+            // Remove from sentence if it's there
+            const sentenceWordElement = document.querySelector(`.sentence-word[data-number="${number}"]`);
+            if (sentenceWordElement) {
+                sentenceWordElement.remove();
+                sentenceWords = sentenceWords.filter(item => item.number !== number);
+            }
+            
+            // Show placeholder if sentence area is empty
+            if (sentenceWords.length === 0) {
+                placeholderText.style.display = 'block';
+            }
+        }
+
+        // Clear selection
+        function clearSelection() {
+            selectedNumbers.forEach(number => {
+                const element = document.querySelector(`.number[data-number="${number}"]`);
+                if (element) {
+                    element.classList.remove('selected');
+                }
+            });
+            
+            selectedNumbers = [];
+            selectedWords = [];
+            wordBank.innerHTML = '';
+            
+            clearSentence();
+            updateSubmitButton();
+        }
+
+        // Clear sentence
+        function clearSentence() {
+            sentenceWords = [];
+            sentenceArea.innerHTML = '';
+            placeholderText.style.display = 'block';
+            
+            // Return words to word bank
+            selectedWords.forEach(word => {
+                if (!wordBank.querySelector(`.word[data-number="${word.number}"]`)) {
+                    addWordToBank(word.number);
+                }
+            });
+        }
+
+        // Update submit button state
+        function updateSubmitButton() {
+            if (selectedNumbers.length >= 3 && selectedNumbers.length <= 10) {
+                submitSentenceBtn.disabled = false;
+                submitSentenceBtn.classList.add('pulse');
+            } else {
+                submitSentenceBtn.disabled = true;
+                submitSentenceBtn.classList.remove('pulse');
+            }
+        }
+
+        // Enable drag and drop
+        function enableDragAndDrop() {
+            // Allow drop in sentence area
+            sentenceArea.addEventListener('dragover', handleDragOver);
+            sentenceArea.addEventListener('drop', handleDrop);
+            
+            // Allow drop in word bank
+            wordBank.addEventListener('dragover', handleDragOver);
+            wordBank.addEventListener('drop', handleDropInWordBank);
+        }
+
+        // Handle drag start
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.number);
+            e.target.classList.add('dragging');
+        }
+
+        // Handle drag over
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        // Handle drop in sentence area
+        function handleDrop(e) {
+            e.preventDefault();
+            const number = e.dataTransfer.getData('text/plain');
+            const wordElement = document.querySelector(`.word[data-number="${number}"]`);
+            
+            if (wordElement) {
+                // Remove from word bank
+                wordElement.remove();
+                
+                // Add to sentence area
+                addWordToSentence(parseInt(number), wordDatabase[number]);
+                
+                // Hide placeholder
+                placeholderText.style.display = 'none';
+            }
+        }
+
+        // Handle drop in word bank
+        function handleDropInWordBank(e) {
+            e.preventDefault();
+            const number = e.dataTransfer.getData('text/plain');
+            const sentenceWordElement = document.querySelector(`.sentence-word[data-number="${number}"]`);
+            
+            if (sentenceWordElement) {
+                // Remove from sentence
+                sentenceWordElement.remove();
+                sentenceWords = sentenceWords.filter(item => item.number !== parseInt(number));
+                
+                // Add back to word bank
+                addWordToBank(parseInt(number));
+                
+                // Show placeholder if sentence is empty
+                if (sentenceWords.length === 0) {
+                    placeholderText.style.display = 'block';
+                }
+            }
+        }
+
+        // Add word to sentence area
+        function addWordToSentence(number, word) {
+            const wordElement = document.createElement('div');
+            wordElement.className = 'sentence-word';
+            wordElement.textContent = word;
+            wordElement.dataset.number = number;
+            wordElement.draggable = true;
+            
+            const removeIcon = document.createElement('i');
+            removeIcon.className = 'fas fa-times';
+            removeIcon.addEventListener('click', () => {
+                wordElement.remove();
+                sentenceWords = sentenceWords.filter(item => item.number !== number);
+                addWordToBank(number);
+                
+                if (sentenceWords.length === 0) {
+                    placeholderText.style.display = 'block';
+                }
+            });
+            
+            wordElement.appendChild(removeIcon);
+            sentenceArea.appendChild(wordElement);
+            
+            sentenceWords.push({ number, word, element: wordElement });
+            
+            // Enable drag for the new word
+            wordElement.addEventListener('dragstart', handleDragStart);
+        }
+
+        // Validate sentence
+        function validateSentence() {
+            if (sentenceWords.length < 3) {
+                showNotification('Sentence must contain at least 3 words', 'error');
+                return;
+            }
+            
+            attempts++;
+            attemptsValue.textContent = attempts;
+            
+            // Simple validation for demo purposes
+            const sentence = sentenceWords.map(item => item.word).join(' ');
+            let isValid = false;
+            let points = 0;
+            
+            // Basic grammar check (in a real app, this would be more sophisticated)
+            if (sentence.split(' ').length >= 5) {
+                isValid = true;
+                points = 20;
+            } else if (sentence.split(' ').length >= 3) {
+                isValid = true;
+                points = 10;
+            }
+            
+            if (isValid) {
+                correctAttempts++;
+                score += points;
+                scoreValue.textContent = score;
+                accuracyValue.textContent = Math.round((correctAttempts / attempts) * 100) + '%';
+                
+                showNotification(`Valid sentence! +${points} points`, 'success');
+            } else {
+                showNotification('Sentence needs improvement. Try adding more words.', 'error');
+            }
+        }
+
+        // Submit to AI for evaluation
+        async function submitToAI() {
+            if (sentenceWords.length < 3) {
+                showNotification('Sentence must contain at least 3 words', 'error');
+                return;
+            }
+            
+            const sentence = sentenceWords.map(item => item.word).join(' ');
+            
+            // Show loading state
+            submitSentenceBtn.innerHTML = '<div class="loading"></div> Evaluating...';
+            submitSentenceBtn.disabled = true;
+            
+            try {
+                // In a real implementation, you would call the Cohere API here
+                // For this demo, we'll simulate an API call
+                const aiEvaluation = await simulateAIEvaluation(sentence);
+                
+                // Display AI response
+                aiText.innerHTML = aiEvaluation;
+                aiResponse.classList.add('show');
+                
+                // Update score based on AI evaluation
+                score += 15; // Bonus points for using AI evaluation
+                scoreValue.textContent = score;
+                
+                showNotification('AI evaluation completed! +15 points', 'success');
+            } catch (error) {
+                console.error('AI evaluation error:', error);
+                showNotification('Error evaluating sentence. Please try again.', 'error');
+            } finally {
+                // Reset button
+                submitSentenceBtn.innerHTML = '<i class="fas fa-robot"></i> AI Evaluation';
+                submitSentenceBtn.disabled = false;
+            }
+        }
+
+        // Simulate AI evaluation (in a real app, this would call the Cohere API)
+        function simulateAIEvaluation(sentence) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const evaluations = [
+                        `Your sentence "<strong>${sentence}</strong>" demonstrates good syntactic structure. The word order follows standard English patterns, and the phrase is grammatically correct. Well done!`,
+                        `The sentence "<strong>${sentence}</strong>" is syntactically sound. The arrangement of words creates a meaningful expression that would be easily understood by native speakers.`,
+                        `"<strong>${sentence}</strong>" is a valid English construction. The syntax follows subject-verb-object order where appropriate, and the phrase conveys a clear meaning.`,
+                        `This sentence "<strong>${sentence}</strong>" shows understanding of basic English syntax. While correct, you could enhance it by adding descriptive words or extending the thought.`,
+                        `Your formation "<strong>${sentence}</strong>" works syntactically. The words are in the correct order to form a coherent phrase that communicates a complete idea.`
+                    ];
+                    
+                    const randomEvaluation = evaluations[Math.floor(Math.random() * evaluations.length)];
+                    resolve(randomEvaluation);
+                }, 2000);
+            });
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize the game when the page loads
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
