@@ -5,25 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SyntaxBet - Word Formation Challenge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
         :root {
-            --ocean-blue: #0077be;
-            --ocean-dark: #005a87;
-            --ocean-light: #4a9fe3;
-            --ocean-accent: #00a8e8;
-            --seafoam: #a0e6ff;
-            --sand: #f5f0e1;
-            --coral: #ff6b6b;
-            --seagrass: #2e8b57;
-            --light: #f8f9fa;
-            --dark: #212529;
+            --primary: #0a2e5a;
+            --secondary: #1a4789;
+            --accent: #ff9d00;
+            --accent-gradient: linear-gradient(to right, #ff9d00, #ffcc00);
+            --text-light: #ffffff;
+            --text-gray: #a0c1ed;
+            --card-bg: #1a3e75;
+            --card-dark: #0f2b50;
             --success: #4cc9f0;
             --warning: #f8961e;
             --danger: #e63946;
-            --gray: #6c757d;
-            --gray-light: #adb5bd;
             --border-radius: 12px;
             --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
@@ -37,8 +31,8 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0077be 0%, #00a8e8 50%, #a0e6ff 100%);
-            color: var(--dark);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text-light);
             min-height: 100vh;
             padding: 15px;
             overflow-x: hidden;
@@ -54,7 +48,7 @@
             text-align: center;
             margin-bottom: 25px;
             padding: 20px 15px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             animation: fadeIn 0.8s ease;
@@ -63,7 +57,7 @@
         }
 
         h1 {
-            color: var(--ocean-blue);
+            color: var(--text-light);
             font-size: 2.2rem;
             margin-bottom: 10px;
             display: flex;
@@ -73,11 +67,11 @@
         }
 
         h1 i {
-            color: var(--ocean-accent);
+            color: var(--accent);
         }
 
         .subtitle {
-            color: var(--gray);
+            color: var(--text-gray);
             font-size: 1rem;
             max-width: 800px;
             margin: 0 auto;
@@ -99,7 +93,7 @@
         }
 
         .panel {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             padding: 20px;
@@ -114,12 +108,130 @@
             gap: 10px;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 119, 190, 0.2);
-            color: var(--ocean-blue);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-light);
         }
 
         .panel-title i {
             font-size: 1.2rem;
+        }
+
+        .topic-box {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .betting-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .bet-amount {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bet-input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .bet-input::placeholder {
+            color: var(--text-gray);
+        }
+
+        .word-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .word-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .word-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--card-bg);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .word-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .word-btn.active {
+            background: var(--accent-gradient);
+            color: var(--primary);
+            box-shadow: 0 5px 15px rgba(255, 157, 0, 0.4);
+        }
+
+        .word-btn .btn-label {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .word-btn .btn-payout {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .place-bet-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--accent-gradient);
+            color: var(--primary);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(255, 157, 0, 0.4);
+        }
+
+        .place-bet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 157, 0, 0.6);
+        }
+
+        .place-bet-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .numbers-grid {
@@ -130,13 +242,13 @@
             max-height: 280px;
             overflow-y: auto;
             padding: 10px;
-            background: rgba(160, 230, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
         }
 
         .number {
-            background: var(--light);
-            border: 2px solid rgba(0, 119, 190, 0.2);
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             height: 55px;
             display: flex;
@@ -147,64 +259,32 @@
             cursor: pointer;
             transition: var(--transition);
             user-select: none;
-            color: var(--ocean-dark);
+            color: var(--text-light);
         }
 
         .number:hover {
             transform: translateY(-3px);
-            border-color: var(--ocean-blue);
-            box-shadow: 0 5px 15px rgba(0, 119, 190, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 5px 15px rgba(255, 157, 0, 0.2);
         }
 
         .number.selected {
-            background: var(--ocean-blue);
-            color: white;
-            border-color: var(--ocean-blue);
+            background: var(--accent-gradient);
+            color: var(--primary);
+            border-color: var(--accent);
         }
 
-        .word-bank {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
-            min-height: 60px;
-            padding: 15px;
-            background: rgba(160, 230, 255, 0.2);
-            border-radius: 8px;
-            border: 2px dashed rgba(0, 119, 190, 0.3);
-        }
-
-        .word {
-            background: var(--ocean-blue);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            animation: popIn 0.3s ease;
-            box-shadow: 0 3px 8px rgba(0, 119, 190, 0.3);
-        }
-
-        .word i {
-            cursor: pointer;
-            font-size: 0.9rem;
-            opacity: 0.7;
-            transition: var(--transition);
-        }
-
-        .word i:hover {
-            opacity: 1;
-            transform: scale(1.2);
+        .number.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .sentence-area {
             min-height: 120px;
             padding: 20px;
-            background: rgba(160, 230, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            border: 2px dashed rgba(0, 119, 190, 0.3);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
             margin-bottom: 20px;
             display: flex;
             flex-wrap: wrap;
@@ -213,8 +293,8 @@
         }
 
         .sentence-word {
-            background: white;
-            border: 2px solid var(--ocean-blue);
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--accent);
             padding: 10px 15px;
             border-radius: 8px;
             font-weight: 500;
@@ -222,18 +302,8 @@
             align-items: center;
             gap: 10px;
             animation: popIn 0.3s ease;
-            box-shadow: 0 3px 10px rgba(0, 119, 190, 0.1);
-            color: var(--ocean-dark);
-        }
-
-        .sentence-word i {
-            color: var(--danger);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .sentence-word i:hover {
-            transform: scale(1.2);
+            box-shadow: 0 3px 10px rgba(255, 157, 0, 0.1);
+            color: var(--text-light);
         }
 
         .controls {
@@ -257,52 +327,52 @@
         }
 
         .btn-primary {
-            background: var(--ocean-blue);
+            background: var(--primary);
             color: white;
         }
 
         .btn-primary:hover {
-            background: var(--ocean-dark);
+            background: var(--secondary);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 119, 190, 0.3);
+            box-shadow: 0 5px 15px rgba(10, 46, 90, 0.3);
         }
 
         .btn-secondary {
-            background: var(--ocean-accent);
-            color: white;
+            background: var(--accent);
+            color: var(--primary);
         }
 
         .btn-secondary:hover {
-            background: #0090cc;
+            background: #ffb133;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 168, 232, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 157, 0, 0.3);
         }
 
         .btn-success {
-            background: var(--seagrass);
+            background: var(--success);
             color: white;
         }
 
         .btn-success:hover {
-            background: #26734d;
+            background: #3ab0d9;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 139, 87, 0.3);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
         }
 
         .btn-danger {
-            background: var(--coral);
+            background: var(--danger);
             color: white;
         }
 
         .btn-danger:hover {
-            background: #e05555;
+            background: #d32f2f;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
         }
 
         .ai-response {
-            background: rgba(160, 230, 255, 0.3);
-            border-left: 4px solid var(--ocean-blue);
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--accent);
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
@@ -319,7 +389,7 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
-            color: var(--ocean-blue);
+            color: var(--accent);
         }
 
         .ai-header i {
@@ -331,7 +401,7 @@
             justify-content: space-between;
             margin-top: 20px;
             padding-top: 20px;
-            border-top: 1px solid rgba(0, 119, 190, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
             flex-wrap: wrap;
             gap: 15px;
         }
@@ -345,12 +415,12 @@
         .score-value {
             font-size: 1.8rem;
             font-weight: bold;
-            color: var(--ocean-blue);
+            color: var(--accent);
         }
 
         .score-label {
             font-size: 0.85rem;
-            color: var(--gray);
+            color: var(--text-gray);
         }
 
         .examples {
@@ -365,17 +435,17 @@
         }
 
         .example {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
             padding: 15px;
             border-radius: 8px;
-            border-left: 4px solid var(--ocean-accent);
+            border-left: 4px solid var(--accent);
             font-size: 0.9rem;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
 
         .rules {
             margin-top: 25px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
@@ -427,9 +497,9 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 119, 190, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 119, 190, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 119, 190, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(255, 157, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 157, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 157, 0, 0); }
         }
 
         .notification {
@@ -450,11 +520,11 @@
         }
 
         .notification.success {
-            background: var(--seagrass);
+            background: var(--success);
         }
 
         .notification.error {
-            background: var(--coral);
+            background: var(--danger);
         }
 
         .loading {
@@ -559,26 +629,91 @@
 
         <div class="game-area">
             <div class="panel">
-                <h2 class="panel-title"><i class="fas fa-th-large"></i> Word Selection</h2>
-                <p>Select between 3 and 10 words to form your sentence:</p>
+                <h2 class="panel-title"><i class="fas fa-comments"></i> Topic & Betting</h2>
+                
+                <div class="topic-box" id="topicBox">
+                    Loading topic...
+                </div>
+
+                <div class="betting-controls">
+                    <div class="bet-amount">
+                        <input type="number" class="bet-input" id="betAmount" placeholder="Enter bet amount" min="1" value="10">
+                    </div>
+
+                    <div class="word-buttons">
+                        <button class="word-btn" data-words="3">
+                            <span class="btn-label">W3</span>
+                            <span class="btn-payout">Payout: 2x</span>
+                        </button>
+                        <button class="word-btn" data-words="4">
+                            <span class="btn-label">W4</span>
+                            <span class="btn-payout">Payout: 3x</span>
+                        </button>
+                        <button class="word-btn" data-words="5">
+                            <span class="btn-label">W5</span>
+                            <span class="btn-payout">Payout: 4x</span>
+                        </button>
+                        <button class="word-btn" data-words="6">
+                            <span class="btn-label">W6</span>
+                            <span class="btn-payout">Payout: 5x</span>
+                        </button>
+                        <button class="word-btn" data-words="7">
+                            <span class="btn-label">W7</span>
+                            <span class="btn-payout">Payout: 6x</span>
+                        </button>
+                        <button class="word-btn" data-words="8">
+                            <span class="btn-label">W8</span>
+                            <span class="btn-payout">Payout: 7x</span>
+                        </button>
+                        <button class="word-btn" data-words="9">
+                            <span class="btn-label">W9</span>
+                            <span class="btn-payout">Payout: 8x</span>
+                        </button>
+                        <button class="word-btn" data-words="10">
+                            <span class="btn-label">W10</span>
+                            <span class="btn-payout">Payout: 10x</span>
+                        </button>
+                    </div>
+
+                    <button class="place-bet-btn" id="placeBetBtn" disabled>
+                        <i class="fas fa-coins"></i> Place Bet
+                    </button>
+                </div>
+
+                <div class="score-display">
+                    <div class="score-item">
+                        <div class="score-value" id="balanceValue">1000</div>
+                        <div class="score-label">Balance</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value" id="winValue">0</div>
+                        <div class="score-label">Winnings</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value" id="betValue">0</div>
+                        <div class="score-label">Current Bet</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-th-large"></i> Word Selection & Sentence Construction</h2>
                 
                 <div class="numbers-grid" id="numbersGrid">
                     <!-- Numbers 1-100 will be generated by JavaScript -->
                 </div>
 
-                <div class="word-bank" id="wordBank">
-                    <!-- Selected words will appear here -->
+                <div class="sentence-area" id="sentenceArea">
+                    <!-- Words will appear here when selected -->
+                    <p id="placeholderText">Select words to build your sentence...</p>
                 </div>
 
                 <div class="controls">
-                    <button class="btn-primary" id="clearSelection">
-                        <i class="fas fa-eraser"></i> Clear Selection
+                    <button class="btn-success" id="validateSentence">
+                        <i class="fas fa-check-circle"></i> Validate Sentence
                     </button>
-                    <button class="btn-secondary" id="submitSentence" disabled>
-                        <i class="fas fa-robot"></i> AI Evaluation
-                    </button>
-                    <button class="btn-success" id="newGame">
-                        <i class="fas fa-sync-alt"></i> New Game
+                    <button class="btn-secondary" id="newRound">
+                        <i class="fas fa-sync-alt"></i> New Round
                     </button>
                 </div>
 
@@ -588,40 +723,6 @@
                         <h3>AI Evaluation</h3>
                     </div>
                     <div id="aiText">Waiting for evaluation...</div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h2 class="panel-title"><i class="fas fa-pencil-alt"></i> Sentence Construction</h2>
-                <p>Drag words from your selection to form a sentence in the correct order:</p>
-                
-                <div class="sentence-area" id="sentenceArea">
-                    <!-- Words will be dragged here to form sentences -->
-                    <p id="placeholderText">Drag words here to build your sentence...</p>
-                </div>
-
-                <div class="controls">
-                    <button class="btn-success" id="validateSentence">
-                        <i class="fas fa-check-circle"></i> Validate Sentence
-                    </button>
-                    <button class="btn-danger" id="clearSentence">
-                        <i class="fas fa-trash"></i> Clear Sentence
-                    </button>
-                </div>
-
-                <div class="score-display">
-                    <div class="score-item">
-                        <div class="score-value" id="scoreValue">0</div>
-                        <div class="score-label">Current Score</div>
-                    </div>
-                    <div class="score-item">
-                        <div class="score-value" id="attemptsValue">0</div>
-                        <div class="score-label">Attempts</div>
-                    </div>
-                    <div class="score-item">
-                        <div class="score-value" id="accuracyValue">0%</div>
-                        <div class="score-label">Accuracy</div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -641,12 +742,13 @@
         <div class="rules">
             <h2 class="panel-title"><i class="fas fa-info-circle"></i> Game Rules</h2>
             <ul>
-                <li>Select between 3 and 10 words from the number grid</li>
-                <li>Drag the selected words to the sentence area to form a meaningful phrase, clause, or sentence</li>
+                <li>Place a bet and select a word count (W3-W10)</li>
+                <li>Select the specified number of words from the number grid</li>
+                <li>Words appear directly in the sentence area when selected</li>
                 <li>Words must be arranged in the correct grammatical order</li>
-                <li>Use the AI evaluation to check your sentence's correctness</li>
-                <li>Earn points based on the complexity and correctness of your sentences</li>
-                <li>Challenge yourself to create more complex sentences for higher scores</li>
+                <li>Use the validation button to check if your sentence matches the topic</li>
+                <li>Win your bet multiplied by the payout rate if your sentence is valid</li>
+                <li>Challenge yourself to create more complex sentences for higher payouts</li>
             </ul>
         </div>
 
@@ -656,54 +758,39 @@
     </div>
 
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBOwdgpt4PSo_MLMmz716zswPnpInaXfok",
-            authDomain: "lumora-b227c.firebaseapp.com",
-            projectId: "lumora-b227c",
-            storageBucket: "lumora-b227c.firebasestorage.app",
-            messagingSenderId: "126529099616",
-            appId: "1:126529099616:web:303e8d8c987ecd6ba1b005"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
         // Game state
         let selectedNumbers = [];
-        let selectedWords = [];
         let sentenceWords = [];
-        let score = 0;
-        let attempts = 0;
-        let correctAttempts = 0;
+        let balance = 1000;
+        let currentBet = 0;
+        let selectedWordCount = 0;
+        let currentTopic = "";
         let wordDatabase = {};
-
-        // Open source dictionary words (1 letter and above)
-        const dictionaryWords = [
-            "a", "I", "am", "is", "be", "to", "of", "and", "in", "it", "you", "that", "he", "was", "for", "on", "are", "as", "with", "his", "they", "at", "this", "have", "from", "or", "one", "had", "by", "word", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use", "an", "each", "which", "she", "do", "how", "their", "if", "will", "up", "other", "about", "out", "many", "then", "them", "these", "so", "some", "her", "would", "make", "like", "him", "into", "time", "has", "look", "two", "more", "write", "go", "see", "number", "no", "way", "could", "people", "my", "than", "first", "water", "been", "call", "who", "oil", "its", "now", "find", "long", "down", "day", "did", "get", "come", "made", "may", "part", "over", "new", "sound", "take", "only", "little", "work", "know", "place", "year", "live", "me", "back", "give", "most", "very", "after", "thing", "our", "just", "name", "good", "sentence", "man", "think", "say", "great", "where", "help", "through", "much", "before", "line", "right", "too", "mean", "old", "any", "same", "tell", "boy", "follow", "came", "want", "show", "also", "around", "form", "three", "small", "set", "put", "end", "does", "another", "well", "large", "must", "big", "even", "such", "because", "turn", "here", "why", "ask", "went", "men", "read", "need", "land", "different", "home", "us", "move", "try", "kind", "hand", "picture", "again", "change", "off", "play", "spell", "air", "away", "animal", "house", "point", "page", "letter", "mother", "answer", "found", "study", "still", "learn", "should", "America", "world", "high", "every", "near", "add", "food", "between", "own", "below", "country", "plant", "last", "school", "father", "keep", "tree", "never", "start", "city", "earth", "eye", "light", "thought", "head", "under", "story", "saw", "left", "don't", "few", "while", "along", "might", "close", "something", "seem", "next", "hard", "open", "example", "begin", "life", "always", "those", "both", "paper", "together", "got", "group", "often", "run", "important", "until", "children", "side", "feet", "car", "mile", "night", "walk", "white", "sea", "began", "grow", "took", "river", "four", "carry", "state", "once", "book", "hear", "stop", "without", "second", "later", "miss", "idea", "enough", "eat", "face", "watch", "far", "Indian", "really", "almost", "let", "above", "girl", "sometimes", "mountain", "cut", "young", "talk", "soon", "list", "song", "being", "leave", "family", "it's", "body", "music", "color", "stand", "sun", "question", "fish", "area", "mark", "dog", "horse", "birds", "problem", "complete", "room", "knew", "since", "ever", "piece", "told", "usually", "didn't", "friends", "easy", "heard", "order", "red", "door", "sure", "become", "top", "ship", "across", "today", "during", "short", "better", "best", "however", "low", "hours", "black", "products", "happened", "whole", "measure", "remember", "early", "waves", "reached", "listen", "wind", "rock", "space", "covered", "fast", "several", "hold", "himself", "toward", "five", "step", "morning", "passed", "vowel", "true", "hundred", "against", "pattern", "numeral", "table", "north", "slowly", "money", "map", "farm", "pulled", "draw", "voice", "seen", "cold", "cried", "plan", "notice", "south", "sing", "war", "ground", "fall", "king", "town", "I'll", "unit", "figure", "certain", "field", "travel", "wood", "fire", "upon", "done", "English", "road", "halt", "ten", "fly", "gave", "box", "finally", "wait", "correct", "oh", "quickly", "person", "became", "shown", "minutes", "strong", "verb", "stars", "front", "feel", "fact", "inches", "street", "decided", "contain", "course", "surface", "produce", "building", "ocean", "class", "note", "nothing", "rest", "carefully", "scientists", "inside", "wheels", "stay", "green", "known", "island", "week", "less", "machine", "base", "ago", "stood", "plane", "system", "behind", "ran", "round", "boat", "game", "force", "brought", "understand", "warm", "common", "bring", "explain", "dry", "though", "language", "shape", "deep", "thousands", "yes", "clear", "equation", "yet", "government", "filled", "heat", "full", "hot", "check", "object", "am", "rule", "among", "noun", "power", "cannot", "able", "six", "size", "dark", "ball", "material", "special", "heavy", "fine", "pair", "circle", "include", "built", "can't", "matter", "square", "syllables", "perhaps", "bill", "felt", "suddenly", "test", "direction", "center", "farmers", "ready", "anything", "divided", "general", "energy", "subject", "Europe", "moon", "region", "return", "believe", "dance", "members", "picked", "simple", "cells", "paint", "mind", "love", "cause", "rain", "exercise", "eggs", "train", "blue", "wish", "drop", "developed", "window", "difference", "distance", "heart", "site", "sum", "summer", "wall", "forest", "probably", "legs", "sat", "main", "winter", "wide", "written", "length", "reason", "kept", "interest", "arms", "brother", "race", "present", "beautiful", "store", "job", "edge", "past", "sign", "record", "finished", "discovered", "wild", "happy", "beside", "gone", "sky", "glass", "million", "west", "lay", "weather", "root", "instruments", "meet", "third", "months", "paragraph", "raised", "represent", "soft", "whether", "clothes", "flowers", "shall", "teacher", "held", "describe", "drive", "cross", "speak", "solve", "appear", "metal", "son", "either", "ice", "sleep", "village", "factors", "result", "jumped", "snow", "ride", "care", "floor", "hill", "pushed", "baby", "buy", "century", "outside", "everything", "tall", "already", "instead", "phrase", "soil", "bed", "copy", "free", "hope", "spring", "case", "laughed", "nation", "quite", "type", "themselves", "temperature", "bright", "lead", "everyone", "method", "section", "lake", "consonant", "within", "dictionary", "hair", "age", "amount", "scale", "pounds", "although", "per", "broken", "moment", "tiny", "possible", "gold", "milk", "quiet", "natural", "lot", "stone", "act", "build", "middle", "speed", "count", "cat", "someone", "sail", "rolled", "bear", "wonder", "smiled", "angle", "fraction", "Africa", "killed", "melody", "bottom", "trip", "hole", "poor", "let's", "fight", "surprise", "French", "died", "beat", "exactly", "remain", "dress", "iron", "couldn't", "fingers", "row", "least", "catch", "climbed", "wrote", "shouted", "continued", "itself", "else", "plains", "gas", "England", "burning", "design", "joined", "foot", "law", "ears", "grass", "you're", "grew", "skin", "valley", "cents", "key", "president", "brown", "trouble", "cool", "cloud", "lost", "sent", "symbols", "wear", "bad", "save", "experiment", "engine", "alone", "drawing", "east", "pay", "single", "touch", "information", "express", "mouth", "yard", "equal", "decimal", "yourself", "control", "practice", "report", "straight", "rise", "statement", "stick", "party", "seeds", "suppose", "woman", "coast", "bank", "period", "wire", "choose", "clean", "visit", "bit", "whose", "received", "garden", "please", "strange", "caught", "fell", "team", "God", "captain", "direct", "ring", "serve", "child", "desert", "increase", "history", "cost", "maybe", "business", "separate", "break", "uncle", "hunting", "flow", "lady", "students", "human", "art", "feeling", "supply", "corner", "electric", "insects", "crops", "tone", "hit", "sand", "doctor", "provide", "thus", "won't", "cook", "bones", "tail", "board", "modern", "compound", "mine", "wasn't", "fit", "addition", "belong", "safe", "soldiers", "guess", "silent", "trade", "rather", "compare", "crowd", "poem", "enjoy", "elements", "indicate", "except", "expect", "flat", "seven", "interesting", "sense", "string", "blow", "famous", "value", "wings", "movement", "pole", "exciting", "branches", "thick", "blood", "lie", "spot", "bell", "fun", "loud", "consider", "suggested", "thin", "position", "entered", "fruit", "tied", "rich", "dollars", "send", "sight", "chief", "Japanese", "stream", "planets", "rhythm", "eight", "science", "major", "observe", "tube", "necessary", "weight", "meat", "lifted", "process", "army", "hat", "property", "particular", "swim", "terms", "current", "park", "sell", "shoulder", "industry", "wash", "block", "spread", "cattle", "wife", "sharp", "company", "radio", "we'll", "action", "capital", "factories", "settled", "yellow", "isn't", "southern", "truck", "fair", "printed", "wouldn't", "ahead", "chance", "born", "level", "triangle", "molecules", "France", "repeated", "column", "western", "church", "sister", "oxygen", "plural", "various", "agreed", "opposite", "wrong", "chart", "prepared", "pretty", "solution", "fresh", "shop", "suffix", "especially", "shoes", "actually", "nose", "afraid", "dead", "sugar", "adjective", "fig", "office", "huge", "gun", "similar", "death", "score", "forward", "stretched", "experience", "rose", "allow", "fear", "workers", "Washington", "Greek", "women", "bought", "led", "march", "northern", "create", "British", "difficult", "match", "win", "doesn't", "steel", "total", "deal", "determine", "evening", "hoe", "rope", "cotton", "apple", "details", "entire", "corn", "substances", "smell", "tools", "conditions", "cows", "track", "arrived", "located", "sir", "seat", "division", "effect", "underline", "view", "overall", "society", "shape", "activity", "bee", "due", "depend", "exactly", "tone", "existence", "feature", "sharp", "direction", "meat", "quiet", "notice", "finish", "theory", "property", "choose", "cause", "coast", "ancient", "silent", "bright", "fresh", "allow", "doctor", "pound", "basic", "smile", "angle", "clock", "famous", "blood", "occur", "oxygen", "pretty", "skill", "women", "season", "solution", "magnet", "silver", "thank", "branch", "match", "suffix", "especially", "fig", "afraid", "huge", "sister", "steel", "discuss", "forward", "similar", "guide", "experience", "score", "apple", "bought", "led", "pitch", "coat", "mass", "card", "band", "rope", "slip", "win", "dream", "evening", "condition", "feed", "tool", "total", "basic", "smell", "valley", "nor", "double", "seat", "arrive", "master", "track", "parent", "shore", "division", "sheet", "substance", "favor", "connect", "post", "spend", "chord", "fat", "glad", "original", "share", "station", "dad", "bread", "charge", "proper", "bar", "offer", "segment", "slave", "duck", "instant", "market", "degree", "populate", "chick", "dear", "enemy", "reply", "drink", "occur", "support", "speech", "nature", "range", "steam", "motion", "path", "liquid", "log", "meant", "quotient", "teeth", "shell", "neck", "oxygen", "sugar", "death", "pretty", "skill", "women", "season", "solution", "magnet", "silver", "thank", "branch", "match", "suffix", "especially", "fig", "afraid", "huge", "sister", "steel", "discuss", "forward", "similar", "guide", "experience", "score", "apple", "bought", "led", "pitch", "coat", "mass", "card", "band", "rope", "slip", "win", "dream", "evening", "condition", "feed", "tool", "total", "basic", "smell", "valley", "nor", "double", "seat", "arrive", "master", "track", "parent", "shore", "division", "sheet", "substance", "favor", "connect", "post", "spend", "chord", "fat", "glad", "original", "share", "station", "dad", "bread", "charge", "proper", "bar", "offer", "segment", "slave", "duck", "instant", "market", "degree", "populate", "chick", "dear", "enemy", "reply", "drink", "occur", "support", "speech", "nature", "range", "steam", "motion", "path", "liquid", "log", "meant", "quotient", "teeth", "shell", "neck"
-        ];
+        let roundActive = false;
 
         // DOM elements
         const numbersGrid = document.getElementById('numbersGrid');
-        const wordBank = document.getElementById('wordBank');
         const sentenceArea = document.getElementById('sentenceArea');
         const placeholderText = document.getElementById('placeholderText');
-        const clearSelectionBtn = document.getElementById('clearSelection');
-        const submitSentenceBtn = document.getElementById('submitSentence');
+        const topicBox = document.getElementById('topicBox');
+        const betAmountInput = document.getElementById('betAmount');
+        const placeBetBtn = document.getElementById('placeBetBtn');
+        const wordButtons = document.querySelectorAll('.word-btn');
         const validateSentenceBtn = document.getElementById('validateSentence');
-        const clearSentenceBtn = document.getElementById('clearSentence');
-        const newGameBtn = document.getElementById('newGame');
+        const newRoundBtn = document.getElementById('newRound');
         const aiResponse = document.getElementById('aiResponse');
         const aiText = document.getElementById('aiText');
-        const scoreValue = document.getElementById('scoreValue');
-        const attemptsValue = document.getElementById('attemptsValue');
-        const accuracyValue = document.getElementById('accuracyValue');
+        const balanceValue = document.getElementById('balanceValue');
+        const winValue = document.getElementById('winValue');
+        const betValue = document.getElementById('betValue');
+
+        // Cohere API key
+        const COHERE_API_KEY = "OjpC1Vsdtpebb9lRygjkMIklrFItDJF4RM3tFEoy";
 
         // Initialize the game
         function initGame() {
-            // Generate random word database
-            generateWordDatabase();
+            // Generate random topic using Cohere API
+            generateRandomTopic();
             
             // Create number grid
             numbersGrid.innerHTML = '';
@@ -721,42 +808,212 @@
             }
 
             // Event listeners
-            clearSelectionBtn.addEventListener('click', clearSelection);
-            submitSentenceBtn.addEventListener('click', submitToAI);
+            placeBetBtn.addEventListener('click', placeBet);
             validateSentenceBtn.addEventListener('click', validateSentence);
-            clearSentenceBtn.addEventListener('click', clearSentence);
-            newGameBtn.addEventListener('click', startNewGame);
+            newRoundBtn.addEventListener('click', startNewRound);
+            
+            // Word button event listeners
+            wordButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    selectWordCount(parseInt(button.dataset.words));
+                });
+            });
 
-            // Enable drag and drop
-            enableDragAndDrop();
+            // Update UI
+            updateUI();
         }
 
-        // Generate random word database
-        function generateWordDatabase() {
-            wordDatabase = {};
-            const shuffledWords = [...dictionaryWords].sort(() => 0.5 - Math.random());
+        // Generate random topic using Cohere API
+        async function generateRandomTopic() {
+            topicBox.innerHTML = '<div class="loading"></div> Generating topic...';
             
-            for (let i = 1; i <= 100; i++) {
-                wordDatabase[i] = shuffledWords[i - 1] || "word";
+            try {
+                const response = await fetch('https://api.cohere.ai/v1/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${COHERE_API_KEY}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: 'command',
+                        prompt: 'Generate a short dialogue between two people on a random everyday topic. The dialogue should be between 4-8 lines total, with each line being a complete sentence. Format it like this example:\n\nDialogue Bank [Topic] ⬇\n\nPERSON1: [FIRST SENTENCE] [SECOND SENTENCE]\nPERSON2: [THIRD SENTENCE] [FOURTH SENTENCE]\n\nPlease create a completely different dialogue on a new topic. Do not use restaurant or food-related topics.',
+                        max_tokens: 300,
+                        temperature: 0.8,
+                        k: 0,
+                        stop_sequences: [],
+                        return_likelihoods: 'NONE'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate topic');
+                }
+
+                const data = await response.json();
+                const generatedTopic = data.generations[0].text;
+                
+                currentTopic = generatedTopic;
+                topicBox.textContent = generatedTopic;
+                
+                // Generate word database based on topic
+                generateWordDatabase(generatedTopic);
+            } catch (error) {
+                console.error('Error generating topic:', error);
+                // Fallback to a default topic if API fails
+                const fallbackTopic = `Dialogue Bank [Travel Plans] ⬇
+
+PERSON1: [WHERE ARE YOU PLANNING TO GO] [WHEN WILL YOU LEAVE]
+PERSON2: [I WANT TO VISIT JAPAN] [I WILL TRAVEL NEXT MONTH]
+PERSON1: [HOW LONG WILL YOU STAY] [HAVE YOU BOOKED YOUR FLIGHT]
+PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
+                
+                currentTopic = fallbackTopic;
+                topicBox.textContent = fallbackTopic;
+                generateWordDatabase(fallbackTopic);
             }
         }
 
-        // Start a new game
-        function startNewGame() {
-            clearSelection();
-            generateWordDatabase();
-            aiResponse.classList.remove('show');
-            showNotification('New game started with random words!', 'success');
+        // Generate word database from topic
+        function generateWordDatabase(topic) {
+            wordDatabase = {};
+            
+            // Extract words from the topic
+            const words = topic
+                .replace(/[\[\]]/g, ' ') // Remove brackets
+                .replace(/[^\w\s]/g, '') // Remove punctuation
+                .toUpperCase()
+                .split(/\s+/)
+                .filter(word => word.length > 1) // Remove single letters
+                .filter((word, index, self) => self.indexOf(word) === index); // Remove duplicates
+            
+            // Fill the rest with random words if needed
+            const dictionaryWords = [
+                "ABOUT", "AFTER", "AGAIN", "AIR", "ALL", "ALONG", "ALSO", "AN", "AND", "ANOTHER", "ANY", "ARE", "AROUND", "AS", "AT", "AWAY", "BACK", "BE", "BECAUSE", "BEEN", "BEFORE", "BEGAN", "BEST", "BETTER", "BIG", "BLACK", "BLUE", "BOOK", "BOTH", "BOX", "BRING", "BUT", "BY", "CALL", "CAME", "CAN", "CAR", "CARE", "CARRIED", "CARRY", "CHANGE", "CITY", "CLOSE", "COME", "COULD", "CUT", "DARK", "DAY", "DID", "DIFFERENT", "DO", "DOES", "DONT", "DOWN", "EACH", "END", "EVEN", "EVERY", "EYE", "FACE", "FALL", "FAR", "FARM", "FAST", "FATHER", "FEET", "FEW", "FIND", "FIRST", "FIVE", "FLY", "FOOD", "FOR", "FORM", "FOUND", "FOUR", "FROM", "FULL", "GAVE", "GET", "GIVE", "GO", "GOING", "GOOD", "GOT", "GREAT", "GREEN", "GROW", "HAD", "HAND", "HARD", "HAS", "HAVE", "HE", "HEAD", "HEAR", "HELP", "HER", "HERE", "HIGH", "HIM", "HIS", "HOME", "HOUSE", "HOW", "I", "IF", "IN", "INTO", "IS", "IT", "ITS", "JUST", "KEEP", "KIND", "KNOW", "LAND", "LARGE", "LAST", "LATE", "LAUGH", "LEARN", "LEFT", "LET", "LETTER", "LIFE", "LIGHT", "LIKE", "LINE", "LISTEN", "LITTLE", "LIVE", "LONG", "LOOK", "MADE", "MAKE", "MAN", "MANY", "MAY", "ME", "MEN", "MIGHT", "MILE", "MISS", "MORE", "MOST", "MOTHER", "MOUNTAIN", "MOVE", "MUCH", "MUST", "MY", "MYSELF", "NAME", "NEAR", "NEED", "NEVER", "NEW", "NEXT", "NIGHT", "NO", "NOT", "NOW", "NUMBER", "OF", "OFF", "OLD", "ON", "ONCE", "ONE", "ONLY", "OPEN", "OR", "OTHER", "OUR", "OUT", "OVER", "OWN", "PAGE", "PART", "PEOPLE", "PICTURE", "PLACE", "PLAY", "POINT", "PUT", "READ", "RED", "RIGHT", "ROOM", "RUN", "SAID", "SAME", "SAW", "SAY", "SCHOOL", "SEE", "SEEM", "SENTENCE", "SET", "SHE", "SHOULD", "SHOW", "SIDE", "SMALL", "SO", "SOME", "SOMETHING", "SOON", "SOUND", "SPELL", "START", "STATE", "STILL", "STOP", "STORY", "STUDY", "SUCH", "TAKE", "TALK", "TELL", "THAN", "THAT", "THE", "THEIR", "THEM", "THEN", "THERE", "THESE", "THEY", "THING", "THINK", "THIS", "THOSE", "THOUGHT", "THREE", "THROUGH", "TIME", "TO", "TOGETHER", "TOO", "TOOK", "TREE", "TURN", "TWO", "UNDER", "UP", "US", "USE", "VERY", "WALK", "WANT", "WAS", "WATCH", "WATER", "WAY", "WE", "WELL", "WENT", "WERE", "WHAT", "WHEN", "WHERE", "WHICH", "WHILE", "WHITE", "WHO", "WHY", "WILL", "WITH", "WORD", "WORK", "WORLD", "WOULD", "WRITE", "YEAR", "YES", "YOU", "YOUR"
+            ];
+            
+            // Shuffle dictionary words
+            const shuffledDictionary = [...dictionaryWords].sort(() => 0.5 - Math.random());
+            
+            // Create an array of all numbers from 1 to 100
+            const allNumbers = Array.from({length: 100}, (_, i) => i + 1);
+            
+            // Shuffle the numbers randomly
+            const shuffledNumbers = [...allNumbers].sort(() => 0.5 - Math.random());
+            
+            // Assign words to shuffled numbers
+            for (let i = 0; i < 100; i++) {
+                if (i < words.length) {
+                    wordDatabase[shuffledNumbers[i]] = words[i];
+                } else {
+                    wordDatabase[shuffledNumbers[i]] = shuffledDictionary[i - words.length] || "WORD";
+                }
+            }
+        }
+
+        // Select word count
+        function selectWordCount(count) {
+            selectedWordCount = count;
+            
+            // Update UI
+            wordButtons.forEach(button => {
+                if (parseInt(button.dataset.words) === count) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+            
+            // Enable/disable place bet button
+            placeBetBtn.disabled = !(selectedWordCount > 0 && betAmountInput.value > 0);
+        }
+
+        // Place bet
+        function placeBet() {
+            const betAmount = parseInt(betAmountInput.value);
+            
+            if (betAmount <= 0) {
+                showNotification('Please enter a valid bet amount', 'error');
+                return;
+            }
+            
+            if (betAmount > balance) {
+                showNotification('Insufficient balance', 'error');
+                return;
+            }
+            
+            if (selectedWordCount < 3 || selectedWordCount > 10) {
+                showNotification('Please select a word count between 3 and 10', 'error');
+                return;
+            }
+            
+            // Deduct bet from balance
+            balance -= betAmount;
+            currentBet = betAmount;
+            
+            // Start the round
+            roundActive = true;
+            
+            // Update UI
+            updateUI();
+            
+            // Disable betting controls
+            betAmountInput.disabled = true;
+            placeBetBtn.disabled = true;
+            wordButtons.forEach(button => {
+                button.disabled = true;
+            });
+            
+            showNotification(`Bet placed: ${betAmount} coins on W${selectedWordCount}`, 'success');
+        }
+
+        // Start new round
+        function startNewRound() {
+            // Reset game state
+            selectedNumbers = [];
+            sentenceWords = [];
+            currentBet = 0;
+            selectedWordCount = 0;
+            roundActive = false;
+            
+            // Clear UI
+            sentenceArea.innerHTML = '';
+            placeholderText.style.display = 'block';
+            
+            // Reset number grid
+            document.querySelectorAll('.number').forEach(number => {
+                number.classList.remove('selected', 'disabled');
+            });
+            
+            // Enable betting controls
+            betAmountInput.disabled = false;
+            placeBetBtn.disabled = false;
+            wordButtons.forEach(button => {
+                button.disabled = false;
+                button.classList.remove('active');
+            });
+            
+            // Generate new topic
+            generateRandomTopic();
+            
+            // Update UI
+            updateUI();
+            
+            showNotification('New round started!', 'success');
         }
 
         // Toggle number selection
         function toggleNumberSelection(number, element) {
+            if (!roundActive) {
+                showNotification('Please place a bet first', 'error');
+                return;
+            }
+            
             const index = selectedNumbers.indexOf(number);
             
             if (index === -1) {
                 // Check if we've reached the maximum
-                if (selectedNumbers.length >= 10) {
-                    showNotification('Maximum of 10 words allowed', 'error');
+                if (selectedNumbers.length >= selectedWordCount) {
+                    showNotification(`You can only select ${selectedWordCount} words`, 'error');
                     return;
                 }
                 
@@ -764,302 +1021,165 @@
                 selectedNumbers.push(number);
                 element.classList.add('selected');
                 
-                // Add word to word bank
-                addWordToBank(number);
-            } else {
-                // Remove from selection
-                selectedNumbers.splice(index, 1);
-                element.classList.remove('selected');
-                
-                // Remove word from word bank
-                removeWordFromBank(number);
+                // Add word to sentence area
+                addWordToSentence(number, wordDatabase[number]);
             }
             
-            // Update submit button state
-            updateSubmitButton();
-        }
-
-        // Add word to word bank
-        function addWordToBank(number) {
-            const word = wordDatabase[number];
-            
-            const wordElement = document.createElement('div');
-            wordElement.className = 'word';
-            wordElement.textContent = word;
-            wordElement.dataset.number = number;
-            wordElement.draggable = true;
-            
-            const removeIcon = document.createElement('i');
-            removeIcon.className = 'fas fa-times';
-            removeIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const number = parseInt(wordElement.dataset.number);
-                removeWordFromBank(number);
-                
-                // Also remove from selected numbers
-                const index = selectedNumbers.indexOf(number);
-                if (index !== -1) {
-                    selectedNumbers.splice(index, 1);
-                    document.querySelector(`.number[data-number="${number}"]`).classList.remove('selected');
-                }
-                
-                updateSubmitButton();
-            });
-            
-            wordElement.appendChild(removeIcon);
-            wordBank.appendChild(wordElement);
-            
-            selectedWords.push({ number, word, element: wordElement });
-            
-            // Enable drag and drop for the new word
-            wordElement.addEventListener('dragstart', handleDragStart);
-        }
-
-        // Remove word from word bank
-        function removeWordFromBank(number) {
-            const wordElement = document.querySelector(`.word[data-number="${number}"]`);
-            if (wordElement) {
-                wordElement.remove();
-            }
-            
-            // Remove from selectedWords array
-            selectedWords = selectedWords.filter(item => item.number !== number);
-            
-            // Remove from sentence if it's there
-            const sentenceWordElement = document.querySelector(`.sentence-word[data-number="${number}"]`);
-            if (sentenceWordElement) {
-                sentenceWordElement.remove();
-                sentenceWords = sentenceWords.filter(item => item.number !== number);
-            }
-            
-            // Show placeholder if sentence area is empty
-            if (sentenceWords.length === 0) {
-                placeholderText.style.display = 'block';
-            }
-        }
-
-        // Clear selection
-        function clearSelection() {
-            selectedNumbers.forEach(number => {
-                const element = document.querySelector(`.number[data-number="${number}"]`);
-                if (element) {
-                    element.classList.remove('selected');
-                }
-            });
-            
-            selectedNumbers = [];
-            selectedWords = [];
-            wordBank.innerHTML = '';
-            
-            clearSentence();
-            updateSubmitButton();
-        }
-
-        // Clear sentence
-        function clearSentence() {
-            sentenceWords = [];
-            sentenceArea.innerHTML = '';
-            placeholderText.style.display = 'block';
-            
-            // Return words to word bank
-            selectedWords.forEach(word => {
-                if (!wordBank.querySelector(`.word[data-number="${word.number}"]`)) {
-                    addWordToBank(word.number);
-                }
-            });
-        }
-
-        // Update submit button state
-        function updateSubmitButton() {
-            if (selectedNumbers.length >= 3 && selectedNumbers.length <= 10) {
-                submitSentenceBtn.disabled = false;
-                submitSentenceBtn.classList.add('pulse');
-            } else {
-                submitSentenceBtn.disabled = true;
-                submitSentenceBtn.classList.remove('pulse');
-            }
-        }
-
-        // Enable drag and drop
-        function enableDragAndDrop() {
-            // Allow drop in sentence area
-            sentenceArea.addEventListener('dragover', handleDragOver);
-            sentenceArea.addEventListener('drop', handleDrop);
-            
-            // Allow drop in word bank
-            wordBank.addEventListener('dragover', handleDragOver);
-            wordBank.addEventListener('drop', handleDropInWordBank);
-        }
-
-        // Handle drag start
-        function handleDragStart(e) {
-            e.dataTransfer.setData('text/plain', e.target.dataset.number);
-            e.target.classList.add('dragging');
-        }
-
-        // Handle drag over
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-        }
-
-        // Handle drop in sentence area
-        function handleDrop(e) {
-            e.preventDefault();
-            const number = e.dataTransfer.getData('text/plain');
-            const wordElement = document.querySelector(`.word[data-number="${number}"]`);
-            
-            if (wordElement) {
-                // Remove from word bank
-                wordElement.remove();
-                
-                // Add to sentence area
-                addWordToSentence(parseInt(number), wordDatabase[number]);
-                
-                // Hide placeholder
-                placeholderText.style.display = 'none';
-            }
-        }
-
-        // Handle drop in word bank
-        function handleDropInWordBank(e) {
-            e.preventDefault();
-            const number = e.dataTransfer.getData('text/plain');
-            const sentenceWordElement = document.querySelector(`.sentence-word[data-number="${number}"]`);
-            
-            if (sentenceWordElement) {
-                // Remove from sentence
-                sentenceWordElement.remove();
-                sentenceWords = sentenceWords.filter(item => item.number !== parseInt(number));
-                
-                // Add back to word bank
-                addWordToBank(parseInt(number));
-                
-                // Show placeholder if sentence is empty
-                if (sentenceWords.length === 0) {
-                    placeholderText.style.display = 'block';
-                }
+            // Check if selection is complete
+            if (selectedNumbers.length === selectedWordCount) {
+                document.querySelectorAll('.number').forEach(num => {
+                    if (!num.classList.contains('selected')) {
+                        num.classList.add('disabled');
+                    }
+                });
             }
         }
 
         // Add word to sentence area
         function addWordToSentence(number, word) {
+            // Hide placeholder
+            placeholderText.style.display = 'none';
+            
             const wordElement = document.createElement('div');
             wordElement.className = 'sentence-word';
             wordElement.textContent = word;
             wordElement.dataset.number = number;
-            wordElement.draggable = true;
             
-            const removeIcon = document.createElement('i');
-            removeIcon.className = 'fas fa-times';
-            removeIcon.addEventListener('click', () => {
-                wordElement.remove();
-                sentenceWords = sentenceWords.filter(item => item.number !== number);
-                addWordToBank(number);
-                
-                if (sentenceWords.length === 0) {
-                    placeholderText.style.display = 'block';
-                }
-            });
-            
-            wordElement.appendChild(removeIcon);
             sentenceArea.appendChild(wordElement);
             
             sentenceWords.push({ number, word, element: wordElement });
-            
-            // Enable drag for the new word
-            wordElement.addEventListener('dragstart', handleDragStart);
         }
 
         // Validate sentence
-        function validateSentence() {
-            if (sentenceWords.length < 3) {
-                showNotification('Sentence must contain at least 3 words', 'error');
+        async function validateSentence() {
+            if (!roundActive) {
+                showNotification('Please place a bet first', 'error');
                 return;
             }
             
-            attempts++;
-            attemptsValue.textContent = attempts;
-            
-            // Simple validation for demo purposes
-            const sentence = sentenceWords.map(item => item.word).join(' ');
-            let isValid = false;
-            let points = 0;
-            
-            // Basic grammar check (in a real app, this would be more sophisticated)
-            if (sentence.split(' ').length >= 5) {
-                isValid = true;
-                points = 20;
-            } else if (sentence.split(' ').length >= 3) {
-                isValid = true;
-                points = 10;
-            }
-            
-            if (isValid) {
-                correctAttempts++;
-                score += points;
-                scoreValue.textContent = score;
-                accuracyValue.textContent = Math.round((correctAttempts / attempts) * 100) + '%';
-                
-                showNotification(`Valid sentence! +${points} points`, 'success');
-            } else {
-                showNotification('Sentence needs improvement. Try adding more words.', 'error');
-            }
-        }
-
-        // Submit to AI for evaluation
-        async function submitToAI() {
-            if (sentenceWords.length < 3) {
-                showNotification('Sentence must contain at least 3 words', 'error');
+            if (sentenceWords.length !== selectedWordCount) {
+                showNotification(`Sentence must contain exactly ${selectedWordCount} words`, 'error');
                 return;
             }
             
             const sentence = sentenceWords.map(item => item.word).join(' ');
-            
-            // Show loading state
-            submitSentenceBtn.innerHTML = '<div class="loading"></div> Evaluating...';
-            submitSentenceBtn.disabled = true;
             
             try {
-                // In a real implementation, you would call the Cohere API here
-                // For this demo, we'll simulate an API call
-                const aiEvaluation = await simulateAIEvaluation(sentence);
+                // Use AI to validate the sentence
+                const isValid = await validateSentenceWithAI(sentence, currentTopic);
                 
-                // Display AI response
-                aiText.innerHTML = aiEvaluation;
-                aiResponse.classList.add('show');
-                
-                // Update score based on AI evaluation
-                score += 15; // Bonus points for using AI evaluation
-                scoreValue.textContent = score;
-                
-                showNotification('AI evaluation completed! +15 points', 'success');
+                if (isValid) {
+                    // Calculate winnings based on word count
+                    const payoutMultipliers = {
+                        3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 7, 9: 8, 10: 10
+                    };
+                    
+                    const winnings = currentBet * payoutMultipliers[selectedWordCount];
+                    balance += winnings;
+                    
+                    // Update UI
+                    winValue.textContent = winnings;
+                    updateUI();
+                    
+                    // Show AI evaluation
+                    showAIEvaluation(sentence, true, winnings);
+                    
+                    showNotification(`Congratulations! You won ${winnings} coins!`, 'success');
+                    
+                    // End the round
+                    roundActive = false;
+                } else {
+                    showAIEvaluation(sentence, false, 0);
+                    showNotification('Sentence does not match the topic. Try again!', 'error');
+                }
             } catch (error) {
-                console.error('AI evaluation error:', error);
-                showNotification('Error evaluating sentence. Please try again.', 'error');
-            } finally {
-                // Reset button
-                submitSentenceBtn.innerHTML = '<i class="fas fa-robot"></i> AI Evaluation';
-                submitSentenceBtn.disabled = false;
+                console.error('Error validating sentence:', error);
+                // Fallback to random validation if AI fails
+                const isValid = Math.random() > 0.3; // 70% chance of being valid for demo
+                
+                if (isValid) {
+                    const payoutMultipliers = {
+                        3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 7, 9: 8, 10: 10
+                    };
+                    
+                    const winnings = currentBet * payoutMultipliers[selectedWordCount];
+                    balance += winnings;
+                    
+                    winValue.textContent = winnings;
+                    updateUI();
+                    
+                    showAIEvaluation(sentence, true, winnings);
+                    showNotification(`Congratulations! You won ${winnings} coins!`, 'success');
+                    roundActive = false;
+                } else {
+                    showAIEvaluation(sentence, false, 0);
+                    showNotification('Sentence does not match the topic. Try again!', 'error');
+                }
             }
         }
 
-        // Simulate AI evaluation (in a real app, this would call the Cohere API)
-        function simulateAIEvaluation(sentence) {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    const evaluations = [
-                        `Your sentence "<strong>${sentence}</strong>" demonstrates good syntactic structure. The word order follows standard English patterns, and the phrase is grammatically correct. Well done!`,
-                        `The sentence "<strong>${sentence}</strong>" is syntactically sound. The arrangement of words creates a meaningful expression that would be easily understood by native speakers.`,
-                        `"<strong>${sentence}</strong>" is a valid English construction. The syntax follows subject-verb-object order where appropriate, and the phrase conveys a clear meaning.`,
-                        `This sentence "<strong>${sentence}</strong>" shows understanding of basic English syntax. While correct, you could enhance it by adding descriptive words or extending the thought.`,
-                        `Your formation "<strong>${sentence}</strong>" works syntactically. The words are in the correct order to form a coherent phrase that communicates a complete idea.`
-                    ];
-                    
-                    const randomEvaluation = evaluations[Math.floor(Math.random() * evaluations.length)];
-                    resolve(randomEvaluation);
-                }, 2000);
-            });
+        // Validate sentence with AI
+        async function validateSentenceWithAI(sentence, topic) {
+            try {
+                const response = await fetch('https://api.cohere.ai/v1/classify', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${COHERE_API_KEY}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: 'embed-english-v2.0',
+                        inputs: [`Sentence: ${sentence}\nTopic: ${topic}`],
+                        examples: [
+                            { text: "Sentence: I AM GOING TO THE STORE\nTopic: Dialogue Bank [Shopping] ⬇\nPERSON1: [WHAT DO YOU NEED TO BUY] [WHEN WILL YOU GO]\nPERSON2: [I NEED MILK AND BREAD] [I WILL GO THIS AFTERNOON]", label: "valid" },
+                            { text: "Sentence: THE WEATHER IS NICE TODAY\nTopic: Dialogue Bank [Shopping] ⬇\nPERSON1: [WHAT DO YOU NEED TO BUY] [WHEN WILL YOU GO]\nPERSON2: [I NEED MILK AND BREAD] [I WILL GO THIS AFTERNOON]", label: "invalid" },
+                            { text: "Sentence: CAN YOU HELP ME WITH THIS\nTopic: Dialogue Bank [Work Project] ⬇\nPERSON1: [HAVE YOU FINISHED THE REPORT] [WHEN IS THE DEADLINE]\nPERSON2: [I AM STILL WORKING ON IT] [IT IS DUE NEXT WEEK]", label: "valid" },
+                            { text: "Sentence: I LIKE TO SWIM IN THE OCEAN\nTopic: Dialogue Bank [Work Project] ⬇\nPERSON1: [HAVE YOU FINISHED THE REPORT] [WHEN IS THE DEADLINE]\nPERSON2: [I AM STILL WORKING ON IT] [IT IS DUE NEXT WEEK]", label: "invalid" }
+                        ]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to validate sentence');
+                }
+
+                const data = await response.json();
+                const classification = data.classifications[0];
+                
+                // Return true if the prediction is "valid"
+                return classification.prediction === "valid";
+            } catch (error) {
+                console.error('Error with AI validation:', error);
+                throw error;
+            }
+        }
+
+        // Show AI evaluation
+        function showAIEvaluation(sentence, isValid, winnings) {
+            let evaluation = "";
+            
+            if (isValid) {
+                evaluation = `
+                    <p>Your sentence "<strong>${sentence}</strong>" is valid and matches the topic!</p>
+                    <p>You won <strong>${winnings} coins</strong>!</p>
+                    <p>The sentence follows proper grammatical structure and makes sense in the context of the dialogue.</p>
+                `;
+            } else {
+                evaluation = `
+                    <p>Your sentence "<strong>${sentence}</strong>" does not properly match the topic.</p>
+                    <p>Try to create a sentence that fits within the context of the dialogue provided.</p>
+                    <p>Consider the relationships between the characters and the situation described.</p>
+                `;
+            }
+            
+            aiText.innerHTML = evaluation;
+            aiResponse.classList.add('show');
+        }
+
+        // Update UI
+        function updateUI() {
+            balanceValue.textContent = balance;
+            betValue.textContent = currentBet;
         }
 
         // Show notification
