@@ -9,8 +9,8 @@
         :root {
             --primary: #0a2e5a;
             --secondary: #1a4789;
-            --accent: #ff9d00;
-            --accent-gradient: linear-gradient(to right, #ff9d00, #ffcc00);
+            --accent: #4cc9f0;
+            --accent-gradient: linear-gradient(to right, #4cc9f0, #4895ef);
             --text-light: #ffffff;
             --text-gray: #a0c1ed;
             --card-bg: #1a3e75;
@@ -114,6 +114,7 @@
 
         .panel-title i {
             font-size: 1.2rem;
+            color: var(--accent);
         }
 
         .topic-box {
@@ -191,7 +192,7 @@
         .word-btn.active {
             background: var(--accent-gradient);
             color: var(--primary);
-            box-shadow: 0 5px 15px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.4);
         }
 
         .word-btn .btn-label {
@@ -219,12 +220,12 @@
             justify-content: center;
             gap: 10px;
             margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.4);
         }
 
         .place-bet-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 157, 0, 0.6);
+            box-shadow: 0 8px 20px rgba(76, 201, 240, 0.6);
         }
 
         .place-bet-btn:disabled {
@@ -265,7 +266,7 @@
         .number:hover {
             transform: translateY(-3px);
             border-color: var(--accent);
-            box-shadow: 0 5px 15px rgba(255, 157, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.2);
         }
 
         .number.selected {
@@ -302,7 +303,7 @@
             align-items: center;
             gap: 10px;
             animation: popIn 0.3s ease;
-            box-shadow: 0 3px 10px rgba(255, 157, 0, 0.1);
+            box-shadow: 0 3px 10px rgba(76, 201, 240, 0.1);
             color: var(--text-light);
         }
 
@@ -343,9 +344,9 @@
         }
 
         .btn-secondary:hover {
-            background: #ffb133;
+            background: #3ab0d9;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 157, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
         }
 
         .btn-success {
@@ -497,9 +498,9 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 157, 0, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 157, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 157, 0, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 201, 240, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0); }
         }
 
         .notification {
