@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnglaBet - Rules & Clues</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a2e5a;
+            --secondary: #1a4789;
+            --accent: #4cc9f0;
+            --accent-gradient: linear-gradient(to right, #4cc9f0, #4895ef);
+            --text-light: #ffffff;
+            --text-gray: #a0c1ed;
+            --card-bg: #1a3e75;
+            --card-dark: #0f2b50;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #e63946;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            animation: fadeIn 0.8s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            color: var(--text-light);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        h1 i {
+            color: var(--accent);
+        }
+
+        .subtitle {
+            color: var(--text-gray);
+            font-size: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .game-modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .module-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            animation: slideUp 0.5s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .module-card.active {
+            border-color: var(--accent);
+            box-shadow: 0 10px 20px rgba(76, 201, 240, 0.3);
+        }
+
+        .module-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .module-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .module-description {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .rules-content {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            animation: slideUp 0.5s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .rules-content.active {
+            display: block;
+        }
+
+        .rules-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .rules-header i {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+
+        .rules-title {
+            font-size: 1.8rem;
+            color: var(--text-light);
+        }
+
+        .rules-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            font-size: 1.2rem;
+        }
+
+        .rules-list {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .rules-list li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: var(--text-light);
+        }
+
+        .example-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        .example-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .example-content {
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .game-schedule {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .schedule-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .schedule-time {
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .schedule-game {
+            color: var(--text-light);
+        }
+
+        .warning-box {
+            background: rgba(230, 57, 70, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--danger);
+        }
+
+        .warning-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--danger);
+        }
+
+        .warning-content {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .age-restriction {
+            background: rgba(248, 150, 30, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--warning);
+        }
+
+        .age-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--warning);
+        }
+
+        .age-content {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .module-card {
+                padding: 15px;
+            }
+            
+            .module-title {
+                font-size: 1.3rem;
+            }
+            
+            .rules-content {
+                padding: 20px;
+            }
+            
+            .rules-title {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 15px 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .game-modules {
+                grid-template-columns: 1fr;
+            }
+            
+            .game-schedule {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-water"></i> EnglaBet</h1>
+            <p class="subtitle">Rules, Clues & Guidelines for All Game Modules</p>
+        </header>
+
+        <div class="game-modules">
+            <div class="module-card active" data-module="wordbet">
+                <div class="module-icon">
+                    <i class="fas fa-spell-check"></i>
+                </div>
+                <h3 class="module-title">WordBet</h3>
+                <p class="module-description">Predict English words according to system algorithm with outcomes every two hours.</p>
+            </div>
+            
+            <div class="module-card" data-module="virtualspelling">
+                <div class="module-icon">
+                    <i class="fas fa-keyboard"></i>
+                </div>
+                <h3 class="module-title">VirtualSpelling</h3>
+                <p class="module-description">Spell English words correctly within time limits for rewards.</p>
+            </div>
+            
+            <div class="module-card" data-module="syntaxbet">
+                <div class="module-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="module-title">SyntaxBet</h3>
+                <p class="module-description">Form meaningful dialogues from hidden letters to create complete sentences.</p>
+            </div>
+        </div>
+
+        <!-- WordBet Rules -->
+        <div class="rules-content active" id="wordbet-rules">
+            <div class="rules-header">
+                <i class="fas fa-spell-check"></i>
+                <h2 class="rules-title">WordBet Rules & Clues</h2>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-clock"></i> Game Schedule</h3>
+                <p>From 08:00am to 12:00am daily, there are eight game rounds, each valid for two hours:</p>
+                
+                <div class="game-schedule">
+                    <div class="schedule-item">
+                        <div class="schedule-time">08:00am - 10:00am</div>
+                        <div class="schedule-game">DEWDROP</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">10:00am - 12:00pm</div>
+                        <div class="schedule-game">EVOLUTION</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">12:00pm - 02:00pm</div>
+                        <div class="schedule-game">MIDDAY</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">02:00pm - 04:00pm</div>
+                        <div class="schedule-game">GENIUS</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">04:00pm - 06:00pm</div>
+                        <div class="schedule-game">FAST LANE</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">06:00pm - 08:00pm</div>
+                        <div class="schedule-game">ANGLOPHONES</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">08:00pm - 10:00pm</div>
+                        <div class="schedule-game">CHEETAH</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">10:00pm - 12:00am</div>
+                        <div class="schedule-game">EXIT</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-key"></i> Key Letter & Keyword</h3>
+                <ul class="rules-list">
+                    <li>Every active game has a permanent KEY LETTER and a changing KEYWORD</li>
+                    <li>The KEYWORD is a word that begins with the KEY LETTER</li>
+                    <li>The KEYWORD is only revealed when results are released</li>
+                </ul>
+                
+                <div class="example-box">
+                    <div class="example-title">Example:</div>
+                    <div class="example-content">
+                        Game: DEWDROP<br>
+                        Key Letter: A<br>
+                        Keyword: ADVANTAGE (unknown until results released)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-edit"></i> Prediction Rules</h3>
+                <ul class="rules-list">
+                    <li>Predict words using the KEY LETTER as a clue or predict randomly</li>
+                    <li>Words must be at least three letters long (e.g., POT, CAR, BAG)</li>
+                    <li>Longer words with morphemes have higher odds and winnings</li>
+                    <li>Examples: DIS-ADVANTAGE-OUS, INTEN(D)-TION-AL-LLY</li>
+                    <li>Some long words like MATHEMATICS have single morphemes</li>
+                    <li>Minimum stake: $0.1 per word in a slip</li>
+                    <li>Maximum words per slip: 10</li>
+                </ul>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-lightbulb"></i> Keyword Rival</h3>
+                <p>A KEYWORD Rival is a word similar in spelling to the KEYWORD, provided for reference and learning.</p>
+                
+                <div class="example-box">
+                    <div class="example-title">Example:</div>
+                    <div class="example-content">
+                        ADVANTAGE → ADVENTURE
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-cogs"></i> Result Generation</h3>
+                <p>The system generates results as follows:</p>
+                <ul class="rules-list">
+                    <li>Takes the KEY LETTER of the game</li>
+                    <li>Generates a KEYWORD from the dictionary</li>
+                    <li>Splits the KEYWORD and adds affixes (if any)</li>
+                    <li>Adds strange letters to the split KEYWORD</li>
+                    <li>Produces an OVERVIEW of all possible words from the process</li>
+                </ul>
+                
+                <div class="example-box">
+                    <div class="example-title">Example with Keyword: ADVANTAGE</div>
+                    <div class="example-content">
+                        Word Split: -OUS E A D V A N G E T A DIS- F -LL- Y K -SS-<br><br>
+                        Overview:<br>
+                        ADVANTAGE, ADVANTAGEOUS, AGENT, ATE, DAFT, DANGEROUS, DAY,<br>
+                        DISADVANTAGE, DISADVANTAGES, DISADVANTAGEOUS, FALL, GATE,<br>
+                        GET, NAG, VAN, TAG
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-ban"></i> Important Restrictions</h3>
+                <ul class="rules-list">
+                    <li>Single letters cannot be doubled for advantage</li>
+                    <li>Double letters (-LL-, -GG-, -MM-, etc.) cannot be split into singles</li>
+                    <li>Affixes cannot be split into single letters</li>
+                    <li>Abbreviations and acronyms (FIFA, UNESCO, USA) are void</li>
+                    <li>Bets cannot be undone after 5 minutes</li>
+                    <li>Bets won't be processed 5 minutes before game round ends</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- VirtualSpelling Rules -->
+        <div class="rules-content" id="virtualspelling-rules">
+            <div class="rules-header">
+                <i class="fas fa-keyboard"></i>
+                <h2 class="rules-title">VirtualSpelling Rules & Clues</h2>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-info-circle"></i> Game Overview</h3>
+                <p>VirtualSpelling is a module focused on correctly spelling English words within time constraints.</p>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-gamepad"></i> How to Play</h3>
+                <ul class="rules-list">
+                    <li>Select a target word length (L3 to L12)</li>
+                    <li>Longer words offer higher odds and winnings</li>
+                    <li>Correct letters are hidden under figures with strange letters</li>
+                    <li>Select letters in correct order to spell the target word</li>
+                    <li>Each game round lasts 120 seconds</li>
+                    <li>1,440 game rounds available daily</li>
+                </ul>
+                
+                <div class="example-box">
+                    <div class="example-title">Word Length Examples:</div>
+                    <div class="example-content">
+                        L12: INTRODUCTION<br>
+                        L11: MATHEMATICS<br>
+                        L10: UNIVERSITY<br>
+                        L9: ECONOMICS<br>
+                        L8: ACCIDENT<br>
+                        L7: VEHICLE<br>
+                        L6: OFFICE<br>
+                        L5: HOUSE<br>
+                        L4: WIFE<br>
+                        L3: CUP
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-play-circle"></i> Game Interface</h3>
+                <ul class="rules-list">
+                    <li>Target word is displayed after selection</li>
+                    <li>Letters are hidden under figures (3-5 strange letters included)</li>
+                    <li>Goal is to select correct letters in proper order</li>
+                </ul>
+                
+                <div class="example-box">
+                    <div class="example-title">Example with HOUSE:</div>
+                    <div class="example-content">
+                        HOUSE [1][2][3][4][5][6][7][8]<br>
+                        Figures contain H, O, U, S, E plus 3 strange letters
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SyntaxBet Rules -->
+        <div class="rules-content" id="syntaxbet-rules">
+            <div class="rules-header">
+                <i class="fas fa-comments"></i>
+                <h2 class="rules-title">SyntaxBet Rules & Clues</h2>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-info-circle"></i> Game Overview</h3>
+                <p>SyntaxBet involves forming meaningful dialogues from hidden letters to create complete sentences, clauses, or phrases.</p>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-gamepad"></i> How to Play</h3>
+                <ul class="rules-list">
+                    <li>Form meaningful dialogues from letters 1-100</li>
+                    <li>Dialogues must make complete sense (clause, sentence, question, statement)</li>
+                    <li>Minimum: 3 words, Maximum: 10 words</li>
+                    <li>Words must be arranged rightward, not leftward or random</li>
+                    <li>No apostrophe-shortened words (use full forms)</li>
+                    <li>Each game round lasts 120 seconds</li>
+                    <li>1,440 game rounds available daily</li>
+                </ul>
+                
+                <div class="example-box">
+                    <div class="example-title">Correct vs Incorrect Examples:</div>
+                    <div class="example-content">
+                        ❌ I'M HERE<br>
+                        ✔ [I] [AM] [HERE]<br><br>
+                        ❌ DON'T COME TO THE OFFICE TODAY<br>
+                        ✔ DO NOT COME TO THE OFFICE TODAY
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rules-section">
+                <h3 class="section-title"><i class="fas fa-trophy"></i> Scoring & Winnings</h3>
+                <ul class="rules-list">
+                    <li>Longer words yield higher odds and winnings</li>
+                    <li>Words are evaluated based on grammatical correctness and relevance</li>
+                    <li>Dialogues are checked against AI dialogue bank for validity</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="age-restriction">
+            <div class="age-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Age Restriction</h3>
+            </div>
+            <div class="age-content">
+                EnglaBet is strictly for users 18 years and older. By using our platform, you confirm that you meet this age requirement. We reserve the right to request age verification at any time.
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <div class="warning-title">
+                <i class="fas fa-exclamation-circle"></i>
+                <h3>Important Notice</h3>
+            </div>
+            <div class="warning-content">
+                Please ensure you have read and fully understood the rules and clues of all game modules before playing. EnglaBet assumes no responsibility if you fail to do so. All users must register with valid email, phone number, and bank details. Keep your account information secure and out of reach of third parties. Winnings not claimed within one month will be considered invalid.
+            </div>
+        </div>
+
+        <footer>
+            <p>EnglaBet &copy; 2023 | Learning & Earning Platform</p>
+        </footer>
+    </div>
+
+    <script>
+        // Module selection functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const moduleCards = document.querySelectorAll('.module-card');
+            const rulesContents = document.querySelectorAll('.rules-content');
+            
+            moduleCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove active class from all cards and contents
+                    moduleCards.forEach(c => c.classList.remove('active'));
+                    rulesContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked card
+                    this.classList.add('active');
+                    
+                    // Show corresponding rules content
+                    const module = this.getAttribute('data-module');
+                    document.getElementById(`${module}-rules`).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
