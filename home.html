@@ -1030,6 +1030,113 @@
             color: var(--text-gray);
             margin-bottom: 20px;
         }
+        
+        /* Spelling Screen Styles */
+        .spelling-body {
+            background: linear-gradient(135deg, #1a4789 0%, #0a2e5a 100%);
+        }
+        .spelling-header {
+            background: linear-gradient(to right, #1a4789, #0a2e5a);
+        }
+        .spelling-nav-active .top-nav-icon,
+        .spelling-nav-active .top-nav-text {
+            color: #00a8d8;
+        }
+        .spelling-game-card {
+            background: #1a3e75;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .spelling-game-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .spelling-game-card .game-status-indicator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .spelling-game-card .game-content {
+            margin-top: 25px;
+        }
+        .spelling-game-card .game-title-large {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            color: white;
+        }
+        .spelling-game-card .game-description {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .spelling-game-card .game-time-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .spelling-game-card .game-time-icon {
+            margin-right: 8px;
+            color: #00a8d8;
+        }
+        .spelling-game-card .play-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #00a8d8, #00d8e8);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 16px;
+        }
+        .spelling-game-card .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 168, 216, 0.4);
+        }
+        .spelling-hero {
+            text-align: center;
+            padding: 20px 0;
+            animation: fadeIn 0.8s ease;
+        }
+        .spelling-hero-icon {
+            font-size: 50px;
+            color: #00a8d8;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+        .spelling-hero-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #00a8d8, #00d8e8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .spelling-hero-subtitle {
+            font-size: 16px;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -1286,13 +1393,57 @@
                 </div>
             </div>
         </div>
-        <!-- Empty Screens for Other Navigation Items -->
-        <div id="spelling-screen" class="empty-screen">
-            <div class="empty-icon"><i class="fas fa-spell-check"></i></div>
-            <div class="empty-title">Spelling Games</div>
-            <div class="empty-text">This section is coming soon!</div>
-            <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
+        <!-- Spelling Screen Content -->
+        <div id="spelling-screen" class="screen-content">
+            <div class="spelling-hero">
+                <div class="spelling-hero-icon">
+                    <i class="fas fa-spell-check"></i>
+                </div>
+                <div class="spelling-hero-title">Spelling Games</div>
+                <div class="spelling-hero-subtitle">Test your spelling skills and compete with others!</div>
+            </div>
+            <div class="featured-section">
+                <div class="section-title">
+                    Active Games <span class="active-indicator"><i class="fas fa-check-circle"></i> LIVE</span>
+                </div>
+                <!-- Spelling Game Card -->
+                <div class="spelling-game-card">
+                    <div class="game-status-indicator">ACTIVE</div>
+                    <div class="game-content">
+                        <div class="game-title-large">Virtual Spelling Challenge</div>
+                        <div class="game-description">Test your spelling skills with our virtual spelling challenges. Compete with other players and improve your vocabulary!</div>
+                        <div class="game-time-display">
+                            <i class="fas fa-clock game-time-icon"></i>
+                            <span>Always Available</span>
+                            <span class="active-indicator"><i class="fas fa-check-circle"></i> ACTIVE</span>
+                        </div>
+                        <button class="play-button" onclick="window.location.href='virtual_spelling.html'">
+                            PLAY NOW
+                        </button>
+                        <div class="next-session">Available 24/7 - Play anytime!</div>
+                    </div>
+                </div>
+            </div>
+            <div class="featured-section">
+                <div class="section-title">
+                    How to Play
+                </div>
+                <div class="game-card">
+                    <div class="game-rules">
+                        <div class="rule-title">Spelling Game Rules</div>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li style="margin-bottom: 8px;">Listen to the word pronunciation or read the definition</li>
+                            <li style="margin-bottom: 8px;">Type the correct spelling of the word</li>
+                            <li style="margin-bottom: 8px;">Earn points for each correct answer</li>
+                            <li style="margin-bottom: 8px;">Compete with other players in real-time</li>
+                            <li style="margin-bottom: 8px;">Complete different levels of difficulty</li>
+                            <li>Challenge yourself to improve your spelling skills</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
+        <!-- Empty Screens for Other Navigation Items -->
         <div id="tournaments-screen" class="empty-screen">
             <div class="empty-icon"><i class="fas fa-trophy"></i></div>
             <div class="empty-title">Tournaments</div>
@@ -1747,7 +1898,7 @@
             });
             // Update top navigation
             document.querySelectorAll('.top-nav-item').forEach(item => {
-                item.classList.remove('top-nav-active', 'wordbet-nav-active', 'syntaxbet-nav-active');
+                item.classList.remove('top-nav-active', 'wordbet-nav-active', 'syntaxbet-nav-active', 'spelling-nav-active');
             });
             if (screenId === 'wordbet') {
                 document.body.classList.add('wordbet-body');
@@ -1762,9 +1913,15 @@
                 document.querySelectorAll(`.top-nav-item[data-screen="${screenId}"]`).forEach(item => {
                     item.classList.add('syntaxbet-nav-active');
                 });
+            } else if (screenId === 'spelling') {
+                document.body.classList.add('spelling-body');
+                document.getElementById('main-header').classList.add('spelling-header');
+                document.querySelectorAll(`.top-nav-item[data-screen="${screenId}"]`).forEach(item => {
+                    item.classList.add('spelling-nav-active');
+                });
             } else {
-                document.body.classList.remove('wordbet-body', 'syntaxbet-body');
-                document.getElementById('main-header').classList.remove('wordbet-header', 'syntaxbet-header');
+                document.body.classList.remove('wordbet-body', 'syntaxbet-body', 'spelling-body');
+                document.getElementById('main-header').classList.remove('wordbet-header', 'syntaxbet-header', 'spelling-header');
                 document.querySelectorAll(`.top-nav-item[data-screen="${screenId}"]`).forEach(item => {
                     item.classList.add('top-nav-active');
                 });

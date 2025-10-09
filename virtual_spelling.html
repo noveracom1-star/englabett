@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnglaBet - VirtualSpelling</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a2e5a;
+            --secondary: #1a4789;
+            --accent: #4cc9f0;
+            --accent-gradient: linear-gradient(135deg, #4cc9f0, #4895ef);
+            --yellow: #ffcc00;
+            --yellow-gradient: linear-gradient(135deg, #ffcc00, #ffaa00);
+            --success: #4ade80;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-light: #ffffff;
+            --text-gray: #a0c1ed;
+            --card-bg: #1a3e75;
+            --card-dark: #0f2b50;
+            --border-radius: 16px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .user-balance {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .game-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.5s ease;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-light);
+            font-size: 1.4rem;
+        }
+
+        .panel-title i {
+            color: var(--accent);
+            font-size: 1.3rem;
+        }
+
+        /* Timer Styles */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .timer {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .timer.running {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .timer.warning {
+            color: var(--warning);
+            border-color: var(--warning);
+            animation: pulse 1s infinite;
+        }
+
+        .timer.danger {
+            color: var(--danger);
+            border-color: var(--danger);
+            animation: pulse 0.5s infinite;
+        }
+
+        /* Word Level Selection */
+        .level-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .level-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .level-card.active {
+            border-color: var(--yellow);
+            background: rgba(255, 204, 0, 0.2);
+        }
+
+        .level-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--yellow);
+        }
+
+        .level-word {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .level-letters {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Game Stats */
+        .game-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--yellow);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        /* Target Word Display */
+        .target-word-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .target-label {
+            font-size: 1rem;
+            color: var(--text-gray);
+            margin-bottom: 10px;
+        }
+
+        .target-word {
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: var(--yellow);
+            text-transform: uppercase;
+        }
+
+        /* Number Grid */
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .number-box {
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+            color: var(--text-light);
+        }
+
+        .number-box:hover {
+            transform: translateY(-5px);
+            border-color: var(--yellow);
+            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.2);
+        }
+
+        .number-box.selected {
+            background: var(--yellow-gradient);
+            color: var(--primary);
+            border-color: var(--yellow);
+            transform: scale(1.05);
+        }
+
+        .number-box.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .number-box.strange {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--danger);
+        }
+
+        /* Player Word Area */
+        .player-word-area {
+            min-height: 120px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-letter {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--yellow);
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: popIn 0.3s ease;
+            box-shadow: 0 3px 10px rgba(255, 204, 0, 0.1);
+            color: var(--text-light);
+            min-width: 60px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .placeholder-text {
+            color: var(--text-gray);
+            font-style: italic;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--yellow-gradient);
+            color: var(--primary);
+            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.4);
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 204, 0, 0.6);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(10, 46, 90, 0.3);
+        }
+
+        /* Results Panel */
+        .results-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--yellow);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 25px;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .results-panel.show {
+            display: block;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--yellow);
+        }
+
+        .results-header i {
+            font-size: 1.5rem;
+        }
+
+        .score-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .score-item {
+            text-align: center;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .score-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--yellow);
+        }
+
+        .score-label {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        /* Game History */
+        .game-history {
+            margin-top: 30px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+            color: var(--yellow);
+        }
+
+        .history-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: rgba(76, 222, 128, 0.2);
+            color: var(--success);
+        }
+
+        .status.failed {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        /* Next Round Countdown */
+        .next-round-countdown {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: none;
+        }
+
+        .countdown-text {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--yellow);
+        }
+
+        .countdown-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 204, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .notification.info {
+            background: var(--accent);
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            .level-selection {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .number-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+            
+            .number-box {
+                height: 60px;
+                font-size: 1.3rem;
+            }
+            
+            .target-word {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .panel {
+                padding: 20px;
+            }
+            
+            .level-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                <h1>EnglaBet - VirtualSpelling</h1>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">JD</div>
+                <div class="user-details">
+                    <div class="user-name">John Doe</div>
+                    <div class="user-balance">1,250 coins</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="timer-container">
+            <div class="timer" id="timer">
+                <i class="fas fa-clock"></i>
+                <span id="timerValue">02:00</span>
+            </div>
+        </div>
+
+        <div class="game-container">
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-gamepad"></i> Game Setup</h2>
+                
+                <div class="level-selection">
+                    <div class="level-card active" data-level="3">
+                        <div class="level-number">L3</div>
+                        <div class="level-word">3 Letters</div>
+                        <div class="level-letters">Easy</div>
+                    </div>
+                    <div class="level-card" data-level="4">
+                        <div class="level-number">L4</div>
+                        <div class="level-word">4 Letters</div>
+                        <div class="level-letters">Easy</div>
+                    </div>
+                    <div class="level-card" data-level="5">
+                        <div class="level-number">L5</div>
+                        <div class="level-word">5 Letters</div>
+                        <div class="level-letters">Medium</div>
+                    </div>
+                    <div class="level-card" data-level="6">
+                        <div class="level-number">L6</div>
+                        <div class="level-word">6 Letters</div>
+                        <div class="level-letters">Medium</div>
+                    </div>
+                    <div class="level-card" data-level="7">
+                        <div class="level-number">L7</div>
+                        <div class="level-word">7 Letters</div>
+                        <div class="level-letters">Hard</div>
+                    </div>
+                    <div class="level-card" data-level="8">
+                        <div class="level-number">L8</div>
+                        <div class="level-word">8 Letters</div>
+                        <div class="level-letters">Hard</div>
+                    </div>
+                    <div class="level-card" data-level="9">
+                        <div class="level-number">L9</div>
+                        <div class="level-word">9 Letters</div>
+                        <div class="level-letters">Expert</div>
+                    </div>
+                    <div class="level-card" data-level="10">
+                        <div class="level-number">L10</div>
+                        <div class="level-word">10 Letters</div>
+                        <div class="level-letters">Expert</div>
+                    </div>
+                </div>
+
+                <div class="game-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="gamesPlayed">0</div>
+                        <div class="stat-label">Games Played</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="gamesWon">0</div>
+                        <div class="stat-label">Games Won</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="successRate">0%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn-primary" id="startGameBtn">
+                        <i class="fas fa-play-circle"></i> Start Game
+                    </button>
+                    <button class="btn-secondary" id="resetGameBtn" disabled>
+                        <i class="fas fa-redo"></i> Reset Game
+                    </button>
+                </div>
+
+                <div class="results-panel" id="resultsPanel">
+                    <div class="results-header">
+                        <i class="fas fa-trophy"></i>
+                        <h3>Game Results</h3>
+                    </div>
+                    <div id="resultsText">Waiting for results...</div>
+                    
+                    <div class="score-display">
+                        <div class="score-item">
+                            <div class="score-value" id="resultCoins">0</div>
+                            <div class="score-label">Coins Won</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-value" id="resultTime">0s</div>
+                            <div class="score-label">Time Used</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-value" id="resultScore">0</div>
+                            <div class="score-label">Score</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="next-round-countdown" id="nextRoundCountdown">
+                    <div class="countdown-text">Next round starting in:</div>
+                    <div class="countdown-value" id="countdownValue">5</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-spell-check"></i> Spelling Challenge</h2>
+                
+                <div class="target-word-container">
+                    <div class="target-label">Target Word:</div>
+                    <div class="target-word" id="targetWord">Loading...</div>
+                </div>
+
+                <div class="number-grid" id="numberGrid">
+                    <!-- Numbers will be generated by JavaScript -->
+                </div>
+
+                <div class="player-word-area" id="playerWordArea">
+                    <p class="placeholder-text">Select numbers to reveal letters and build your word...</p>
+                </div>
+
+                <div class="controls">
+                    <button class="btn-primary" id="submitWordBtn" disabled>
+                        <i class="fas fa-check-circle"></i> Submit Word
+                    </button>
+                    <button class="btn-secondary" id="clearWordBtn" disabled>
+                        <i class="fas fa-times-circle"></i> Clear Word
+                    </button>
+                </div>
+
+                <div class="game-history">
+                    <div class="history-header">
+                        <h2 class="panel-title"><i class="fas fa-history"></i> Recent Games</h2>
+                    </div>
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Word</th>
+                                <th>Result</th>
+                                <th>Time</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody">
+                            <!-- History will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let currentLevel = 5;
+        let gameActive = false;
+        let timerInterval;
+        let timeLeft = 120; // 2 minutes in seconds
+        let selectedNumbers = [];
+        let targetWord = "";
+        let letterPool = [];
+        let playerWord = "";
+        let gameStartTime = 0;
+        let nextRoundCountdown = null;
+        let numberToLetterMap = {};
+
+        // Free dictionary API that doesn't require configuration
+        const DICTIONARY_API = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
+
+        // DOM elements
+        const timerElement = document.getElementById('timer');
+        const timerValue = document.getElementById('timerValue');
+        const levelCards = document.querySelectorAll('.level-card');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const resetGameBtn = document.getElementById('resetGameBtn');
+        const submitWordBtn = document.getElementById('submitWordBtn');
+        const clearWordBtn = document.getElementById('clearWordBtn');
+        const targetWordElement = document.getElementById('targetWord');
+        const numberGrid = document.getElementById('numberGrid');
+        const playerWordArea = document.getElementById('playerWordArea');
+        const resultsPanel = document.getElementById('resultsPanel');
+        const resultsText = document.getElementById('resultsText');
+        const resultCoins = document.getElementById('resultCoins');
+        const resultTime = document.getElementById('resultTime');
+        const resultScore = document.getElementById('resultScore');
+        const gamesPlayed = document.getElementById('gamesPlayed');
+        const gamesWon = document.getElementById('gamesWon');
+        const successRate = document.getElementById('successRate');
+        const nextRoundCountdownElement = document.getElementById('nextRoundCountdown');
+        const countdownValue = document.getElementById('countdownValue');
+        const historyBody = document.getElementById('historyBody');
+
+        // Initialize the game
+        function initGame() {
+            // Set up level selection
+            levelCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    if (gameActive) return;
+                    
+                    levelCards.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    currentLevel = parseInt(this.getAttribute('data-level'));
+                    updateTargetWord();
+                });
+            });
+
+            // Set up game controls
+            startGameBtn.addEventListener('click', startGame);
+            resetGameBtn.addEventListener('click', resetGame);
+            submitWordBtn.addEventListener('click', submitWord);
+            clearWordBtn.addEventListener('click', clearWord);
+
+            // Initialize with default level
+            updateTargetWord();
+        }
+
+        // Update target word based on selected level
+        async function updateTargetWord() {
+            try {
+                // Try to fetch a random word from the dictionary API
+                targetWord = await fetchRandomWord(currentLevel);
+                targetWordElement.textContent = targetWord.toUpperCase();
+            } catch (error) {
+                console.error('Failed to fetch word from API:', error);
+                // If API fails, show error and disable game
+                targetWordElement.textContent = "API Error - Try Again";
+                startGameBtn.disabled = true;
+                showNotification('Dictionary API is currently unavailable. Please try again later.', 'error');
+            }
+        }
+
+        // Fetch a random word from dictionary API
+        async function fetchRandomWord(length) {
+            // First, try to get a random word from the dictionary API
+            try {
+                // Get a list of common words by making multiple API calls
+                const commonWords = await fetchCommonWords(length);
+                if (commonWords.length > 0) {
+                    const randomWord = commonWords[Math.floor(Math.random() * commonWords.length)];
+                    
+                    // Verify the word exists in the dictionary
+                    const response = await fetch(`${DICTIONARY_API}${randomWord}`);
+                    if (response.ok) {
+                        return randomWord;
+                    }
+                }
+            } catch (error) {
+                console.warn('Primary dictionary API failed, trying alternative approach');
+            }
+
+            // Fallback: Use a predefined list of verified words
+            const fallbackWords = getFallbackWords(length);
+            return fallbackWords[Math.floor(Math.random() * fallbackWords.length)];
+        }
+
+        // Fetch common words from dictionary API
+        async function fetchCommonWords(length) {
+            // This is a simplified approach - in a real app, you'd have a more robust word list
+            const wordAttempts = [
+                'apple', 'house', 'water', 'table', 'chair', 
+                'phone', 'music', 'light', 'plant', 'cloud',
+                'beach', 'smile', 'dream', 'pencil', 'friend',
+                'family', 'school', 'number', 'person', 'summer',
+                'winter', 'spring', 'garden', 'window', 'bottle',
+                'letter', 'mother', 'bicycle', 'teacher', 'country',
+                'picture', 'morning', 'evening', 'weather', 'holiday',
+                'weekend', 'problem', 'kitchen', 'library', 'diamond',
+                'journey', 'freedom', 'computer', 'language', 'question',
+                'building', 'business', 'children', 'hospital', 'magazine'
+            ];
+
+            const validWords = [];
+            
+            // Check which words have the correct length and exist in dictionary
+            for (const word of wordAttempts) {
+                if (word.length === length) {
+                    try {
+                        const response = await fetch(`${DICTIONARY_API}${word}`);
+                        if (response.ok) {
+                            validWords.push(word);
+                            if (validWords.length >= 5) break; // Get enough words
+                        }
+                    } catch (error) {
+                        // Continue to next word if this one fails
+                        continue;
+                    }
+                }
+            }
+            
+            return validWords;
+        }
+
+        // Get fallback words for when API fails
+        function getFallbackWords(length) {
+            // Minimal fallback words that are verified to exist
+            const fallbackWordsByLength = {
+                3: ["cat", "dog", "sun", "car", "bag", "hat", "bed", "map", "key", "cup"],
+                4: ["book", "desk", "door", "fish", "ball", "cake", "tree", "moon", "star", "food"],
+                5: ["house", "phone", "water", "table", "chair", "money", "paper", "music", "night", "light"],
+                6: ["office", "pencil", "friend", "family", "school", "number", "person", "summer", "winter", "spring"],
+                7: ["bicycle", "teacher", "country", "picture", "morning", "evening", "weather", "holiday", "weekend", "problem"],
+                8: ["computer", "language", "question", "building", "business", "children", "hospital", "magazine", "president", "university"],
+                9: ["cockroach", "direction", "education", "government", "information", "knowledge", "television", "transport", "vacation", "adventure"],
+                10: ["motorcycle", "experience", "importance", "management", "opportunity", "population", "restaurant", "telephone", "understand", "yellowstone"]
+            };
+            
+            return fallbackWordsByLength[length] || ["example"];
+        }
+
+        // Start the game
+        async function startGame() {
+            if (gameActive) return;
+            
+            // Get a new word for this round
+            await updateTargetWord();
+            
+            // Check if we have a valid word
+            if (!targetWord || targetWord === "API Error - Try Again") {
+                showNotification('Unable to fetch a word. Please try again.', 'error');
+                return;
+            }
+            
+            gameActive = true;
+            gameStartTime = Date.now();
+            
+            // Reset game state
+            selectedNumbers = [];
+            playerWord = "";
+            timeLeft = 120;
+            
+            // Update UI
+            updatePlayerWordArea();
+            updateTimerDisplay();
+            generateNumberPool();
+            updateControls();
+            
+            // Hide results and countdown
+            resultsPanel.classList.remove('show');
+            nextRoundCountdownElement.style.display = 'none';
+            
+            // Start timer
+            startTimer();
+            
+            // Show notification
+            showNotification(`Game started! Spell "${targetWord.toUpperCase()}" by selecting numbers.`, 'info');
+        }
+
+        // Generate number pool that maps to letters
+        function generateNumberPool() {
+            numberGrid.innerHTML = '';
+            letterPool = [];
+            numberToLetterMap = {};
+            
+            // Add correct letters from target word
+            const correctLetters = targetWord.toUpperCase().split('');
+            letterPool.push(...correctLetters);
+            
+            // Add strange letters (3-5 depending on level)
+            const strangeCount = Math.min(5, Math.max(3, currentLevel));
+            const strangeLetters = generateStrangeLetters(strangeCount, correctLetters);
+            letterPool.push(...strangeLetters);
+            
+            // Shuffle the letter pool
+            shuffleArray(letterPool);
+            
+            // Create mapping from numbers to letters
+            letterPool.forEach((letter, index) => {
+                numberToLetterMap[index + 1] = letter;
+            });
+            
+            // Create number boxes (show numbers instead of letters)
+            for (let i = 1; i <= letterPool.length; i++) {
+                const numberBox = document.createElement('div');
+                numberBox.className = 'number-box';
+                numberBox.textContent = i;
+                numberBox.dataset.number = i;
+                
+                // Check if this number maps to a strange letter
+                if (strangeLetters.includes(numberToLetterMap[i])) {
+                    numberBox.classList.add('strange');
+                }
+                
+                numberBox.addEventListener('click', () => {
+                    selectNumber(i, numberBox);
+                });
+                
+                numberGrid.appendChild(numberBox);
+            }
+        }
+
+        // Generate strange letters that are not in the target word
+        function generateStrangeLetters(count, correctLetters) {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const strangeLetters = [];
+            
+            // Filter out letters that are in the target word
+            const availableLetters = alphabet.split('').filter(letter => 
+                !correctLetters.includes(letter)
+            );
+            
+            // Select random letters
+            for (let i = 0; i < count; i++) {
+                if (availableLetters.length === 0) break;
+                
+                const randomIndex = Math.floor(Math.random() * availableLetters.length);
+                strangeLetters.push(availableLetters[randomIndex]);
+                availableLetters.splice(randomIndex, 1);
+            }
+            
+            return strangeLetters;
+        }
+
+        // Shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Select a number from the grid - FINAL SELECTION (cannot be changed)
+        function selectNumber(number, element) {
+            if (!gameActive) {
+                showNotification('Please start the game first', 'error');
+                return;
+            }
+            
+            // Check if this number is already selected
+            if (selectedNumbers.includes(number)) {
+                showNotification('Letter already selected! Selection is final.', 'error');
+                return;
+            }
+            
+            // Check if we've reached the word length limit
+            if (selectedNumbers.length >= targetWord.length) {
+                showNotification(`You can only select ${targetWord.length} letters for this word.`, 'error');
+                return;
+            }
+            
+            // Select the number (FINAL - cannot be changed)
+            selectedNumbers.push(number);
+            element.classList.add('selected');
+            element.classList.add('disabled'); // Disable after selection
+            
+            // Update player word (convert numbers to letters)
+            playerWord = selectedNumbers.map(n => numberToLetterMap[n]).join('');
+            updatePlayerWordArea();
+            updateControls();
+        }
+
+        // Update player word area display
+        function updatePlayerWordArea() {
+            playerWordArea.innerHTML = '';
+            
+            if (playerWord.length === 0) {
+                playerWordArea.innerHTML = '<p class="placeholder-text">Select numbers to reveal letters and build your word...</p>';
+                return;
+            }
+            
+            // Create letter elements for the player's word
+            playerWord.split('').forEach((letter, index) => {
+                const letterElement = document.createElement('div');
+                letterElement.className = 'player-letter';
+                letterElement.textContent = letter;
+                playerWordArea.appendChild(letterElement);
+            });
+        }
+
+        // Update control buttons state
+        function updateControls() {
+            startGameBtn.disabled = gameActive;
+            resetGameBtn.disabled = !gameActive;
+            submitWordBtn.disabled = playerWord.length !== targetWord.length;
+            clearWordBtn.disabled = true; // Always disabled - cannot clear selections
+        }
+
+        // Submit the word for validation
+        function submitWord() {
+            if (!gameActive) return;
+            
+            const timeUsed = Math.floor((Date.now() - gameStartTime) / 1000);
+            const isCorrect = checkWord();
+            
+            // End the game
+            endGame(isCorrect, timeUsed);
+        }
+
+        // Check if the player's word is correct
+        function checkWord() {
+            // For VirtualSpelling, any permutation of the correct letters is accepted
+            const playerSorted = playerWord.split('').sort().join('');
+            const targetSorted = targetWord.toUpperCase().split('').sort().join('');
+            
+            return playerSorted === targetSorted;
+        }
+
+        // Clear the current word - DISABLED (cannot clear selections)
+        function clearWord() {
+            showNotification('Letter selections are final and cannot be cleared.', 'error');
+            return;
+        }
+
+        // Reset the game
+        function resetGame() {
+            if (!gameActive) return;
+            
+            // Clear timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            
+            // Reset game state
+            gameActive = false;
+            selectedNumbers = [];
+            playerWord = "";
+            
+            // Update UI
+            updatePlayerWordArea();
+            updateControls();
+            resultsPanel.classList.remove('show');
+            nextRoundCountdownElement.style.display = 'none';
+            
+            // Reset timer display
+            timerElement.className = 'timer';
+            timerValue.textContent = '02:00';
+            
+            showNotification('Game reset. Ready to start a new game.', 'info');
+        }
+
+        // End the game
+        function endGame(isCorrect, timeUsed) {
+            gameActive = false;
+            
+            // Clear timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            
+            // Calculate score and coins
+            const baseScore = currentLevel * 10;
+            const timeBonus = Math.max(0, 120 - timeUsed);
+            const score = isCorrect ? baseScore + timeBonus : 0;
+            const coins = isCorrect ? Math.floor(score / 2) : 0;
+            
+            // Update results panel
+            resultsText.innerHTML = isCorrect ? 
+                `<p>Congratulations! You correctly spelled "<strong>${targetWord.toUpperCase()}</strong>"!</p>` :
+                `<p>Sorry! Your spelling "<strong>${playerWord}</strong>" doesn't match "<strong>${targetWord.toUpperCase()}</strong>".</p>`;
+            
+            resultCoins.textContent = coins;
+            resultTime.textContent = `${timeUsed}s`;
+            resultScore.textContent = score;
+            
+            resultsPanel.classList.add('show');
+            
+            // Update game stats and history
+            updateGameStats(isCorrect);
+            addToHistory(targetWord.toUpperCase(), isCorrect, timeUsed, score);
+            
+            // Show notification
+            if (isCorrect) {
+                showNotification(`Success! You earned ${coins} coins.`, 'success');
+            } else {
+                showNotification(`Try again! The correct word was "${targetWord.toUpperCase()}".`, 'error');
+            }
+            
+            updateControls();
+            
+            // Start next round countdown
+            startNextRoundCountdown();
+        }
+
+        // Start countdown to next round
+        function startNextRoundCountdown() {
+            let countdown = 5;
+            nextRoundCountdownElement.style.display = 'block';
+            countdownValue.textContent = countdown;
+            
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownValue.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    nextRoundCountdownElement.style.display = 'none';
+                    startNextRound();
+                }
+            }, 1000);
+        }
+
+        // Start the next round automatically
+        function startNextRound() {
+            // Reset game state for new round
+            resetGame();
+            
+            // Start the new game with a new word
+            startGame();
+        }
+
+        // Update game statistics
+        function updateGameStats(isWin) {
+            // In a real app, this would update from a database
+            // For demo purposes, we'll just increment values
+            const played = parseInt(gamesPlayed.textContent) + 1;
+            const won = parseInt(gamesWon.textContent) + (isWin ? 1 : 0);
+            const rate = Math.round((won / played) * 100);
+            
+            gamesPlayed.textContent = played;
+            gamesWon.textContent = won;
+            successRate.textContent = `${rate}%`;
+        }
+
+        // Add game to history
+        function addToHistory(word, isSuccess, time, score) {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${word}</td>
+                <td><span class="status ${isSuccess ? 'success' : 'failed'}">${isSuccess ? 'Success' : 'Failed'}</span></td>
+                <td>${time}s</td>
+                <td>${score}</td>
+            `;
+            
+            // Add to the beginning of the table
+            historyBody.insertBefore(newRow, historyBody.firstChild);
+            
+            // Limit to 10 entries
+            if (historyBody.children.length > 10) {
+                historyBody.removeChild(historyBody.lastChild);
+            }
+        }
+
+        // Start the countdown timer
+        function startTimer() {
+            timeLeft = 120;
+            updateTimerDisplay();
+            
+            // Clear any existing timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            // Start new timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    const timeUsed = Math.floor((Date.now() - gameStartTime) / 1000);
+                    endGame(false, timeUsed);
+                }
+            }, 1000);
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerValue.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update timer styling based on time remaining
+            timerElement.className = 'timer';
+            if (timeLeft <= 30) {
+                timerElement.classList.add('danger');
+            } else if (timeLeft <= 60) {
+                timerElement.classList.add('warning');
+            } else {
+                timerElement.classList.add('running');
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize the game when the page loads
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
