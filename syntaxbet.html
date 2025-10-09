@@ -541,6 +541,43 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Timer Styles */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .timer.running {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .timer.warning {
+            color: var(--warning);
+            border-color: var(--warning);
+            animation: pulse 1s infinite;
+        }
+
+        .timer.danger {
+            color: var(--danger);
+            border-color: var(--danger);
+            animation: pulse 0.5s infinite;
+        }
+
         /* Mobile-specific adjustments */
         @media (max-width: 768px) {
             h1 {
@@ -627,6 +664,13 @@
             <p class="subtitle">Form meaningful phrases, clauses, or sentences by selecting words in the rightward order. Challenge your syntax skills with our AI-powered evaluation system.</p>
         </header>
 
+        <div class="timer-container">
+            <div class="timer" id="timer">
+                <i class="fas fa-clock"></i>
+                <span id="timerValue">02:00</span>
+            </div>
+        </div>
+
         <div class="game-area">
             <div class="panel">
                 <h2 class="panel-title"><i class="fas fa-comments"></i> Topic & Betting</h2>
@@ -712,9 +756,6 @@
                     <button class="btn-success" id="validateSentence">
                         <i class="fas fa-check-circle"></i> Validate Sentence
                     </button>
-                    <button class="btn-secondary" id="newRound">
-                        <i class="fas fa-sync-alt"></i> New Round
-                    </button>
                 </div>
 
                 <div class="ai-response" id="aiResponse">
@@ -749,6 +790,7 @@
                 <li>Use the validation button to check if your sentence matches the topic</li>
                 <li>Win your bet multiplied by the payout rate if your sentence is valid</li>
                 <li>Challenge yourself to create more complex sentences for higher payouts</li>
+                <li>Each round has a 2-minute time limit</li>
             </ul>
         </div>
 
@@ -767,6 +809,8 @@
         let currentTopic = "";
         let wordDatabase = {};
         let roundActive = false;
+        let timerInterval;
+        let timeLeft = 120; // 2 minutes in seconds
 
         // DOM elements
         const numbersGrid = document.getElementById('numbersGrid');
@@ -777,12 +821,13 @@
         const placeBetBtn = document.getElementById('placeBetBtn');
         const wordButtons = document.querySelectorAll('.word-btn');
         const validateSentenceBtn = document.getElementById('validateSentence');
-        const newRoundBtn = document.getElementById('newRound');
         const aiResponse = document.getElementById('aiResponse');
         const aiText = document.getElementById('aiText');
         const balanceValue = document.getElementById('balanceValue');
         const winValue = document.getElementById('winValue');
         const betValue = document.getElementById('betValue');
+        const timerElement = document.getElementById('timer');
+        const timerValue = document.getElementById('timerValue');
 
         // Cohere API key
         const COHERE_API_KEY = "OjpC1Vsdtpebb9lRygjkMIklrFItDJF4RM3tFEoy";
@@ -810,7 +855,6 @@
             // Event listeners
             placeBetBtn.addEventListener('click', placeBet);
             validateSentenceBtn.addEventListener('click', validateSentence);
-            newRoundBtn.addEventListener('click', startNewRound);
             
             // Word button event listeners
             wordButtons.forEach(button => {
@@ -953,6 +997,9 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
             // Start the round
             roundActive = true;
             
+            // Start the timer
+            startTimer();
+            
             // Update UI
             updateUI();
             
@@ -964,6 +1011,66 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
             });
             
             showNotification(`Bet placed: ${betAmount} coins on W${selectedWordCount}`, 'success');
+        }
+
+        // Start the countdown timer
+        function startTimer() {
+            timeLeft = 120; // Reset to 2 minutes
+            updateTimerDisplay();
+            
+            // Clear any existing timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            // Start new timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endRound(false, "Time's up!");
+                }
+            }, 1000);
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerValue.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update timer styling based on time remaining
+            timerElement.className = 'timer';
+            if (timeLeft <= 30) {
+                timerElement.classList.add('danger');
+            } else if (timeLeft <= 60) {
+                timerElement.classList.add('warning');
+            } else {
+                timerElement.classList.add('running');
+            }
+        }
+
+        // End the current round
+        function endRound(isWin, message) {
+            roundActive = false;
+            
+            // Clear timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            
+            // Show notification
+            showNotification(message, isWin ? 'success' : 'error');
+            
+            // Reset timer display
+            timerElement.className = 'timer';
+            timerValue.textContent = '02:00';
+            
+            // Automatically start next round after a delay
+            setTimeout(startNewRound, 3000);
         }
 
         // Start new round
@@ -978,6 +1085,7 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
             // Clear UI
             sentenceArea.innerHTML = '';
             placeholderText.style.display = 'block';
+            aiResponse.classList.remove('show');
             
             // Reset number grid
             document.querySelectorAll('.number').forEach(number => {
@@ -998,7 +1106,7 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
             // Update UI
             updateUI();
             
-            showNotification('New round started!', 'success');
+            showNotification('New round started! Place your bet.', 'success');
         }
 
         // Toggle number selection
@@ -1084,13 +1192,12 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
                     // Show AI evaluation
                     showAIEvaluation(sentence, true, winnings);
                     
-                    showNotification(`Congratulations! You won ${winnings} coins!`, 'success');
-                    
-                    // End the round
-                    roundActive = false;
+                    // End the round with win
+                    endRound(true, `Congratulations! You won ${winnings} coins!`);
                 } else {
                     showAIEvaluation(sentence, false, 0);
-                    showNotification('Sentence does not match the topic. Try again!', 'error');
+                    // End the round with loss
+                    endRound(false, 'Sentence does not match the topic. Try again next round!');
                 }
             } catch (error) {
                 console.error('Error validating sentence:', error);
@@ -1109,11 +1216,12 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
                     updateUI();
                     
                     showAIEvaluation(sentence, true, winnings);
-                    showNotification(`Congratulations! You won ${winnings} coins!`, 'success');
-                    roundActive = false;
+                    // End the round with win
+                    endRound(true, `Congratulations! You won ${winnings} coins!`);
                 } else {
                     showAIEvaluation(sentence, false, 0);
-                    showNotification('Sentence does not match the topic. Try again!', 'error');
+                    // End the round with loss
+                    endRound(false, 'Sentence does not match the topic. Try again next round!');
                 }
             }
         }
