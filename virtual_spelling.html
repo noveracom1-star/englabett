@@ -128,6 +128,10 @@
             .game-container {
                 grid-template-columns: 1fr;
             }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
         }
 
         .panel {
@@ -593,6 +597,33 @@
             color: var(--danger);
         }
 
+        .user-letters {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+        }
+
+        .letter {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        .letter.correct {
+            background: rgba(76, 222, 128, 0.3);
+            color: var(--success);
+        }
+
+        .letter.incorrect {
+            background: rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+        }
+
         /* Next Round Countdown */
         .next-round-countdown {
             text-align: center;
@@ -716,6 +747,11 @@
             
             .target-word {
                 font-size: 1.5rem;
+            }
+            
+            .timer-container {
+                position: static;
+                margin-top: 10px;
             }
         }
 
@@ -891,6 +927,7 @@
                             <tr>
                                 <th>Word</th>
                                 <th>Bet</th>
+                                <th>Letters</th>
                                 <th>Result</th>
                                 <th>Winnings</th>
                             </tr>
@@ -1425,7 +1462,10 @@
             // Update game stats and history
             const isFullWin = failedLetters === 0;
             updateGameStats(isFullWin);
-            addToHistory(targetWord.toUpperCase(), currentBetAmount, resultStatus, winnings);
+            
+            // Get which letters were correct/incorrect
+            const letterAnalysis = analyzeLetters();
+            addToHistory(targetWord.toUpperCase(), currentBetAmount, resultStatus, winnings, letterAnalysis);
             
             // Show notification
             if (failedLetters === 0) {
@@ -1439,6 +1479,28 @@
             }
             
             updateControls();
+        }
+
+        // Analyze which letters were correct/incorrect
+        function analyzeLetters() {
+            const targetLetters = targetWord.toUpperCase().split('');
+            const playerLetters = playerWord.split('');
+            const result = [];
+            
+            // Create copies to avoid modifying the original arrays
+            let targetCopy = [...targetLetters];
+            
+            for (let i = 0; i < playerLetters.length; i++) {
+                const index = targetCopy.indexOf(playerLetters[i]);
+                if (index !== -1) {
+                    result.push({ letter: playerLetters[i], correct: true });
+                    targetCopy.splice(index, 1); // Remove the matched letter
+                } else {
+                    result.push({ letter: playerLetters[i], correct: false });
+                }
+            }
+            
+            return result;
         }
 
         // Update game statistics
@@ -1455,7 +1517,7 @@
         }
 
         // Add game to history
-        function addToHistory(word, bet, resultStatus, winnings) {
+        function addToHistory(word, bet, resultStatus, winnings, letterAnalysis) {
             const newRow = document.createElement('tr');
             
             let statusText, statusClass;
@@ -1470,12 +1532,27 @@
                 statusClass = "failed";
             }
             
+            // Create letter display
+            const lettersHtml = document.createElement('div');
+            lettersHtml.className = 'user-letters';
+            
+            letterAnalysis.forEach(item => {
+                const letterSpan = document.createElement('span');
+                letterSpan.className = `letter ${item.correct ? 'correct' : 'incorrect'}`;
+                letterSpan.textContent = item.letter;
+                lettersHtml.appendChild(letterSpan);
+            });
+            
             newRow.innerHTML = `
                 <td>${word}</td>
                 <td>₦${bet}</td>
+                <td></td>
                 <td><span class="status ${statusClass}">${statusText}</span></td>
                 <td>₦${winnings}</td>
             `;
+            
+            // Add the letters to the third cell
+            newRow.cells[2].appendChild(lettersHtml);
             
             // Add to the beginning of the table
             historyBody.insertBefore(newRow, historyBody.firstChild);
