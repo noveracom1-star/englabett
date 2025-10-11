@@ -58,6 +58,7 @@
             box-shadow: var(--box-shadow);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
         }
 
         .logo {
@@ -110,6 +111,12 @@
             font-size: 0.95rem;
         }
 
+        .timer-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
         .game-container {
             display: grid;
             grid-template-columns: 1fr 1.5fr;
@@ -150,12 +157,6 @@
         }
 
         /* Timer Styles */
-        .timer-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
         .timer {
             background: rgba(255, 255, 255, 0.15);
             border-radius: 40px;
@@ -190,19 +191,19 @@
         .level-selection {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 6px;
+            margin-bottom: 15px;
         }
 
         .level-card {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 6px;
-            padding: 10px 6px;
+            padding: 8px 4px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
             border: 2px solid transparent;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
 
         .level-card:hover {
@@ -216,19 +217,19 @@
         }
 
         .level-number {
-            font-size: 1rem;
+            font-size: 0.8rem;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             color: var(--yellow);
         }
 
         .level-word {
             font-weight: 600;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
         }
 
         .level-letters {
-            font-size: 0.65rem;
+            font-size: 0.55rem;
             opacity: 0.8;
             margin-top: 2px;
         }
@@ -237,25 +238,25 @@
         .game-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
         .stat-card {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 12px;
+            border-radius: 8px;
+            padding: 10px;
             text-align: center;
         }
 
         .stat-value {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: var(--yellow);
         }
 
         .stat-label {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: var(--text-gray);
         }
 
@@ -263,31 +264,31 @@
         .betting-area {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 12px;
+            margin-bottom: 15px;
             border: 2px dashed rgba(255, 255, 255, 0.2);
         }
 
         .betting-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--text-gray);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .bet-amount-container {
             display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 10px;
         }
 
         .bet-amount {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--text-light);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             text-align: center;
         }
 
@@ -302,19 +303,19 @@
 
         .bet-button {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background: var(--yellow-gradient);
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--primary);
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .bet-button:hover {
@@ -333,22 +334,22 @@
         .target-word-container {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
             text-align: center;
             border: 2px dashed rgba(255, 255, 255, 0.2);
         }
 
         .target-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--text-gray);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .target-word {
-            font-size: 2rem;
+            font-size: 1.7rem;
             font-weight: bold;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             color: var(--yellow);
             text-transform: uppercase;
         }
@@ -356,21 +357,21 @@
         /* Number Grid */
         .number-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
         .number-box {
             background: var(--card-bg);
             border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            height: 60px;
+            border-radius: 8px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: var(--transition);
             user-select: none;
@@ -378,7 +379,7 @@
         }
 
         .number-box:hover {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             border-color: var(--yellow);
             box-shadow: 0 4px 12px rgba(255, 204, 0, 0.2);
         }
@@ -397,15 +398,15 @@
 
         /* Player Word Area */
         .player-word-area {
-            min-height: 100px;
-            padding: 15px;
+            min-height: 80px;
+            padding: 12px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            border-radius: 8px;
             border: 2px dashed rgba(255, 255, 255, 0.2);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
             justify-content: center;
         }
@@ -413,17 +414,17 @@
         .player-letter {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid var(--yellow);
-            padding: 12px 15px;
-            border-radius: 8px;
+            padding: 10px 12px;
+            border-radius: 6px;
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             animation: popIn 0.3s ease;
             box-shadow: 0 2px 8px rgba(255, 204, 0, 0.1);
             color: var(--text-light);
-            min-width: 50px;
+            min-width: 45px;
             text-align: center;
             justify-content: center;
         }
@@ -431,28 +432,28 @@
         .placeholder-text {
             color: var(--text-gray);
             font-style: italic;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         /* Controls */
         .controls {
             display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
         }
 
         button {
-            padding: 12px 20px;
+            padding: 10px 15px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
+            gap: 6px;
+            font-size: 0.8rem;
         }
 
         .btn-primary {
@@ -489,9 +490,9 @@
         .results-panel {
             background: rgba(255, 255, 255, 0.1);
             border-left: 4px solid var(--yellow);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
             display: none;
             animation: slideIn 0.5s ease;
         }
@@ -503,77 +504,77 @@
         .results-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 10px;
             color: var(--yellow);
         }
 
         .results-header i {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
         }
 
         .score-display {
             display: flex;
             justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
 
         .score-item {
             text-align: center;
             flex: 1;
-            min-width: 80px;
+            min-width: 70px;
         }
 
         .score-value {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
             color: var(--yellow);
         }
 
         .score-label {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: var(--text-gray);
         }
 
         /* Game History */
         .game-history {
-            margin-top: 25px;
+            margin-top: 20px;
         }
 
         .history-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .history-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
 
         .history-table th {
             text-align: left;
-            padding: 12px;
+            padding: 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             font-weight: 600;
             color: var(--yellow);
         }
 
         .history-table td {
-            padding: 12px;
+            padding: 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .status {
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: 600;
         }
 
@@ -595,21 +596,21 @@
         /* Next Round Countdown */
         .next-round-countdown {
             text-align: center;
-            margin-top: 15px;
-            padding: 12px;
+            margin-top: 12px;
+            padding: 10px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+            border-radius: 6px;
             display: none;
         }
 
         .countdown-text {
-            font-size: 0.95rem;
-            margin-bottom: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
             color: var(--yellow);
         }
 
         .countdown-value {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: var(--accent);
         }
@@ -647,7 +648,7 @@
             position: fixed;
             top: 15px;
             right: 15px;
-            padding: 12px 20px;
+            padding: 10px 15px;
             border-radius: 6px;
             color: white;
             font-weight: 500;
@@ -655,10 +656,10 @@
             animation: slideIn 0.5s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 280px;
-            font-size: 0.9rem;
+            max-width: 250px;
+            font-size: 0.8rem;
         }
 
         .notification.success {
@@ -676,8 +677,8 @@
         /* Loading */
         .loading {
             display: inline-block;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border: 2px solid rgba(255,255,255,.3);
             border-radius: 50%;
             border-top-color: #fff;
@@ -692,12 +693,12 @@
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
-                gap: 12px;
+                gap: 10px;
                 text-align: center;
             }
             
             .logo h1 {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
             
             .level-selection {
@@ -705,16 +706,16 @@
             }
             
             .number-grid {
-                grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
             }
             
             .number-box {
-                height: 50px;
-                font-size: 1.1rem;
+                height: 45px;
+                font-size: 1rem;
             }
             
             .target-word {
-                font-size: 1.7rem;
+                font-size: 1.5rem;
             }
         }
 
@@ -724,7 +725,7 @@
             }
             
             .panel {
-                padding: 15px;
+                padding: 12px;
             }
             
             .level-selection {
@@ -756,14 +757,13 @@
                     <div class="user-balance">₦12,500</div>
                 </div>
             </div>
-        </header>
-
-        <div class="timer-container">
-            <div class="timer" id="timer">
-                <i class="fas fa-clock"></i>
-                <span id="timerValue">02:00</span>
+            <div class="timer-container">
+                <div class="timer" id="timer">
+                    <i class="fas fa-clock"></i>
+                    <span id="timerValue">02:00</span>
+                </div>
             </div>
-        </div>
+        </header>
 
         <div class="game-container">
             <div class="panel">
@@ -871,7 +871,7 @@
                 
                 <div class="target-word-container">
                     <div class="target-label">Target Word:</div>
-                    <div class="target-word" id="targetWord">Select Level & Place Bet</div>
+                    <div class="target-word" id="targetWord">Select Letter & Place Bet</div>
                 </div>
 
                 <div class="number-grid" id="numberGrid">
@@ -1158,7 +1158,7 @@
                 6: ["office", "pencil", "friend", "family", "school", "number", "person", "summer", "winter", "spring"],
                 7: ["bicycle", "teacher", "country", "picture", "morning", "evening", "weather", "holiday", "weekend", "problem"],
                 8: ["computer", "language", "question", "building", "business", "children", "hospital", "magazine", "president", "university"],
-                9: ["cockroach", "direction", "education", "government", "information", "knowledge", "television", "transport", "vacation", "adventure"],
+                9: ["cockroach", "direction", "education", "government", "information", "knowledge", 'television', "transport", "vacation", "adventure"],
                 10: ["motorcycle", "experience", "importance", "management", "opportunity", "population", "restaurant", "telephone", "understand", "yellowstone"]
             };
             
@@ -1200,6 +1200,12 @@
             // Hide results and countdown
             resultsPanel.classList.remove('show');
             nextRoundCountdownElement.style.display = 'none';
+            
+            // Auto-scroll to the number grid
+            document.querySelector('.number-grid').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
             
             // Show notification
             showNotification(`Bet placed! Spell "${targetWord.toUpperCase()}" by selecting numbers.`, 'info');
@@ -1373,29 +1379,32 @@
             
             // Calculate winnings based on correct letters
             const totalLetters = targetWord.length;
-            const percentageCorrect = correctLetters / totalLetters;
-            
-            // Calculate winnings (proportional to correct letters)
-            let winnings = 0;
             const failedLetters = totalLetters - correctLetters;
             
             // New winning logic:
-            // - If 0-1 failed letters: full win (2x bet)
-            // - If 2 failed letters: 50% of bet
+            // - If 0 failed letters: full win (2x bet)
+            // - If 1 failed letter: partial win (50% of bet returned)
+            // - If 2 failed letters: partial win (25% of bet returned)
             // - If 3+ failed letters: no win
-            if (failedLetters <= 1) {
+            let winnings = 0;
+            if (failedLetters === 0) {
                 winnings = currentBetAmount * 2;
-            } else if (failedLetters === 2) {
+            } else if (failedLetters === 1) {
                 winnings = Math.floor(currentBetAmount * 0.5);
+            } else if (failedLetters === 2) {
+                winnings = Math.floor(currentBetAmount * 0.25);
             } else {
                 winnings = 0;
             }
             
             // Determine result status
             let resultStatus, resultMessage;
-            if (failedLetters <= 1) {
+            if (failedLetters === 0) {
                 resultStatus = "success";
                 resultMessage = `Congratulations! You correctly spelled "<strong>${targetWord.toUpperCase()}</strong>"!`;
+            } else if (failedLetters === 1) {
+                resultStatus = "partial";
+                resultMessage = `You got ${correctLetters} out of ${totalLetters} letters correct for "<strong>${targetWord.toUpperCase()}</strong>".`;
             } else if (failedLetters === 2) {
                 resultStatus = "partial";
                 resultMessage = `You got ${correctLetters} out of ${totalLetters} letters correct for "<strong>${targetWord.toUpperCase()}</strong>".`;
@@ -1414,15 +1423,17 @@
             resultsPanel.classList.add('show');
             
             // Update game stats and history
-            const isFullWin = failedLetters <= 1;
+            const isFullWin = failedLetters === 0;
             updateGameStats(isFullWin);
             addToHistory(targetWord.toUpperCase(), currentBetAmount, resultStatus, winnings);
             
             // Show notification
-            if (failedLetters <= 1) {
+            if (failedLetters === 0) {
                 showNotification(`Perfect! You won ₦${winnings}!`, 'success');
-            } else if (failedLetters === 2) {
+            } else if (failedLetters === 1) {
                 showNotification(`Good try! You won ₦${winnings} for ${correctLetters} correct letters.`, 'info');
+            } else if (failedLetters === 2) {
+                showNotification(`Good effort! You won ₦${winnings} for ${correctLetters} correct letters.`, 'info');
             } else {
                 showNotification(`Better luck next time! The word was "${targetWord.toUpperCase()}".`, 'error');
             }
