@@ -187,15 +187,15 @@
         /* Word Level Selection */
         .level-selection {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
             margin-bottom: 25px;
         }
 
         .level-card {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px 15px;
+            border-radius: 8px;
+            padding: 12px 8px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
@@ -203,7 +203,7 @@
         }
 
         .level-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             background: rgba(255, 255, 255, 0.15);
         }
 
@@ -213,7 +213,7 @@
         }
 
         .level-number {
-            font-size: 1.8rem;
+            font-size: 1.2rem;
             font-weight: bold;
             margin-bottom: 5px;
             color: var(--yellow);
@@ -221,13 +221,13 @@
 
         .level-word {
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         .level-letters {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             opacity: 0.8;
-            margin-top: 5px;
+            margin-top: 3px;
         }
 
         /* Game Stats */
@@ -254,6 +254,76 @@
         .stat-label {
             font-size: 0.85rem;
             color: var(--text-gray);
+        }
+
+        /* Betting Area */
+        .betting-area {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .betting-label {
+            font-size: 1rem;
+            color: var(--text-gray);
+            margin-bottom: 10px;
+        }
+
+        .bet-amount-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .bet-amount {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .bet-amount:focus {
+            outline: none;
+            border-color: var(--yellow);
+        }
+
+        .bet-amount::placeholder {
+            color: var(--text-gray);
+        }
+
+        .bet-button {
+            width: 100%;
+            padding: 15px;
+            background: var(--yellow-gradient);
+            border: none;
+            border-radius: 10px;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .bet-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 204, 0, 0.6);
+        }
+
+        .bet-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         /* Target Word Display */
@@ -320,11 +390,6 @@
         .number-box.disabled {
             opacity: 0.5;
             cursor: not-allowed;
-        }
-
-        .number-box.strange {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: var(--danger);
         }
 
         /* Player Word Area */
@@ -512,6 +577,11 @@
             color: var(--success);
         }
 
+        .status.partial {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
         .status.failed {
             background: rgba(239, 68, 68, 0.2);
             color: var(--danger);
@@ -652,7 +722,7 @@
             }
             
             .level-selection {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .controls {
@@ -677,7 +747,7 @@
                 <div class="user-avatar">JD</div>
                 <div class="user-details">
                     <div class="user-name">John Doe</div>
-                    <div class="user-balance">1,250 coins</div>
+                    <div class="user-balance">₦12,500</div>
                 </div>
             </div>
         </header>
@@ -697,43 +767,53 @@
                     <div class="level-card active" data-level="3">
                         <div class="level-number">L3</div>
                         <div class="level-word">3 Letters</div>
-                        <div class="level-letters">Easy</div>
+                        <div class="level-letters">₦50</div>
                     </div>
                     <div class="level-card" data-level="4">
                         <div class="level-number">L4</div>
                         <div class="level-word">4 Letters</div>
-                        <div class="level-letters">Easy</div>
+                        <div class="level-letters">₦100</div>
                     </div>
                     <div class="level-card" data-level="5">
                         <div class="level-number">L5</div>
                         <div class="level-word">5 Letters</div>
-                        <div class="level-letters">Medium</div>
+                        <div class="level-letters">₦200</div>
                     </div>
                     <div class="level-card" data-level="6">
                         <div class="level-number">L6</div>
                         <div class="level-word">6 Letters</div>
-                        <div class="level-letters">Medium</div>
+                        <div class="level-letters">₦500</div>
                     </div>
                     <div class="level-card" data-level="7">
                         <div class="level-number">L7</div>
                         <div class="level-word">7 Letters</div>
-                        <div class="level-letters">Hard</div>
+                        <div class="level-letters">₦1,000</div>
                     </div>
                     <div class="level-card" data-level="8">
                         <div class="level-number">L8</div>
                         <div class="level-word">8 Letters</div>
-                        <div class="level-letters">Hard</div>
+                        <div class="level-letters">₦2,000</div>
                     </div>
                     <div class="level-card" data-level="9">
                         <div class="level-number">L9</div>
                         <div class="level-word">9 Letters</div>
-                        <div class="level-letters">Expert</div>
+                        <div class="level-letters">₦5,000</div>
                     </div>
                     <div class="level-card" data-level="10">
                         <div class="level-number">L10</div>
                         <div class="level-word">10 Letters</div>
-                        <div class="level-letters">Expert</div>
+                        <div class="level-letters">₦10,000</div>
                     </div>
+                </div>
+
+                <div class="betting-area">
+                    <div class="betting-label">Place Your Bet:</div>
+                    <div class="bet-amount-container">
+                        <input type="number" class="bet-amount" id="betAmount" placeholder="Enter amount..." min="50" max="10000">
+                    </div>
+                    <button class="bet-button" id="placeBetBtn">
+                        <i class="fas fa-coins"></i> Place Bet
+                    </button>
                 </div>
 
                 <div class="game-stats">
@@ -751,15 +831,6 @@
                     </div>
                 </div>
 
-                <div class="controls">
-                    <button class="btn-primary" id="startGameBtn">
-                        <i class="fas fa-play-circle"></i> Start Game
-                    </button>
-                    <button class="btn-secondary" id="resetGameBtn" disabled>
-                        <i class="fas fa-redo"></i> Reset Game
-                    </button>
-                </div>
-
                 <div class="results-panel" id="resultsPanel">
                     <div class="results-header">
                         <i class="fas fa-trophy"></i>
@@ -769,16 +840,16 @@
                     
                     <div class="score-display">
                         <div class="score-item">
-                            <div class="score-value" id="resultCoins">0</div>
-                            <div class="score-label">Coins Won</div>
+                            <div class="score-value" id="resultWinnings">₦0</div>
+                            <div class="score-label">Winnings</div>
                         </div>
                         <div class="score-item">
                             <div class="score-value" id="resultTime">0s</div>
                             <div class="score-label">Time Used</div>
                         </div>
                         <div class="score-item">
-                            <div class="score-value" id="resultScore">0</div>
-                            <div class="score-label">Score</div>
+                            <div class="score-value" id="resultLetters">0</div>
+                            <div class="score-label">Correct Letters</div>
                         </div>
                     </div>
                 </div>
@@ -794,7 +865,7 @@
                 
                 <div class="target-word-container">
                     <div class="target-label">Target Word:</div>
-                    <div class="target-word" id="targetWord">Loading...</div>
+                    <div class="target-word" id="targetWord">Select Level & Place Bet</div>
                 </div>
 
                 <div class="number-grid" id="numberGrid">
@@ -805,15 +876,6 @@
                     <p class="placeholder-text">Select numbers to reveal letters and build your word...</p>
                 </div>
 
-                <div class="controls">
-                    <button class="btn-primary" id="submitWordBtn" disabled>
-                        <i class="fas fa-check-circle"></i> Submit Word
-                    </button>
-                    <button class="btn-secondary" id="clearWordBtn" disabled>
-                        <i class="fas fa-times-circle"></i> Clear Word
-                    </button>
-                </div>
-
                 <div class="game-history">
                     <div class="history-header">
                         <h2 class="panel-title"><i class="fas fa-history"></i> Recent Games</h2>
@@ -822,9 +884,9 @@
                         <thead>
                             <tr>
                                 <th>Word</th>
+                                <th>Bet</th>
                                 <th>Result</th>
-                                <th>Time</th>
-                                <th>Score</th>
+                                <th>Winnings</th>
                             </tr>
                         </thead>
                         <tbody id="historyBody">
@@ -838,7 +900,7 @@
 
     <script>
         // Game state
-        let currentLevel = 5;
+        let currentLevel = 3;
         let gameActive = false;
         let timerInterval;
         let timeLeft = 120; // 2 minutes in seconds
@@ -849,26 +911,29 @@
         let gameStartTime = 0;
         let nextRoundCountdown = null;
         let numberToLetterMap = {};
+        let currentBetAmount = 0;
 
-        // Free dictionary API that doesn't require configuration
-        const DICTIONARY_API = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
+        // Dictionary APIs to try
+        const DICTIONARY_APIS = [
+            'https://api.dictionaryapi.dev/api/v2/entries/en/',
+            'https://api.datamuse.com/words?sp=',
+            'https://wordsapiv1.p.rapidapi.com/words/'
+        ];
 
         // DOM elements
         const timerElement = document.getElementById('timer');
         const timerValue = document.getElementById('timerValue');
         const levelCards = document.querySelectorAll('.level-card');
-        const startGameBtn = document.getElementById('startGameBtn');
-        const resetGameBtn = document.getElementById('resetGameBtn');
-        const submitWordBtn = document.getElementById('submitWordBtn');
-        const clearWordBtn = document.getElementById('clearWordBtn');
+        const placeBetBtn = document.getElementById('placeBetBtn');
+        const betAmountInput = document.getElementById('betAmount');
         const targetWordElement = document.getElementById('targetWord');
         const numberGrid = document.getElementById('numberGrid');
         const playerWordArea = document.getElementById('playerWordArea');
         const resultsPanel = document.getElementById('resultsPanel');
         const resultsText = document.getElementById('resultsText');
-        const resultCoins = document.getElementById('resultCoins');
+        const resultWinnings = document.getElementById('resultWinnings');
         const resultTime = document.getElementById('resultTime');
-        const resultScore = document.getElementById('resultScore');
+        const resultLetters = document.getElementById('resultLetters');
         const gamesPlayed = document.getElementById('gamesPlayed');
         const gamesWon = document.getElementById('gamesWon');
         const successRate = document.getElementById('successRate');
@@ -887,57 +952,98 @@
                     this.classList.add('active');
                     
                     currentLevel = parseInt(this.getAttribute('data-level'));
+                    
+                    // Set default bet amount based on level
+                    const betAmounts = {
+                        3: 50, 4: 100, 5: 200, 6: 500, 
+                        7: 1000, 8: 2000, 9: 5000, 10: 10000
+                    };
+                    
+                    betAmountInput.value = betAmounts[currentLevel];
+                    currentBetAmount = betAmounts[currentLevel];
+                    
                     updateTargetWord();
                 });
             });
 
-            // Set up game controls
-            startGameBtn.addEventListener('click', startGame);
-            resetGameBtn.addEventListener('click', resetGame);
-            submitWordBtn.addEventListener('click', submitWord);
-            clearWordBtn.addEventListener('click', clearWord);
+            // Set up betting
+            placeBetBtn.addEventListener('click', placeBet);
+            betAmountInput.addEventListener('input', function() {
+                currentBetAmount = parseInt(this.value) || 0;
+            });
 
             // Initialize with default level
-            updateTargetWord();
+            const defaultLevel = document.querySelector('.level-card.active');
+            currentLevel = parseInt(defaultLevel.getAttribute('data-level'));
+            betAmountInput.value = 50;
+            currentBetAmount = 50;
         }
 
         // Update target word based on selected level
         async function updateTargetWord() {
             try {
-                // Try to fetch a random word from the dictionary API
+                // Try to fetch a random word from multiple dictionary APIs
                 targetWord = await fetchRandomWord(currentLevel);
                 targetWordElement.textContent = targetWord.toUpperCase();
             } catch (error) {
-                console.error('Failed to fetch word from API:', error);
-                // If API fails, show error and disable game
-                targetWordElement.textContent = "API Error - Try Again";
-                startGameBtn.disabled = true;
-                showNotification('Dictionary API is currently unavailable. Please try again later.', 'error');
+                console.error('Failed to fetch word from all APIs:', error);
+                // If all APIs fail, show error
+                targetWordElement.textContent = "Check Your Internet Connection";
+                placeBetBtn.disabled = true;
+                showNotification('Unable to connect to dictionary services. Please check your internet connection.', 'error');
             }
         }
 
-        // Fetch a random word from dictionary API
+        // Fetch a random word from dictionary APIs
         async function fetchRandomWord(length) {
-            // First, try to get a random word from the dictionary API
-            try {
-                // Get a list of common words by making multiple API calls
-                const commonWords = await fetchCommonWords(length);
-                if (commonWords.length > 0) {
-                    const randomWord = commonWords[Math.floor(Math.random() * commonWords.length)];
-                    
-                    // Verify the word exists in the dictionary
-                    const response = await fetch(`${DICTIONARY_API}${randomWord}`);
-                    if (response.ok) {
-                        return randomWord;
-                    }
+            // Try multiple APIs in sequence
+            for (const api of DICTIONARY_APIS) {
+                try {
+                    const word = await tryDictionaryAPI(api, length);
+                    if (word) return word;
+                } catch (error) {
+                    console.warn(`API ${api} failed, trying next one`);
+                    continue;
                 }
-            } catch (error) {
-                console.warn('Primary dictionary API failed, trying alternative approach');
             }
-
-            // Fallback: Use a predefined list of verified words
+            
+            // If all APIs fail, use fallback words
             const fallbackWords = getFallbackWords(length);
             return fallbackWords[Math.floor(Math.random() * fallbackWords.length)];
+        }
+
+        // Try a specific dictionary API
+        async function tryDictionaryAPI(api, length) {
+            if (api.includes('dictionaryapi.dev')) {
+                // Try dictionaryapi.dev
+                const commonWords = await fetchCommonWords(length);
+                for (const word of commonWords) {
+                    try {
+                        const response = await fetch(`${api}${word}`);
+                        if (response.ok) {
+                            return word;
+                        }
+                    } catch (error) {
+                        continue;
+                    }
+                }
+            } else if (api.includes('datamuse.com')) {
+                // Try datamuse API
+                try {
+                    const response = await fetch(`${api}${'?'.repeat(length)}&max=10`);
+                    const data = await response.json();
+                    if (data && data.length > 0) {
+                        const validWords = data.filter(item => item.word.length === length);
+                        if (validWords.length > 0) {
+                            return validWords[Math.floor(Math.random() * validWords.length)].word;
+                        }
+                    }
+                } catch (error) {
+                    throw error;
+                }
+            }
+            
+            return null;
         }
 
         // Fetch common words from dictionary API
@@ -958,19 +1064,11 @@
 
             const validWords = [];
             
-            // Check which words have the correct length and exist in dictionary
+            // Check which words have the correct length
             for (const word of wordAttempts) {
                 if (word.length === length) {
-                    try {
-                        const response = await fetch(`${DICTIONARY_API}${word}`);
-                        if (response.ok) {
-                            validWords.push(word);
-                            if (validWords.length >= 5) break; // Get enough words
-                        }
-                    } catch (error) {
-                        // Continue to next word if this one fails
-                        continue;
-                    }
+                    validWords.push(word);
+                    if (validWords.length >= 5) break; // Get enough words
                 }
             }
             
@@ -994,16 +1092,22 @@
             return fallbackWordsByLength[length] || ["example"];
         }
 
-        // Start the game
-        async function startGame() {
+        // Place a bet and start the game
+        async function placeBet() {
             if (gameActive) return;
+            
+            // Validate bet amount
+            if (!currentBetAmount || currentBetAmount < 50) {
+                showNotification('Minimum bet amount is ₦50', 'error');
+                return;
+            }
             
             // Get a new word for this round
             await updateTargetWord();
             
             // Check if we have a valid word
-            if (!targetWord || targetWord === "API Error - Try Again") {
-                showNotification('Unable to fetch a word. Please try again.', 'error');
+            if (!targetWord || targetWord === "Check Your Internet Connection") {
+                showNotification('Unable to fetch a word. Please check your internet connection.', 'error');
                 return;
             }
             
@@ -1029,7 +1133,7 @@
             startTimer();
             
             // Show notification
-            showNotification(`Game started! Spell "${targetWord.toUpperCase()}" by selecting numbers.`, 'info');
+            showNotification(`Bet placed! Spell "${targetWord.toUpperCase()}" by selecting numbers.`, 'info');
         }
 
         // Generate number pool that maps to letters
@@ -1042,10 +1146,10 @@
             const correctLetters = targetWord.toUpperCase().split('');
             letterPool.push(...correctLetters);
             
-            // Add strange letters (3-5 depending on level)
-            const strangeCount = Math.min(5, Math.max(3, currentLevel));
-            const strangeLetters = generateStrangeLetters(strangeCount, correctLetters);
-            letterPool.push(...strangeLetters);
+            // Add extra letters (3-5 depending on level)
+            const extraCount = Math.min(5, Math.max(3, currentLevel));
+            const extraLetters = generateExtraLetters(extraCount, correctLetters);
+            letterPool.push(...extraLetters);
             
             // Shuffle the letter pool
             shuffleArray(letterPool);
@@ -1062,11 +1166,6 @@
                 numberBox.textContent = i;
                 numberBox.dataset.number = i;
                 
-                // Check if this number maps to a strange letter
-                if (strangeLetters.includes(numberToLetterMap[i])) {
-                    numberBox.classList.add('strange');
-                }
-                
                 numberBox.addEventListener('click', () => {
                     selectNumber(i, numberBox);
                 });
@@ -1075,10 +1174,10 @@
             }
         }
 
-        // Generate strange letters that are not in the target word
-        function generateStrangeLetters(count, correctLetters) {
+        // Generate extra letters that are not in the target word
+        function generateExtraLetters(count, correctLetters) {
             const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const strangeLetters = [];
+            const extraLetters = [];
             
             // Filter out letters that are in the target word
             const availableLetters = alphabet.split('').filter(letter => 
@@ -1090,11 +1189,11 @@
                 if (availableLetters.length === 0) break;
                 
                 const randomIndex = Math.floor(Math.random() * availableLetters.length);
-                strangeLetters.push(availableLetters[randomIndex]);
+                extraLetters.push(availableLetters[randomIndex]);
                 availableLetters.splice(randomIndex, 1);
             }
             
-            return strangeLetters;
+            return extraLetters;
         }
 
         // Shuffle array (Fisher-Yates algorithm)
@@ -1109,7 +1208,7 @@
         // Select a number from the grid - FINAL SELECTION (cannot be changed)
         function selectNumber(number, element) {
             if (!gameActive) {
-                showNotification('Please start the game first', 'error');
+                showNotification('Please place a bet first', 'error');
                 return;
             }
             
@@ -1133,7 +1232,13 @@
             // Update player word (convert numbers to letters)
             playerWord = selectedNumbers.map(n => numberToLetterMap[n]).join('');
             updatePlayerWordArea();
-            updateControls();
+            
+            // Auto-submit when all letters are selected
+            if (selectedNumbers.length === targetWord.length) {
+                setTimeout(() => {
+                    submitWord();
+                }, 500);
+            }
         }
 
         // Update player word area display
@@ -1156,10 +1261,7 @@
 
         // Update control buttons state
         function updateControls() {
-            startGameBtn.disabled = gameActive;
-            resetGameBtn.disabled = !gameActive;
-            submitWordBtn.disabled = playerWord.length !== targetWord.length;
-            clearWordBtn.disabled = true; // Always disabled - cannot clear selections
+            placeBetBtn.disabled = gameActive;
         }
 
         // Submit the word for validation
@@ -1167,57 +1269,37 @@
             if (!gameActive) return;
             
             const timeUsed = Math.floor((Date.now() - gameStartTime) / 1000);
-            const isCorrect = checkWord();
+            const correctLetters = countCorrectLetters();
             
             // End the game
-            endGame(isCorrect, timeUsed);
+            endGame(correctLetters, timeUsed);
         }
 
-        // Check if the player's word is correct
-        function checkWord() {
-            // For VirtualSpelling, any permutation of the correct letters is accepted
-            const playerSorted = playerWord.split('').sort().join('');
-            const targetSorted = targetWord.toUpperCase().split('').sort().join('');
+        // Count how many letters are correct (can form the target word)
+        function countCorrectLetters() {
+            const targetLetters = targetWord.toUpperCase().split('');
+            const playerLetters = playerWord.split('');
             
-            return playerSorted === targetSorted;
-        }
-
-        // Clear the current word - DISABLED (cannot clear selections)
-        function clearWord() {
-            showNotification('Letter selections are final and cannot be cleared.', 'error');
-            return;
-        }
-
-        // Reset the game
-        function resetGame() {
-            if (!gameActive) return;
+            // Create copies to avoid modifying the original arrays
+            let targetCopy = [...targetLetters];
+            let playerCopy = [...playerLetters];
             
-            // Clear timer
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
+            // Count matching letters (order doesn't matter)
+            let correctCount = 0;
+            
+            for (let i = 0; i < playerCopy.length; i++) {
+                const index = targetCopy.indexOf(playerCopy[i]);
+                if (index !== -1) {
+                    correctCount++;
+                    targetCopy.splice(index, 1); // Remove the matched letter
+                }
             }
             
-            // Reset game state
-            gameActive = false;
-            selectedNumbers = [];
-            playerWord = "";
-            
-            // Update UI
-            updatePlayerWordArea();
-            updateControls();
-            resultsPanel.classList.remove('show');
-            nextRoundCountdownElement.style.display = 'none';
-            
-            // Reset timer display
-            timerElement.className = 'timer';
-            timerValue.textContent = '02:00';
-            
-            showNotification('Game reset. Ready to start a new game.', 'info');
+            return correctCount;
         }
 
         // End the game
-        function endGame(isCorrect, timeUsed) {
+        function endGame(correctLetters, timeUsed) {
             gameActive = false;
             
             // Clear timer
@@ -1226,32 +1308,54 @@
                 timerInterval = null;
             }
             
-            // Calculate score and coins
-            const baseScore = currentLevel * 10;
-            const timeBonus = Math.max(0, 120 - timeUsed);
-            const score = isCorrect ? baseScore + timeBonus : 0;
-            const coins = isCorrect ? Math.floor(score / 2) : 0;
+            // Calculate winnings based on correct letters
+            const totalLetters = targetWord.length;
+            const percentageCorrect = correctLetters / totalLetters;
+            
+            // Calculate winnings (proportional to correct letters)
+            let winnings = 0;
+            if (percentageCorrect === 1) {
+                // Full win - get 2x bet amount
+                winnings = currentBetAmount * 2;
+            } else if (percentageCorrect > 0) {
+                // Partial win - proportional to correct letters
+                winnings = Math.floor(currentBetAmount * percentageCorrect);
+            }
+            
+            // Determine result status
+            let resultStatus, resultMessage;
+            if (percentageCorrect === 1) {
+                resultStatus = "success";
+                resultMessage = `Congratulations! You correctly spelled "<strong>${targetWord.toUpperCase()}</strong>"!`;
+            } else if (percentageCorrect > 0) {
+                resultStatus = "partial";
+                resultMessage = `You got ${correctLetters} out of ${totalLetters} letters correct for "<strong>${targetWord.toUpperCase()}</strong>".`;
+            } else {
+                resultStatus = "failed";
+                resultMessage = `You didn't get any letters correct for "<strong>${targetWord.toUpperCase()}</strong>".`;
+            }
             
             // Update results panel
-            resultsText.innerHTML = isCorrect ? 
-                `<p>Congratulations! You correctly spelled "<strong>${targetWord.toUpperCase()}</strong>"!</p>` :
-                `<p>Sorry! Your spelling "<strong>${playerWord}</strong>" doesn't match "<strong>${targetWord.toUpperCase()}</strong>".</p>`;
+            resultsText.innerHTML = resultMessage;
             
-            resultCoins.textContent = coins;
+            resultWinnings.textContent = `₦${winnings}`;
             resultTime.textContent = `${timeUsed}s`;
-            resultScore.textContent = score;
+            resultLetters.textContent = `${correctLetters}/${totalLetters}`;
             
             resultsPanel.classList.add('show');
             
             // Update game stats and history
-            updateGameStats(isCorrect);
-            addToHistory(targetWord.toUpperCase(), isCorrect, timeUsed, score);
+            const isFullWin = percentageCorrect === 1;
+            updateGameStats(isFullWin);
+            addToHistory(targetWord.toUpperCase(), currentBetAmount, resultStatus, winnings);
             
             // Show notification
-            if (isCorrect) {
-                showNotification(`Success! You earned ${coins} coins.`, 'success');
+            if (percentageCorrect === 1) {
+                showNotification(`Perfect! You won ₦${winnings}!`, 'success');
+            } else if (percentageCorrect > 0) {
+                showNotification(`Good try! You won ₦${winnings} for ${correctLetters} correct letters.`, 'info');
             } else {
-                showNotification(`Try again! The correct word was "${targetWord.toUpperCase()}".`, 'error');
+                showNotification(`Better luck next time! The word was "${targetWord.toUpperCase()}".`, 'error');
             }
             
             updateControls();
@@ -1273,18 +1377,30 @@
                 if (countdown <= 0) {
                     clearInterval(countdownInterval);
                     nextRoundCountdownElement.style.display = 'none';
-                    startNextRound();
+                    resetGame();
                 }
             }, 1000);
         }
 
-        // Start the next round automatically
-        function startNextRound() {
-            // Reset game state for new round
-            resetGame();
+        // Reset the game
+        function resetGame() {
+            // Reset game state
+            gameActive = false;
+            selectedNumbers = [];
+            playerWord = "";
             
-            // Start the new game with a new word
-            startGame();
+            // Update UI
+            updatePlayerWordArea();
+            updateControls();
+            resultsPanel.classList.remove('show');
+            nextRoundCountdownElement.style.display = 'none';
+            
+            // Reset timer display
+            timerElement.className = 'timer';
+            timerValue.textContent = '02:00';
+            
+            // Get a new word for the next round
+            updateTargetWord();
         }
 
         // Update game statistics
@@ -1301,13 +1417,26 @@
         }
 
         // Add game to history
-        function addToHistory(word, isSuccess, time, score) {
+        function addToHistory(word, bet, resultStatus, winnings) {
             const newRow = document.createElement('tr');
+            
+            let statusText, statusClass;
+            if (resultStatus === "success") {
+                statusText = "Win";
+                statusClass = "success";
+            } else if (resultStatus === "partial") {
+                statusText = "Partial";
+                statusClass = "partial";
+            } else {
+                statusText = "Loss";
+                statusClass = "failed";
+            }
+            
             newRow.innerHTML = `
                 <td>${word}</td>
-                <td><span class="status ${isSuccess ? 'success' : 'failed'}">${isSuccess ? 'Success' : 'Failed'}</span></td>
-                <td>${time}s</td>
-                <td>${score}</td>
+                <td>₦${bet}</td>
+                <td><span class="status ${statusClass}">${statusText}</span></td>
+                <td>₦${winnings}</td>
             `;
             
             // Add to the beginning of the table
@@ -1337,7 +1466,8 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     const timeUsed = Math.floor((Date.now() - gameStartTime) / 1000);
-                    endGame(false, timeUsed);
+                    const correctLetters = countCorrectLetters();
+                    endGame(correctLetters, timeUsed);
                 }
             }, 1000);
         }
