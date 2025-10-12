@@ -191,27 +191,31 @@
             animation: pulse 0.5s infinite;
         }
 
-        /* Word Level Selection */
+        /* Word Level Selection - SMALLER BUTTONS */
         .level-selection {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
+            gap: 4px;
             margin-bottom: 15px;
         }
 
         .level-card {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            padding: 8px 4px;
+            border-radius: 4px;
+            padding: 4px 2px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
-            border: 2px solid transparent;
-            font-size: 0.7rem;
+            border: 1px solid transparent;
+            font-size: 0.55rem;
+            min-height: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .level-card:hover {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
             background: rgba(255, 255, 255, 0.15);
         }
 
@@ -221,21 +225,21 @@
         }
 
         .level-number {
-            font-size: 0.8rem;
+            font-size: 0.6rem;
             font-weight: bold;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             color: var(--yellow);
         }
 
         .level-word {
             font-weight: 600;
-            font-size: 0.6rem;
+            font-size: 0.5rem;
         }
 
         .level-letters {
-            font-size: 0.55rem;
+            font-size: 0.45rem;
             opacity: 0.8;
-            margin-top: 2px;
+            margin-top: 1px;
         }
 
         /* Game Stats */
@@ -733,7 +737,7 @@
             }
             
             .level-selection {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(4, 1fr);
             }
             
             .number-grid {
@@ -765,7 +769,7 @@
             }
             
             .level-selection {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(4, 1fr);
             }
             
             .controls {
