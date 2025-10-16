@@ -205,19 +205,19 @@
       transform: translateY(-1px);
     }
 
-    /* Game Selection Dashboard */
+    /* Game Selection Dashboard - Made much smaller */
     .dashboard {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-      margin-top: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
     }
     
     .game-card {
       background: linear-gradient(180deg, rgba(1,33,51,.7), rgba(1,26,40,.7));
       border: 1px solid rgba(255,255,255,.08);
-      border-radius: 20px;
-      padding: 30px;
+      border-radius: 16px;
+      padding: 15px;
       box-shadow: var(--glow);
       display: flex;
       flex-direction: column;
@@ -242,15 +242,15 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 4px;
+      height: 3px;
       background: linear-gradient(90deg, var(--mint), var(--mint-2));
       transform: scaleX(0);
       transition: transform 0.3s ease;
     }
     
     .game-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 25px 60px rgba(0,0,0,.45);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,.45);
     }
     
     .game-card:hover::before {
@@ -258,16 +258,16 @@
     }
     
     .game-icon {
-      width: 80px;
-      height: 80px;
-      border-radius: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
       display: grid;
       place-items: center;
-      margin-bottom: 20px;
-      font-size: 2.5rem;
+      margin-bottom: 12px;
+      font-size: 1.5rem;
       background: rgba(168,230,207,.15);
       color: var(--mint);
-      box-shadow: 0 8px 20px rgba(0,0,0,.25);
+      box-shadow: 0 6px 15px rgba(0,0,0,.25);
       transition: all 0.3s ease;
     }
     
@@ -277,18 +277,22 @@
     }
     
     .game-title {
-      font-size: 1.5rem;
+      font-size: 1rem;
       font-weight: 800;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       color: var(--mint);
-      letter-spacing: .5px;
+      letter-spacing: .3px;
     }
     
     .game-description {
-      font-size: 0.95rem;
+      font-size: 0.75rem;
       opacity: 0.8;
-      margin-bottom: 20px;
-      line-height: 1.5;
+      margin-bottom: 12px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
     
     .game-stats {
@@ -305,13 +309,13 @@
     }
     
     .stat-value {
-      font-size: 1.3rem;
+      font-size: 0.9rem;
       font-weight: 800;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
     
     .stat-label {
-      font-size: 0.8rem;
+      font-size: 0.65rem;
       opacity: 0.7;
     }
     
@@ -359,7 +363,78 @@
       }
       
       .dashboard {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+      }
+      
+      .game-card {
+        padding: 12px;
+      }
+      
+      .game-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+      }
+      
+      .game-title {
+        font-size: 0.85rem;
+      }
+      
+      .game-description {
+        font-size: 0.7rem;
+        -webkit-line-clamp: 2;
+      }
+      
+      .stat-value {
+        font-size: 0.8rem;
+      }
+      
+      .stat-label {
+        font-size: 0.6rem;
+      }
+    }
+    
+    /* Extra small screens */
+    @media (max-width: 480px) {
+      .dashboard {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+      }
+      
+      .game-card {
+        padding: 10px;
+        border-radius: 12px;
+      }
+      
+      .game-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+        margin-bottom: 6px;
+      }
+      
+      .game-title {
+        font-size: 0.75rem;
+      }
+      
+      .game-description {
+        font-size: 0.65rem;
+        -webkit-line-clamp: 2;
+      }
+      
+      .game-stats {
+        flex-direction: column;
+        gap: 4px;
+      }
+      
+      .stat-value {
+        font-size: 0.75rem;
+      }
+      
+      .stat-label {
+        font-size: 0.55rem;
       }
     }
 
