@@ -16,8 +16,8 @@
         :root {
             --primary: #0a2e5a;
             --secondary: #1a4789;
-            --accent: #ff9d00;
-            --accent-gradient: linear-gradient(to right, #ff9d00, #ffcc00);
+            --accent: #1e90ff;
+            --accent-gradient: linear-gradient(to right, #1e90ff, #00bfff);
             --text-light: #ffffff;
             --text-gray: #a0c1ed;
             --card-bg: #1a3e75;
@@ -61,7 +61,7 @@
             margin-right: 10px;
             font-weight: bold;
             font-size: 20px;
-            box-shadow: 0 2px 8px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.4);
         }
         .logo-text {
             font-size: 22px;
@@ -90,16 +90,16 @@
             color: var(--accent);
         }
         .btn-login:hover {
-            background: rgba(255, 157, 0, 0.1);
+            background: rgba(30, 144, 255, 0.1);
         }
         .btn-register {
             background: var(--accent-gradient);
             color: var(--primary);
-            box-shadow: 0 2px 8px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.4);
         }
         .btn-register:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 157, 0, 0.6);
+            box-shadow: 0 4px 12px rgba(30, 144, 255, 0.6);
         }
         /* Sports Navigation */
         .sports-nav {
@@ -139,7 +139,7 @@
         .sport-active .sport-icon {
             background: var(--accent-gradient);
             color: var(--primary);
-            box-shadow: 0 2px 8px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.4);
         }
         .sport-name {
             font-size: 12px;
@@ -175,7 +175,7 @@
             background: var(--accent-gradient);
             color: var(--primary);
             font-weight: bold;
-            box-shadow: 0 2px 8px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.4);
         }
         /* Featured Section */
         .featured-section {
@@ -272,7 +272,7 @@
         .odd-value {
             font-weight: bold;
             font-size: 16px;
-            color: #ffcc00;
+            color: #00bfff;
         }
         .odd-type {
             font-size: 12px;
@@ -317,7 +317,7 @@
         }
         .nav-active .nav-icon,
         .nav-active .nav-text {
-            color: #ffcc00;
+            color: #00bfff;
         }
         /* Game Specific Styles */
         .game-round {
@@ -327,7 +327,7 @@
             font-size: 14px;
         }
         .round-info {
-            color: #ffcc00;
+            color: #00bfff;
             font-weight: bold;
         }
         .word-components {
@@ -356,7 +356,7 @@
         .key-letter {
             background: var(--accent-gradient);
             color: var(--primary);
-            box-shadow: 0 2px 8px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.4);
         }
         .game-rules {
             background: var(--card-dark);
@@ -369,7 +369,7 @@
         .rule-title {
             font-weight: bold;
             margin-bottom: 5px;
-            color: #ffcc00;
+            color: #00bfff;
         }
         /* Promotional Banner */
         .promo-banner {
@@ -379,7 +379,7 @@
             margin: 20px 0;
             color: var(--primary);
             text-align: center;
-            box-shadow: 0 4px 12px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(30, 144, 255, 0.4);
             animation: pulse 2s infinite;
         }
         .promo-title {
@@ -453,7 +453,7 @@
         .stat-value {
             font-weight: bold;
             font-size: 18px;
-            color: #ffcc00;
+            color: #00bfff;
         }
         .stat-label {
             font-size: 12px;
@@ -553,11 +553,42 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.4);
         }
         .empty-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(255, 157, 0, 0.6);
+            box-shadow: 0 4px 12px rgba(30, 144, 255, 0.6);
+        }
+        /* Footer Styles */
+        .footer {
+            background: var(--card-dark);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0 20px;
+            text-align: center;
+        }
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .footer-link {
+            color: var(--text-gray);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px;
+        }
+        .footer-link:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .footer-text {
+            color: var(--text-gray);
+            font-size: 10px;
+            margin-top: 15px;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -647,47 +678,6 @@
                     <div class="quick-text">History</div>
                 </div>
             </div>
-            <!-- Live Games Section -->
-            <div class="featured-section">
-                <div class="live-indicator">
-                    <div class="live-dot"></div>
-                    <div class="section-title">Live Games</div>
-                </div>
-                <div class="game-card" onclick="window.location.href='login.html'">
-                    <div class="game-header">
-                        <div class="game-status">LIVE</div>
-                        <div class="game-time">120 secs</div>
-                    </div>
-                    <div class="game-round">
-                        <div>VirtualSpelling: L5 HOUSE</div>
-                        <div class="round-info">Time left: 00:48</div>
-                    </div>
-                    <div class="word-components">
-                        <div class="letter-box">E</div>
-                        <div class="letter-box">S</div>
-                        <div class="letter-box">R</div>
-                        <div class="letter-box">O</div>
-                        <div class="letter-box">U</div>
-                        <div class="letter-box">L</div>
-                        <div class="letter-box">X</div>
-                        <div class="letter-box">H</div>
-                    </div>
-                    <div class="odds">
-                        <div class="odd-box">
-                            <div class="odd-type">Letters</div>
-                            <div class="odd-value">8</div>
-                        </div>
-                        <div class="odd-box">
-                            <div class="odd-type">Target</div>
-                            <div class="odd-value">5</div>
-                        </div>
-                        <div class="odd-box">
-                            <div class="odd-type">Strange</div>
-                            <div class="odd-value">3</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <!-- Featured Games Section -->
             <div class="featured-section">
                 <div class="section-title">
@@ -702,7 +692,7 @@
                         <div>Current Round: DEWDROP</div>
                         <div class="round-info">Ends in: 01:24:36</div>
                     </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #ffcc00;">O</span></div>
+                    <div class="game-title">KEY LETTER: <span style="color: #00bfff;">O</span></div>
                     <div class="word-components">
                         <div class="letter-box key-letter">O</div>
                         <div class="letter-box">B</div>
@@ -736,7 +726,7 @@
                         <div>Current Round: AWL FAST LANE</div>
                         <div class="round-info">Starts in: 02:15:42</div>
                     </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #ffcc00;">A</span></div>
+                    <div class="game-title">KEY LETTER: <span style="color: #00bfff;">A</span></div>
                     <div class="word-components">
                         <div class="letter-box key-letter">A</div>
                         <div class="letter-box">W</div>
@@ -829,7 +819,7 @@
                         <div class="game-status">AWL FAST LANE</div>
                         <div class="game-time">20:00 | Today</div>
                     </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #ffcc00;">A</span></div>
+                    <div class="game-title">KEY LETTER: <span style="color: #00bfff;">A</span></div>
                     <div class="odds">
                         <div class="odd-box">
                             <div class="odd-type">Starts in</div>
@@ -842,7 +832,7 @@
                         <div class="game-status">MIDDAY EXIT</div>
                         <div class="game-time">12:00 | Tomorrow</div>
                     </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #ffcc00;">E</span></div>
+                    <div class="game-title">KEY LETTER: <span style="color: #00bfff;">E</span></div>
                     <div class="odds">
                         <div class="odd-box">
                             <div class="odd-type">Starts in</div>
@@ -855,13 +845,28 @@
                         <div class="game-status">DEWDROP</div>
                         <div class="game-time">14:00 | Tomorrow</div>
                     </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #ffcc00;">O</span></div>
+                    <div class="game-title">KEY LETTER: <span style="color: #00bfff;">O</span></div>
                     <div class="odds">
                         <div class="odd-box">
                             <div class="odd-type">Starts in</div>
                             <div class="odd-value">20:45:30</div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <!-- Footer Section -->
+            <div class="footer">
+                <div class="footer-links">
+                    <div class="footer-link" onclick="navigateTo('terms')">Terms & Conditions</div>
+                    <div class="footer-link" onclick="navigateTo('privacy')">Privacy Policy</div>
+                    <div class="footer-link" onclick="navigateTo('help')">Help</div>
+                    <div class="footer-link" onclick="navigateTo('contact')">Contact Us</div>
+                    <div class="footer-link" onclick="navigateTo('support')">Customer Support</div>
+                    <div class="footer-link" onclick="navigateTo('faq')">FAQ</div>
+                </div>
+                <div class="footer-text">
+                    EnglaBet is a word gaming platform for entertainment purposes only. Please play responsibly. 
+                    Users must be 18 years or older to participate. © 2023 EnglaBet. All rights reserved.
                 </div>
             </div>
         </div>
@@ -900,6 +905,43 @@
             <div class="empty-icon"><i class="fas fa-user"></i></div>
             <div class="empty-title">My Account</div>
             <div class="empty-text">This section is coming soon!</div>
+            <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
+        </div>
+        <!-- Footer Screens -->
+        <div id="terms-screen" class="empty-screen">
+            <div class="empty-icon"><i class="fas fa-file-contract"></i></div>
+            <div class="empty-title">Terms & Conditions</div>
+            <div class="empty-text">Our terms and conditions are currently being updated.</div>
+            <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
+        </div>
+        <div id="privacy-screen" class="empty-screen">
+            <div class="empty-icon"><i class="fas fa-shield-alt"></i></div>
+            <div class="empty-title">Privacy Policy</div>
+            <div class="empty-text">Our privacy policy is currently being updated.</div>
+            <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
+        </div>
+        <div id="help-screen" class="empty-screen">
+            <div class="empty-icon"><i class="fas fa-question-circle"></i></div>
+            <div class="empty-title">Help</div>
+            <div class="empty-text">Help documentation is currently being prepared.</div>
+            <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
+        </div>
+        <div id="contact-screen" class="empty-screen">
+            <div class="empty-icon"><i class="fas fa-envelope"></i></div>
+            <div class="empty-title">Contact Us</div>
+            <div class="empty-text">Contact information will be available soon.</div>
+            <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
+        </div>
+        <div id="support-screen" class="empty-screen">
+            <div class="empty-icon"><i class="fas fa-headset"></i></div>
+            <div class="empty-title">Customer Support</div>
+            <div class="empty-text">Customer support details will be available soon.</div>
+            <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
+        </div>
+        <div id="faq-screen" class="empty-screen">
+            <div class="empty-icon"><i class="fas fa-comments"></i></div>
+            <div class="empty-title">Frequently Asked Questions</div>
+            <div class="empty-text">FAQ content is currently being prepared.</div>
             <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
         </div>
     </div>
