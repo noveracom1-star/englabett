@@ -51,25 +51,16 @@
             align-items: center;
         }
         .logo-img {
-            width: 40px;
+            width: 150px; /* Adjusted for logo image */
             height: 40px;
-            background: var(--accent-gradient);
-            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 10px;
-            font-weight: bold;
-            font-size: 20px;
-            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.4);
         }
-        .logo-text {
-            font-size: 22px;
-            font-weight: bold;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        .logo-img img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
         .auth-buttons {
             display: flex;
@@ -177,106 +168,67 @@
             font-weight: bold;
             box-shadow: 0 2px 8px rgba(30, 144, 255, 0.4);
         }
-        /* Featured Section */
-        .featured-section {
-            margin-top: 20px;
-            animation: fadeIn 0.5s ease;
-        }
-        .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .view-more {
-            font-size: 12px;
-            color: var(--accent);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .view-more:hover {
-            transform: translateX(3px);
-        }
-        /* Game Cards */
-        .game-card {
-            background: var(--card-bg);
+        /* Promotional Banner */
+        .promo-banner {
+            background: var(--accent-gradient);
             border-radius: 10px;
             padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            animation: slideIn 0.5s ease;
-        }
-        .game-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .game-status {
-            background: var(--accent);
+            margin: 20px 0;
             color: var(--primary);
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .game-time {
-            font-size: 12px;
-            color: var(--text-gray);
-        }
-        .game-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        .game-details {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .team {
             text-align: center;
+            box-shadow: 0 4px 12px rgba(30, 144, 255, 0.4);
+            animation: pulse 2s infinite;
+        }
+        .promo-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .promo-text {
             font-size: 14px;
+            margin-bottom: 10px;
         }
-        .vs {
-            font-size: 12px;
-            color: var(--text-gray);
-        }
-        .odds {
-            display: flex;
-            justify-content: space-between;
-            gap: 5px;
-        }
-        .odd-box {
-            background: var(--card-dark);
-            flex: 1;
-            text-align: center;
-            padding: 10px 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .odd-box:hover {
-            background: #1e4a86;
-            transform: translateY(-2px);
-        }
-        .odd-value {
+        .promo-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
             font-weight: bold;
-            font-size: 16px;
-            color: #00bfff;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .odd-type {
+        .promo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        /* Quick Access Menu */
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .quick-item {
+            background: var(--card-bg);
+            padding: 15px 10px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .quick-item:hover {
+            transform: translateY(-3px);
+            background: var(--accent-gradient);
+            color: var(--primary);
+        }
+        .quick-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .quick-text {
             font-size: 12px;
-            color: var(--text-gray);
+            font-weight: 500;
         }
         /* Bottom Navigation */
         .bottom-nav {
@@ -319,184 +271,11 @@
         .nav-active .nav-text {
             color: #00bfff;
         }
-        /* Game Specific Styles */
-        .game-round {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        .round-info {
-            color: #00bfff;
-            font-weight: bold;
-        }
-        .word-components {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 15px 0;
-        }
-        .letter-box {
-            width: 40px;
-            height: 40px;
-            background: var(--card-dark);
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            animation: popIn 0.5s ease;
-        }
-        .letter-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-        }
-        .key-letter {
-            background: var(--accent-gradient);
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.4);
-        }
-        .game-rules {
-            background: var(--card-dark);
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 15px;
-            font-size: 12px;
-            animation: fadeIn 0.5s ease;
-        }
-        .rule-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #00bfff;
-        }
-        /* Promotional Banner */
-        .promo-banner {
-            background: var(--accent-gradient);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 20px 0;
-            color: var(--primary);
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(30, 144, 255, 0.4);
-            animation: pulse 2s infinite;
-        }
-        .promo-title {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        .promo-text {
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .promo-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .promo-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        /* Live Games Section */
-        .live-indicator {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .live-dot {
-            width: 10px;
-            height: 10px;
-            background: #ff3366;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse 1.5s infinite;
-        }
         /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
-        }
-        /* Stats Section */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-        .stat-box {
-            background: var(--card-dark);
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .stat-value {
-            font-weight: bold;
-            font-size: 18px;
-            color: #00bfff;
-        }
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-gray);
-        }
-        /* Quick Access Menu */
-        .quick-access {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-        .quick-item {
-            background: var(--card-bg);
-            padding: 15px 10px;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .quick-item:hover {
-            transform: translateY(-3px);
-            background: var(--accent-gradient);
-            color: var(--primary);
-        }
-        .quick-icon {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        .quick-text {
-            font-size: 12px;
-            font-weight: 500;
-        }
-        /* Notification Badge */
-        .badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff3366;
-            color: white;
-            font-size: 10px;
-            padding: 2px 5px;
-            border-radius: 10px;
         }
         /* Scroll to Top Button */
         .scroll-top {
@@ -590,14 +369,20 @@
             margin-top: 15px;
             line-height: 1.4;
         }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="logo">
-                <div class="logo-img">EB</div>
-                <div class="logo-text">EnglaBet</div>
+                <div class="logo-img">
+                    <!-- Custom logo image -->
+                    <img src="englabet.png" alt="EnglaBet Logo">
+                </div>
             </div>
             <div class="auth-buttons">
                 <button class="btn btn-login" id="loginBtn">Login</button>
@@ -678,182 +463,7 @@
                     <div class="quick-text">History</div>
                 </div>
             </div>
-            <!-- Featured Games Section -->
-            <div class="featured-section">
-                <div class="section-title">
-                    Featured Games <span class="view-more" onclick="window.location.href='login.html'">View More ></span>
-                </div>
-                <div class="game-card" onclick="window.location.href='login.html'">
-                    <div class="game-header">
-                        <div class="game-status">HOT</div>
-                        <div class="game-time">18:00 | Today</div>
-                    </div>
-                    <div class="game-round">
-                        <div>Current Round: DEWDROP</div>
-                        <div class="round-info">Ends in: 01:24:36</div>
-                    </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #00bfff;">O</span></div>
-                    <div class="word-components">
-                        <div class="letter-box key-letter">O</div>
-                        <div class="letter-box">B</div>
-                        <div class="letter-box">S</div>
-                        <div class="letter-box">E</div>
-                        <div class="letter-box">R</div>
-                        <div class="letter-box">V</div>
-                        <div class="letter-box">E</div>
-                    </div>
-                    <div class="odds">
-                        <div class="odd-box">
-                            <div class="odd-type">Keyword</div>
-                            <div class="odd-value">OBSERVE</div>
-                        </div>
-                        <div class="odd-box">
-                            <div class="odd-type">Rival</div>
-                            <div class="odd-value">OBSCURE</div>
-                        </div>
-                    </div>
-                    <div class="game-rules">
-                        <div class="rule-title">Rules & Clues</div>
-                        <div>Predict words using the key letter 'O' within the 2-hour round duration.</div>
-                    </div>
-                </div>
-                <div class="game-card" onclick="window.location.href='login.html'">
-                    <div class="game-header">
-                        <div class="game-status">NEW</div>
-                        <div class="game-time">19:30 | Today</div>
-                    </div>
-                    <div class="game-round">
-                        <div>Current Round: AWL FAST LANE</div>
-                        <div class="round-info">Starts in: 02:15:42</div>
-                    </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #00bfff;">A</span></div>
-                    <div class="word-components">
-                        <div class="letter-box key-letter">A</div>
-                        <div class="letter-box">W</div>
-                        <div class="letter-box">L</div>
-                        <div class="letter-box">F</div>
-                        <div class="letter-box">S</div>
-                        <div class="letter-box">T</div>
-                        <div class="letter-box">L</div>
-                        <div class="letter-box">N</div>
-                    </div>
-                    <div class="odds">
-                        <div class="odd-box">
-                            <div class="odd-type">Min. Bet</div>
-                            <div class="odd-value">5</div>
-                        </div>
-                        <div class="odd-box">
-                            <div class="odd-type">Max. Bet</div>
-                            <div class="odd-value">500</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Statistics Section -->
-            <div class="featured-section">
-                <div class="section-title">
-                    Today's Stats
-                </div>
-                <div class="stats-container">
-                    <div class="stat-box">
-                        <div class="stat-value">42</div>
-                        <div class="stat-label">Active Games</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value">18</div>
-                        <div class="stat-label">Live Now</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value">3,582</div>
-                        <div class="stat-label">Players Online</div>
-                    </div>
-                </div>
-            </div>
-            <!-- Hot Games Section -->
-            <div class="featured-section">
-                <div class="section-title">
-                    Hot Games <span class="view-more" onclick="window.location.href='login.html'">View More ></span>
-                </div>
-                <div class="game-card" onclick="window.location.href='login.html'">
-                    <div class="game-header">
-                        <div class="game-status">TRENDING</div>
-                        <div class="game-time">20:00 | Today</div>
-                    </div>
-                    <div class="game-title">WORD RACE: SYNONYMS</div>
-                    <div class="odds">
-                        <div class="odd-box">
-                            <div class="odd-type">Players</div>
-                            <div class="odd-value">1,243</div>
-                        </div>
-                        <div class="odd-box">
-                            <div class="odd-type">Prize Pool</div>
-                            <div class="odd-value">$2,500</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="game-card" onclick="window.location.href='login.html'">
-                    <div class="game-header">
-                        <div class="game-status">POPULAR</div>
-                        <div class="game-time">21:30 | Today</div>
-                    </div>
-                    <div class="game-title">SPELLING BEE: ADVANCED</div>
-                    <div class="odds">
-                        <div class="odd-box">
-                            <div class="odd-type">Players</div>
-                            <div class="odd-value">892</div>
-                        </div>
-                        <div class="odd-box">
-                            <div class="odd-type">Prize Pool</div>
-                            <div class="odd-value">$1,800</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Upcoming Games Section -->
-            <div class="featured-section">
-                <div class="section-title">
-                    Upcoming Games <span class="view-more" onclick="window.location.href='login.html'">View More ></span>
-                </div>
-                <div class="game-card" onclick="window.location.href='login.html'">
-                    <div class="game-header">
-                        <div class="game-status">AWL FAST LANE</div>
-                        <div class="game-time">20:00 | Today</div>
-                    </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #00bfff;">A</span></div>
-                    <div class="odds">
-                        <div class="odd-box">
-                            <div class="odd-type">Starts in</div>
-                            <div class="odd-value">03:15:42</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="game-card" onclick="window.location.href='login.html'">
-                    <div class="game-header">
-                        <div class="game-status">MIDDAY EXIT</div>
-                        <div class="game-time">12:00 | Tomorrow</div>
-                    </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #00bfff;">E</span></div>
-                    <div class="odds">
-                        <div class="odd-box">
-                            <div class="odd-type">Starts in</div>
-                            <div class="odd-value">18:32:15</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="game-card" onclick="window.location.href='login.html'">
-                    <div class="game-header">
-                        <div class="game-status">DEWDROP</div>
-                        <div class="game-time">14:00 | Tomorrow</div>
-                    </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #00bfff;">O</span></div>
-                    <div class="odds">
-                        <div class="odd-box">
-                            <div class="odd-type">Starts in</div>
-                            <div class="odd-value">20:45:30</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
             <!-- Footer Section -->
             <div class="footer">
                 <div class="footer-links">
@@ -1030,14 +640,6 @@
             });
         });
 
-        // Update countdowns (simplified for demo)
-        function updateCountdowns() {
-            const countdownElements = document.querySelectorAll('.round-info');
-            if(countdownElements[0]) {
-                countdownElements[0].textContent = "Ends in: 01:24:20";
-            }
-        }
-
         // Show/hide scroll to top button based on scroll position
         window.addEventListener('scroll', function() {
             const scrollTop = document.querySelector('.scroll-top');
@@ -1058,7 +660,6 @@
 
         // Initialize the page with home screen
         navigateTo('home');
-        setInterval(updateCountdowns, 10000);
     </script>
 </body>
 </html>
