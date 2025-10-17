@@ -961,13 +961,6 @@
         let currentBetAmount = 0;
         let roundActive = false;
 
-        // Dictionary APIs to try
-        const DICTIONARY_APIS = [
-            'https://api.dictionaryapi.dev/api/v2/entries/en/',
-            'https://api.datamuse.com/words?sp=',
-            'https://wordsapiv1.p.rapidapi.com/words/'
-        ];
-
         // DOM elements
         const timerElement = document.getElementById('timer');
         const timerValue = document.getElementById('timerValue');
@@ -1096,114 +1089,38 @@
         // Update target word based on selected level
         async function updateTargetWord() {
             try {
-                // Try to fetch a random word from multiple dictionary APIs
-                targetWord = await fetchRandomWord(currentLevel);
+                // Get a random word for the selected level
+                targetWord = await getRandomWord(currentLevel);
                 targetWordElement.textContent = targetWord.toUpperCase();
+                placeBetBtn.disabled = false;
             } catch (error) {
-                console.error('Failed to fetch word from all APIs:', error);
-                // If all APIs fail, show error
+                console.error('Failed to fetch word:', error);
+                // If API fails, show error
                 targetWordElement.textContent = "Check Your Internet Connection";
                 placeBetBtn.disabled = true;
                 showNotification('Unable to connect to dictionary services. Please check your internet connection.', 'error');
             }
         }
 
-        // Fetch a random word from dictionary APIs
-        async function fetchRandomWord(length) {
-            // Try multiple APIs in sequence
-            for (const api of DICTIONARY_APIS) {
-                try {
-                    const word = await tryDictionaryAPI(api, length);
-                    if (word) return word;
-                } catch (error) {
-                    console.warn(`API ${api} failed, trying next one`);
-                    continue;
-                }
-            }
-            
-            // If all APIs fail, use fallback words
-            const fallbackWords = getFallbackWords(length);
-            return fallbackWords[Math.floor(Math.random() * fallbackWords.length)];
-        }
-
-        // Try a specific dictionary API
-        async function tryDictionaryAPI(api, length) {
-            if (api.includes('dictionaryapi.dev')) {
-                // Try dictionaryapi.dev
-                const commonWords = await fetchCommonWords(length);
-                for (const word of commonWords) {
-                    try {
-                        const response = await fetch(`${api}${word}`);
-                        if (response.ok) {
-                            return word;
-                        }
-                    } catch (error) {
-                        continue;
-                    }
-                }
-            } else if (api.includes('datamuse.com')) {
-                // Try datamuse API
-                try {
-                    const response = await fetch(`${api}${'?'.repeat(length)}&max=10`);
-                    const data = await response.json();
-                    if (data && data.length > 0) {
-                        const validWords = data.filter(item => item.word.length === length);
-                        if (validWords.length > 0) {
-                            return validWords[Math.floor(Math.random() * validWords.length)].word;
-                        }
-                    }
-                } catch (error) {
-                    throw error;
-                }
-            }
-            
-            return null;
-        }
-
-        // Fetch common words from dictionary API
-        async function fetchCommonWords(length) {
-            // This is a simplified approach - in a real app, you'd have a more robust word list
-            const wordAttempts = [
-                'apple', 'house', 'water', 'table', 'chair', 
-                'phone', 'music', 'light', 'plant', 'cloud',
-                'beach', 'smile', 'dream', 'pencil', 'friend',
-                'family', 'school', 'number', 'person', 'summer',
-                'winter', 'spring', 'garden', 'window', 'bottle',
-                'letter', 'mother', 'bicycle', 'teacher', 'country',
-                'picture', 'morning', 'evening', 'weather', 'holiday',
-                'weekend', 'problem', 'kitchen', 'library', 'diamond',
-                'journey', 'freedom', 'computer', 'language', 'question',
-                'building', 'business', 'children', 'hospital', 'magazine'
-            ];
-
-            const validWords = [];
-            
-            // Check which words have the correct length
-            for (const word of wordAttempts) {
-                if (word.length === length) {
-                    validWords.push(word);
-                    if (validWords.length >= 5) break; // Get enough words
-                }
-            }
-            
-            return validWords;
-        }
-
-        // Get fallback words for when API fails
-        function getFallbackWords(length) {
-            // Minimal fallback words that are verified to exist
-            const fallbackWordsByLength = {
-                3: ["cat", "dog", "sun", "car", "bag", "hat", "bed", "map", "key", "cup"],
-                4: ["book", "desk", "door", "fish", "ball", "cake", "tree", "moon", "star", "food"],
-                5: ["house", "phone", "water", "table", "chair", "money", "paper", "music", "night", "light"],
-                6: ["office", "pencil", "friend", "family", "school", "number", "person", "summer", "winter", "spring"],
-                7: ["bicycle", "teacher", "country", "picture", "morning", "evening", "weather", "holiday", "weekend", "problem"],
-                8: ["computer", "language", "question", "building", "business", "children", "hospital", "magazine", "president", "university"],
-                9: ["cockroach", "direction", "education", "government", "information", "knowledge", 'television', "transport", "vacation", "adventure"],
-                10: ["motorcycle", "experience", "importance", "management", "opportunity", "population", "restaurant", "telephone", "understand", "yellowstone"]
+        // Get a random word for the specified length
+        async function getRandomWord(length) {
+            // Use a comprehensive word list for each level
+            const wordLists = {
+                3: ["CAT", "DOG", "SUN", "CAR", "BAG", "HAT", "BED", "MAP", "KEY", "CUP", "PEN", "BOX", "TEA", "EGG", "ICE", "JOB", "LEG", "MAN", "NET", "OWL"],
+                4: ["BOOK", "DESK", "DOOR", "FISH", "BALL", "CAKE", "TREE", "MOON", "STAR", "FOOD", "HOME", "LAMP", "MILK", "ROAD", "SHIP", "TIME", "WIND", "YEAR", "ZONE", "FIRE"],
+                5: ["HOUSE", "PHONE", "WATER", "TABLE", "CHAIR", "MONEY", "PAPER", "MUSIC", "NIGHT", "LIGHT", "APPLE", "BEACH", "CLOUD", "DREAM", "EARTH", "FRUIT", "GLASS", "HONEY", "IMAGE", "JUICE"],
+                6: ["OFFICE", "PENCIL", "FRIEND", "FAMILY", "SCHOOL", "NUMBER", "PERSON", "SUMMER", "WINTER", "SPRING", "BOTTLE", "CIRCLE", "DANGER", "EFFECT", "GARDEN", "HEALTH", "ISLAND", "JUNGLE", "KETTLE", "LETTER"],
+                7: ["BICYCLE", "TEACHER", "COUNTRY", "PICTURE", "MORNING", "EVENING", "WEATHER", "HOLIDAY", "WEEKEND", "PROBLEM", "ANIMAL", "CAPITAL", "DISEASE", "EXAMPLE", "FACTORY", "GENERAL", "HISTORY", "JOURNEY", "LIBRARY", "MACHINE"],
+                8: ["COMPUTER", "LANGUAGE", "QUESTION", "BUILDING", "BUSINESS", "CHILDREN", "HOSPITAL", "MAGAZINE", "PRESIDENT", "UNIVERSITY", "AIRPLANE", "BIRTHDAY", "CAMPAIGN", "DIAMOND", "ELEPHANT", "FOOTBALL", "GOVERNOR", "HAMBURGER", "INTERNET", "JELLYFISH"],
+                9: ["DIRECTION", "EDUCATION", "GOVERNMENT", "INFORMATION", "KNOWLEDGE", "TELEVISION", "TRANSPORT", "VACATION", "ADVENTURE", "BEAUTIFUL", "CELEBRATE", "DEVELOPER", "EVERYTHING", "FURNITURE", "GENERATOR", "HAPPINESS", "IMPORTANT", "JUSTICE", "KANGAROO", "LANDSCAPE"],
+                10: ["EXPERIENCE", "IMPORTANCE", "MANAGEMENT", "OPPORTUNITY", "POPULATION", "RESTAURANT", "TELEPHONE", "UNDERSTAND", "YELLOWSTONE", "ADVERTISING", "BASKETBALL", "CELEBRATION", "DEMONSTRATE", "EVERYWHERE", "FINGERPRINT", "GRADUATION", "HURRICANE", "ILLUSTRATE", "JOURNALISM", "KINDERGARTEN"]
             };
             
-            return fallbackWordsByLength[length] || ["example"];
+            // Get the word list for the current level
+            const wordList = wordLists[length] || wordLists[3];
+            
+            // Return a random word from the list
+            return wordList[Math.floor(Math.random() * wordList.length)].toLowerCase();
         }
 
         // Place a bet and start the game
