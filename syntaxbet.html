@@ -18,8 +18,8 @@
             --success: #4cc9f0;
             --warning: #f8961e;
             --danger: #e63946;
-            --border-radius: 8px;
-            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
         }
 
@@ -34,9 +34,8 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: var(--text-light);
             min-height: 100vh;
-            padding: 10px;
+            padding: 15px;
             overflow-x: hidden;
-            font-size: 12px;
         }
 
         .container {
@@ -47,8 +46,8 @@
 
         header {
             text-align: center;
-            margin-bottom: 15px;
-            padding: 12px 10px;
+            margin-bottom: 25px;
+            padding: 20px 15px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
@@ -59,12 +58,12 @@
 
         h1 {
             color: var(--text-light);
-            font-size: 1.4rem;
-            margin-bottom: 6px;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 15px;
         }
 
         h1 i {
@@ -73,23 +72,23 @@
 
         .subtitle {
             color: var(--text-gray);
-            font-size: 0.7rem;
+            font-size: 1rem;
             max-width: 800px;
             margin: 0 auto;
-            line-height: 1.4;
+            line-height: 1.6;
         }
 
         .game-area {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 25px;
+            margin-bottom: 25px;
         }
 
         @media (max-width: 900px) {
             .game-area {
                 grid-template-columns: 1fr;
-                gap: 12px;
+                gap: 20px;
             }
         }
 
@@ -97,7 +96,7 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            padding: 12px;
+            padding: 20px;
             animation: slideUp 0.5s ease;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -106,60 +105,84 @@
         .panel-title {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             color: var(--text-light);
-            font-size: 0.9rem;
         }
 
         .panel-title i {
-            font-size: 0.8rem;
+            font-size: 1.2rem;
             color: var(--accent);
         }
 
         .topic-box {
             background: rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 12px;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             font-family: monospace;
             white-space: pre-wrap;
-            line-height: 1.4;
-            max-height: 150px;
+            line-height: 1.6;
+            max-height: 300px;
             overflow-y: auto;
-            font-size: 0.7rem;
+            position: relative;
+        }
+
+        .corrections-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--accent-gradient);
+            color: var(--primary);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 3px 10px rgba(76, 201, 240, 0.4);
+        }
+
+        .corrections-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.6);
         }
 
         .betting-controls {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 12px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
         .bet-amount {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 10px;
         }
 
         .bet-input {
             flex: 1;
-            padding: 8px 10px;
-            border-radius: 6px;
+            padding: 12px 15px;
+            border-radius: 8px;
             border: none;
             background: rgba(255, 255, 255, 0.1);
             color: var(--text-light);
-            font-size: 0.8rem;
+            font-size: 1rem;
         }
 
         .bet-input::placeholder {
             color: var(--text-gray);
         }
 
+        /* Updated word buttons - smaller with 4 per line */
         .word-buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -173,7 +196,7 @@
         }
 
         .word-btn {
-            padding: 8px 6px;
+            padding: 8px;
             border: none;
             border-radius: 6px;
             font-weight: 600;
@@ -185,51 +208,51 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
+            min-height: 50px;
         }
 
         .word-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .word-btn.active {
             background: var(--accent-gradient);
             color: var(--primary);
-            box-shadow: 0 3px 8px rgba(76, 201, 240, 0.4);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.4);
         }
 
         .word-btn .btn-label {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             font-weight: bold;
         }
 
         .word-btn .btn-payout {
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             opacity: 0.8;
         }
 
         .place-bet-btn {
-            padding: 10px;
+            padding: 15px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             background: var(--accent-gradient);
             color: var(--primary);
-            font-size: 0.8rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            margin-top: 6px;
-            box-shadow: 0 3px 8px rgba(76, 201, 240, 0.4);
+            gap: 10px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.4);
         }
 
         .place-bet-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 12px rgba(76, 201, 240, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 201, 240, 0.6);
         }
 
         .place-bet-btn:disabled {
@@ -241,26 +264,26 @@
 
         .numbers-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-            gap: 5px;
-            margin-bottom: 12px;
-            max-height: 180px;
+            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+            gap: 8px;
+            margin-bottom: 20px;
+            max-height: 280px;
             overflow-y: auto;
-            padding: 8px;
+            padding: 10px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         .number {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            height: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            height: 55px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: var(--transition);
             user-select: none;
@@ -268,9 +291,9 @@
         }
 
         .number:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             border-color: var(--accent);
-            box-shadow: 0 3px 8px rgba(76, 201, 240, 0.2);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.2);
         }
 
         .number.selected {
@@ -285,57 +308,50 @@
         }
 
         .sentence-area {
-            min-height: 80px;
-            padding: 12px;
+            min-height: 120px;
+            padding: 20px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            margin-bottom: 12px;
+            border-radius: 8px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 10px;
             align-items: center;
         }
 
         .sentence-word {
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--accent);
-            padding: 6px 8px;
-            border-radius: 4px;
+            border: 2px solid var(--accent);
+            padding: 10px 15px;
+            border-radius: 8px;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 10px;
             animation: popIn 0.3s ease;
-            box-shadow: 0 2px 5px rgba(76, 201, 240, 0.1);
+            box-shadow: 0 3px 10px rgba(76, 201, 240, 0.1);
             color: var(--text-light);
-            font-size: 0.8rem;
-        }
-
-        .sentence-word.correct {
-            background: rgba(76, 201, 240, 0.3);
-            border: 1px solid var(--success);
-            padding: 6px 8px;
         }
 
         .controls {
             display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 12px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
 
         button {
-            padding: 8px 12px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.7rem;
+            gap: 8px;
+            font-size: 0.9rem;
         }
 
         .btn-primary {
@@ -345,8 +361,8 @@
 
         .btn-primary:hover {
             background: var(--secondary);
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(10, 46, 90, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(10, 46, 90, 0.3);
         }
 
         .btn-secondary {
@@ -356,8 +372,8 @@
 
         .btn-secondary:hover {
             background: #3ab0d9;
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(76, 201, 240, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
         }
 
         .btn-success {
@@ -367,8 +383,8 @@
 
         .btn-success:hover {
             background: #3ab0d9;
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(76, 201, 240, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
         }
 
         .btn-danger {
@@ -378,19 +394,18 @@
 
         .btn-danger:hover {
             background: #d32f2f;
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(230, 57, 70, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
         }
 
         .ai-response {
             background: rgba(255, 255, 255, 0.1);
-            border-left: 3px solid var(--accent);
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 12px;
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
             display: none;
             animation: slideIn 0.5s ease;
-            font-size: 0.7rem;
         }
 
         .ai-response.show {
@@ -400,90 +415,88 @@
         .ai-header {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 6px;
+            gap: 10px;
+            margin-bottom: 10px;
             color: var(--accent);
-            font-size: 0.8rem;
         }
 
         .ai-header i {
-            font-size: 0.9rem;
+            font-size: 1.5rem;
         }
 
         .score-display {
             display: flex;
             justify-content: space-between;
-            margin-top: 12px;
-            padding-top: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
         }
 
         .score-item {
             text-align: center;
             flex: 1;
-            min-width: 60px;
+            min-width: 100px;
         }
 
         .score-value {
-            font-size: 1.2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: var(--accent);
         }
 
         .score-label {
-            font-size: 0.6rem;
+            font-size: 0.85rem;
             color: var(--text-gray);
         }
 
         .examples {
-            margin-top: 15px;
+            margin-top: 25px;
         }
 
         .examples-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
         }
 
         .example {
             background: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 6px;
-            border-left: 3px solid var(--accent);
-            font-size: 0.7rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
 
         .rules {
-            margin-top: 15px;
+            margin-top: 25px;
             background: rgba(255, 255, 255, 0.1);
-            padding: 12px;
+            padding: 20px;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            font-size: 0.7rem;
         }
 
         .rules ul {
-            padding-left: 15px;
-            margin-top: 6px;
+            padding-left: 20px;
+            margin-top: 10px;
         }
 
         .rules li {
-            margin-bottom: 5px;
-            line-height: 1.4;
+            margin-bottom: 8px;
+            line-height: 1.5;
         }
 
         footer {
             text-align: center;
-            margin-top: 25px;
-            padding: 12px;
+            margin-top: 40px;
+            padding: 20px;
             color: rgba(255, 255, 255, 0.8);
-            font-size: 0.7rem;
+            font-size: 0.85rem;
         }
 
         @keyframes fadeIn {
@@ -492,12 +505,12 @@
         }
 
         @keyframes slideUp {
-            from { transform: translateY(15px); opacity: 0; }
+            from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
 
         @keyframes slideIn {
-            from { transform: translateX(-15px); opacity: 0; }
+            from { transform: translateX(-20px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
 
@@ -513,26 +526,25 @@
 
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.7); }
-            70% { box-shadow: 0 0 0 6px rgba(76, 201, 240, 0); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 201, 240, 0); }
             100% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0); }
         }
 
         .notification {
             position: fixed;
-            top: 15px;
-            right: 15px;
-            padding: 10px 15px;
-            border-radius: 6px;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
             color: white;
             font-weight: 500;
             z-index: 1000;
             animation: slideIn 0.5s ease;
             display: flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-            max-width: 250px;
-            font-size: 0.7rem;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
         }
 
         .notification.success {
@@ -545,9 +557,9 @@
 
         .loading {
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,.3);
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
@@ -561,20 +573,20 @@
         .timer-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
         }
 
         .timer {
             background: rgba(255, 255, 255, 0.15);
-            border-radius: 30px;
-            padding: 10px 20px;
+            border-radius: 50px;
+            padding: 15px 30px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
+            gap: 10px;
+            font-size: 1.2rem;
             font-weight: bold;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .timer.running {
@@ -597,69 +609,69 @@
         /* Mobile-specific adjustments */
         @media (max-width: 768px) {
             h1 {
-                font-size: 1.2rem;
+                font-size: 1.8rem;
             }
             
             .subtitle {
-                font-size: 0.65rem;
+                font-size: 0.9rem;
             }
             
             .panel {
-                padding: 10px;
+                padding: 15px;
             }
             
             .numbers-grid {
-                grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
-                gap: 4px;
-            }
-            
-            .number {
-                height: 35px;
-                font-size: 0.8rem;
-            }
-            
-            button {
-                padding: 6px 10px;
-                font-size: 0.65rem;
-            }
-            
-            .controls {
+                grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
                 gap: 6px;
             }
             
+            .number {
+                height: 50px;
+                font-size: 1rem;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .controls {
+                gap: 8px;
+            }
+            
             .score-item {
-                min-width: 50px;
+                min-width: 80px;
             }
             
             .score-value {
-                font-size: 1rem;
+                font-size: 1.5rem;
             }
         }
 
         @media (max-width: 480px) {
             body {
-                padding: 8px;
+                padding: 10px;
             }
             
             header {
-                padding: 10px 8px;
+                padding: 15px 10px;
             }
             
             h1 {
-                font-size: 1rem;
+                font-size: 1.5rem;
             }
             
             .game-area {
-                gap: 10px;
+                gap: 15px;
             }
             
             .numbers-grid {
-                grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
             }
             
             .number {
-                height: 30px;
-                font-size: 0.7rem;
+                height: 45px;
+                font-size: 0.9rem;
             }
             
             .controls {
@@ -692,6 +704,9 @@
                 <h2 class="panel-title"><i class="fas fa-comments"></i> Topic & Betting</h2>
                 
                 <div class="topic-box" id="topicBox">
+                    <button class="corrections-btn" id="correctionsBtn">
+                        <i class="fas fa-edit"></i> Corrections
+                    </button>
                     Loading topic...
                 </div>
 
@@ -768,15 +783,6 @@
                     <p id="placeholderText">Select words to build your sentence...</p>
                 </div>
 
-                <div class="controls">
-                    <button class="btn-success" id="validateSentence">
-                        <i class="fas fa-check-circle"></i> Validate Sentence
-                    </button>
-                    <button class="btn-secondary" id="correctionBtn">
-                        <i class="fas fa-highlighter"></i> CORRECTION
-                    </button>
-                </div>
-
                 <div class="ai-response" id="aiResponse">
                     <div class="ai-header">
                         <i class="fas fa-robot"></i>
@@ -805,8 +811,8 @@
                 <li>Place a bet and select a word count (W3-W10)</li>
                 <li>Select the specified number of words from the number grid</li>
                 <li>Words appear directly in the sentence area when selected</li>
-                <li>Sentence is automatically submitted when all words are selected</li>
-                <li>Use CORRECTION button to highlight words that make sense</li>
+                <li>Words must be arranged in the correct grammatical order</li>
+                <li>Your sentence will be automatically validated when all words are selected</li>
                 <li>Win your bet multiplied by the payout rate if your sentence is valid</li>
                 <li>Challenge yourself to create more complex sentences for higher payouts</li>
                 <li>Each round has a 2-minute time limit</li>
@@ -830,7 +836,6 @@
         let roundActive = false;
         let timerInterval;
         let timeLeft = 120; // 2 minutes in seconds
-        let correctionMode = false;
 
         // DOM elements
         const numbersGrid = document.getElementById('numbersGrid');
@@ -840,8 +845,6 @@
         const betAmountInput = document.getElementById('betAmount');
         const placeBetBtn = document.getElementById('placeBetBtn');
         const wordButtons = document.querySelectorAll('.word-btn');
-        const validateSentenceBtn = document.getElementById('validateSentence');
-        const correctionBtn = document.getElementById('correctionBtn');
         const aiResponse = document.getElementById('aiResponse');
         const aiText = document.getElementById('aiText');
         const balanceValue = document.getElementById('balanceValue');
@@ -849,6 +852,7 @@
         const betValue = document.getElementById('betValue');
         const timerElement = document.getElementById('timer');
         const timerValue = document.getElementById('timerValue');
+        const correctionsBtn = document.getElementById('correctionsBtn');
 
         // Cohere API key
         const COHERE_API_KEY = "OjpC1Vsdtpebb9lRygjkMIklrFItDJF4RM3tFEoy";
@@ -875,8 +879,7 @@
 
             // Event listeners
             placeBetBtn.addEventListener('click', placeBet);
-            validateSentenceBtn.addEventListener('click', validateSentence);
-            correctionBtn.addEventListener('click', toggleCorrectionMode);
+            correctionsBtn.addEventListener('click', showCorrections);
             
             // Word button event listeners
             wordButtons.forEach(button => {
@@ -1103,7 +1106,6 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
             currentBet = 0;
             selectedWordCount = 0;
             roundActive = false;
-            correctionMode = false;
             
             // Clear UI
             sentenceArea.innerHTML = '';
@@ -1155,7 +1157,7 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
                 // Add word to sentence area
                 addWordToSentence(number, wordDatabase[number]);
                 
-                // Check if selection is complete and auto-submit
+                // Auto-submit when all words are selected
                 if (selectedNumbers.length === selectedWordCount) {
                     document.querySelectorAll('.number').forEach(num => {
                         if (!num.classList.contains('selected')) {
@@ -1163,10 +1165,8 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
                         }
                     });
                     
-                    // Auto-submit after a short delay
-                    setTimeout(() => {
-                        validateSentence();
-                    }, 500);
+                    // Auto-validate the sentence
+                    setTimeout(validateSentence, 500);
                 }
             }
         }
@@ -1184,53 +1184,6 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
             sentenceArea.appendChild(wordElement);
             
             sentenceWords.push({ number, word, element: wordElement });
-        }
-
-        // Toggle correction mode
-        function toggleCorrectionMode() {
-            if (!roundActive) {
-                showNotification('Please place a bet first', 'error');
-                return;
-            }
-            
-            if (sentenceWords.length === 0) {
-                showNotification('Please select some words first', 'error');
-                return;
-            }
-            
-            correctionMode = !correctionMode;
-            
-            if (correctionMode) {
-                highlightCorrectWords();
-                correctionBtn.classList.add('active');
-                showNotification('Correction mode activated. Words that make sense are highlighted.', 'success');
-            } else {
-                removeCorrectionHighlights();
-                correctionBtn.classList.remove('active');
-                showNotification('Correction mode deactivated.', 'info');
-            }
-        }
-
-        // Highlight words that make sense in the context
-        function highlightCorrectWords() {
-            const sentence = sentenceWords.map(item => item.word).join(' ');
-            
-            // For demo purposes, we'll highlight words that are common in English
-            // In a real implementation, this would use AI to determine which words make sense
-            const commonWords = ["I", "YOU", "HE", "SHE", "IT", "WE", "THEY", "AM", "IS", "ARE", "WAS", "WERE", "BE", "BEEN", "HAVE", "HAS", "HAD", "DO", "DOES", "DID", "WILL", "WOULD", "CAN", "COULD", "SHOULD", "MAY", "MIGHT", "MUST", "A", "AN", "THE", "AND", "BUT", "OR", "FOR", "NOR", "SO", "YET", "IN", "ON", "AT", "BY", "WITH", "ABOUT", "AGAINST", "BETWEEN", "INTO", "THROUGH", "DURING", "BEFORE", "AFTER", "ABOVE", "BELOW", "TO", "FROM", "UP", "DOWN", "OF", "OFF", "OVER", "UNDER", "AGAIN", "FURTHER", "THEN", "ONCE", "HERE", "THERE", "WHEN", "WHERE", "WHY", "HOW", "ALL", "ANY", "BOTH", "EACH", "FEW", "MORE", "MOST", "OTHER", "SOME", "SUCH", "NO", "NOR", "NOT", "ONLY", "OWN", "SAME", "SO", "THAN", "TOO", "VERY", "S", "T", "CAN", "JUST", "DON", "SHOULD", "NOW"];
-            
-            sentenceWords.forEach(wordObj => {
-                if (commonWords.includes(wordObj.word.toUpperCase())) {
-                    wordObj.element.classList.add('correct');
-                }
-            });
-        }
-
-        // Remove correction highlights
-        function removeCorrectionHighlights() {
-            sentenceWords.forEach(wordObj => {
-                wordObj.element.classList.remove('correct');
-            });
         }
 
         // Validate sentence
@@ -1357,6 +1310,23 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
             
             aiText.innerHTML = evaluation;
             aiResponse.classList.add('show');
+        }
+
+        // Show corrections
+        function showCorrections() {
+            if (!roundActive) {
+                showNotification('No active game to correct', 'error');
+                return;
+            }
+            
+            if (sentenceWords.length === 0) {
+                showNotification('No sentence to correct yet', 'error');
+                return;
+            }
+            
+            // In a real implementation, this would show suggestions for improving the sentence
+            // For now, we'll just show a notification
+            showNotification('Corrections feature would suggest improvements to your sentence structure', 'info');
         }
 
         // Update UI

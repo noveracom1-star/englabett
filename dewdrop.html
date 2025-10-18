@@ -502,6 +502,140 @@
     .history-result.lose {
       color: var(--bad);
     }
+    
+    /* Result Screen Styles */
+    .result-screen {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 4000;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .result-card {
+      background: linear-gradient(180deg, rgba(1,33,51,.95), rgba(1,26,40,.95));
+      border-radius: 20px;
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+      max-width: 800px;
+      margin: 0 auto;
+      overflow: hidden;
+      animation: slideUp 0.5s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .result-header {
+      background: linear-gradient(90deg, var(--bg1), var(--bg2));
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .result-title {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, var(--mint), #d7f7e9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .result-subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      font-weight: 600;
+    }
+    .result-body {
+      padding: 20px;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .result-section {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 15px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .result-section h3 {
+      color: var(--mint);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .result-value {
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+    .result-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+    .result-badge.win {
+      background: rgba(25,195,125,0.2);
+      color: #bff3dd;
+      border: 1px solid rgba(25,195,125,0.5);
+    }
+    .result-badge.lose {
+      background: rgba(242,95,92,0.2);
+      color: #ffd3d2;
+      border: 1px solid rgba(242,95,92,0.5);
+    }
+    .words-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .word-badge {
+      padding: 6px 10px;
+      background: rgba(168,230,207,0.15);
+      border: 1px solid rgba(168,230,207,0.3);
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    .word-badge.valid {
+      background: rgba(25,195,125,0.15);
+      border-color: rgba(25,195,125,0.4);
+    }
+    .word-badge.invalid {
+      background: rgba(242,95,92,0.15);
+      border-color: rgba(242,95,92,0.4);
+    }
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .close-result {
+      background: transparent;
+      color: var(--txt);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+    .close-result:hover {
+      background: rgba(255,255,255,0.1);
+    }
 
     /* Media queries for larger screens */
     @media (min-width: 768px) {
@@ -665,6 +799,49 @@
     <footer><p>From ENGLAGIP powered by AITECH • Dewdrop Challenge © 2025 • Ocean Blue Edition • Crafted for clarity, speed, and thrill.</p></footer>
   </div>
 
+  <!-- Result Screen -->
+  <div id="result-screen" class="result-screen">
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-title">DEWDROP</div>
+        <div class="result-subtitle">Game Result</div>
+      </div>
+      <div class="result-body">
+        <div class="result-grid">
+          <div class="result-section">
+            <h3>Betting Amount</h3>
+            <div class="result-value" id="rs-bet-amount">₦0</div>
+          </div>
+          <div class="result-section">
+            <h3>Word Bag</h3>
+            <div class="words-list" id="rs-word-bag"></div>
+          </div>
+          <div class="result-section">
+            <h3>Words Played</h3>
+            <div class="words-list" id="rs-words-played"></div>
+          </div>
+          <div class="result-section">
+            <h3>Result</h3>
+            <div class="result-value" id="rs-result">₦0</div>
+            <div class="result-badge" id="rs-badge">Win</div>
+          </div>
+          <div class="result-section">
+            <h3>Date & Time</h3>
+            <div class="result-value" id="rs-date-time">-</div>
+          </div>
+          <div class="result-section">
+            <h3>Balance</h3>
+            <div class="result-value" id="rs-balance">₦0</div>
+          </div>
+        </div>
+      </div>
+      <div class="result-actions">
+        <button id="close-result" class="close-result">Close</button>
+        <button id="share-result" class="btn">Share Result</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Help modal -->
   <div id="help-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
     <div class="modal-card">
@@ -796,7 +973,17 @@
     historyModal: document.getElementById('history-modal'),
     historyList: document.getElementById('history-list'),
     historyClose: document.getElementById('history-close'),
-    noHistory: document.getElementById('no-history')
+    noHistory: document.getElementById('no-history'),
+    resultScreen: document.getElementById('result-screen'),
+    rsBetAmount: document.getElementById('rs-bet-amount'),
+    rsWordBag: document.getElementById('rs-word-bag'),
+    rsWordsPlayed: document.getElementById('rs-words-played'),
+    rsResult: document.getElementById('rs-result'),
+    rsBadge: document.getElementById('rs-badge'),
+    rsDateTime: document.getElementById('rs-date-time'),
+    rsBalance: document.getElementById('rs-balance'),
+    closeResult: document.getElementById('close-result'),
+    shareResult: document.getElementById('share-result')
   };
 
   // ---- UTIL ----
@@ -1026,8 +1213,10 @@
         .collection('bet_history').add(betData);
         
       console.log("Bet saved to user's Firestore history");
+      return betData;
     } catch (error) {
       console.error("Error saving bet to Firestore:", error);
+      return null;
     }
   }
 
@@ -1120,6 +1309,47 @@
     } catch (error) {
       console.error("Error saving words to Firestore:", error);
     }
+  }
+
+  // Show result screen
+  function showResultScreen(resultData) {
+    // Update result screen data
+    els.rsBetAmount.textContent = formatMoney(resultData.betAmount);
+    
+    // Display word bag
+    els.rsWordBag.innerHTML = '';
+    resultData.wordBag.forEach(letter => {
+      const chip = document.createElement('div');
+      chip.className = 'letter-chip';
+      chip.textContent = letter.toUpperCase();
+      els.rsWordBag.appendChild(chip);
+    });
+    
+    // Display words played with validation status
+    els.rsWordsPlayed.innerHTML = '';
+    resultData.words.forEach(word => {
+      const badge = document.createElement('div');
+      const isValid = resultData.validWords.includes(word);
+      badge.className = `word-badge ${isValid ? 'valid' : 'invalid'}`;
+      badge.textContent = word.toUpperCase();
+      els.rsWordsPlayed.appendChild(badge);
+    });
+    
+    // Display result
+    els.rsResult.textContent = (resultData.result >= 0 ? '+' : '') + formatMoney(resultData.result);
+    
+    // Update badge
+    els.rsBadge.textContent = resultData.result >= 0 ? 'WIN' : 'LOSE';
+    els.rsBadge.className = `result-badge ${resultData.result >= 0 ? 'win' : 'lose'}`;
+    
+    // Display date and time
+    els.rsDateTime.textContent = new Date(resultData.date).toLocaleString();
+    
+    // Display balance
+    els.rsBalance.textContent = formatMoney(resultData.balance);
+    
+    // Show result screen
+    els.resultScreen.style.display = 'block';
   }
 
   // Load ads from Firestore
@@ -1253,6 +1483,28 @@
   els.threeWordsBtn.addEventListener('click', () => {
     window.location.href = 'dewdrop3.html';
   });
+  
+  // Result Screen Events
+  els.closeResult.addEventListener('click', () => {
+    els.resultScreen.style.display = 'none';
+  });
+  
+  els.shareResult.addEventListener('click', () => {
+    // Simple share functionality
+    const shareText = `I just played Dewdrop Challenge and ${els.rsBadge.textContent === 'WIN' ? 'won' : 'lost'} ${els.rsResult.textContent}! Can you beat my score?`;
+    if (navigator.share) {
+      navigator.share({
+        title: 'Dewdrop Challenge Result',
+        text: shareText,
+        url: window.location.href
+      });
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(shareText).then(() => {
+        notify("Result copied to clipboard!");
+      });
+    }
+  });
 
   document.getElementById('submit-btn').addEventListener('click', async ()=>{
     if(!roundActive){
@@ -1313,8 +1565,8 @@
       }
     }
     
-    // Save to Firestore
-    await saveBetToFirestore(net);
+    // Save to Firestore and get result data
+    const resultData = await saveBetToFirestore(net);
     await saveWordsToFirestore();
 
     // Custom congratulations based on result
@@ -1341,6 +1593,11 @@
     } else {
       els.resultMsg.innerHTML = `➖ Break even! No gain, no loss on ${slip.length} word(s).`;
       notify("➖ Break even!");
+    }
+    
+    // Show result screen
+    if (resultData) {
+      showResultScreen(resultData);
     }
     
     // Clear input field and start new round immediately
