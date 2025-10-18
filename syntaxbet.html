@@ -54,6 +54,7 @@
             animation: fadeIn 0.8s ease;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
         }
 
         h1 {
@@ -78,6 +79,34 @@
             line-height: 1.6;
         }
 
+        .header-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
         .game-area {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -89,6 +118,12 @@
             .game-area {
                 grid-template-columns: 1fr;
                 gap: 20px;
+            }
+            
+            .header-buttons {
+                position: static;
+                justify-content: center;
+                margin-top: 15px;
             }
         }
 
@@ -499,6 +534,157 @@
             font-size: 0.85rem;
         }
 
+        /* Timer Styles */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .timer.running {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .timer.warning {
+            color: var(--warning);
+            border-color: var(--warning);
+            animation: pulse 1s infinite;
+        }
+
+        .timer.danger {
+            color: var(--danger);
+            border-color: var(--danger);
+            animation: pulse 0.5s infinite;
+        }
+
+        /* Overlay Styles */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .overlay-content {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .overlay.active .overlay-content {
+            transform: translateY(0);
+        }
+
+        .overlay-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .overlay-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .overlay-title {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+        }
+
+        .overlay-title i {
+            color: var(--accent);
+        }
+
+        .help-examples {
+            margin-bottom: 25px;
+        }
+
+        .help-examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .help-example {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .help-rules {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .help-rules ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .help-rules li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -555,6 +741,10 @@
             background: var(--danger);
         }
 
+        .notification.info {
+            background: var(--accent);
+        }
+
         .loading {
             display: inline-block;
             width: 20px;
@@ -567,43 +757,6 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-
-        /* Timer Styles */
-        .timer-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .timer {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50px;
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .timer.running {
-            color: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .timer.warning {
-            color: var(--warning);
-            border-color: var(--warning);
-            animation: pulse 1s infinite;
-        }
-
-        .timer.danger {
-            color: var(--danger);
-            border-color: var(--danger);
-            animation: pulse 0.5s infinite;
         }
 
         /* Mobile-specific adjustments */
@@ -645,6 +798,10 @@
             
             .score-value {
                 font-size: 1.5rem;
+            }
+            
+            .overlay-content {
+                padding: 20px;
             }
         }
 
@@ -690,6 +847,15 @@
         <header>
             <h1><i class="fas fa-water"></i> SyntaxBet</h1>
             <p class="subtitle">Form meaningful phrases, clauses, or sentences by selecting words in the rightward order. Challenge your syntax skills with our AI-powered evaluation system.</p>
+            
+            <div class="header-buttons">
+                <button class="header-btn" id="helpBtn">
+                    <i class="fas fa-question-circle"></i> Help
+                </button>
+                <button class="header-btn" id="correctionsBtn">
+                    <i class="fas fa-edit"></i> Corrections
+                </button>
+            </div>
         </header>
 
         <div class="timer-container">
@@ -704,9 +870,6 @@
                 <h2 class="panel-title"><i class="fas fa-comments"></i> Topic & Betting</h2>
                 
                 <div class="topic-box" id="topicBox">
-                    <button class="corrections-btn" id="correctionsBtn">
-                        <i class="fas fa-edit"></i> Corrections
-                    </button>
                     Loading topic...
                 </div>
 
@@ -793,35 +956,45 @@
             </div>
         </div>
 
-        <div class="examples">
-            <h2 class="panel-title"><i class="fas fa-lightbulb"></i> Example Sentences</h2>
-            <div class="examples-grid">
-                <div class="example">W3: [I] [AM] [HERE]</div>
-                <div class="example">W4: [BRING] [BACK] [MY] [PHONE]</div>
-                <div class="example">W5: [STAY] [WITH] [US] [FOR] [NOW]</div>
-                <div class="example">W6: [IT] [ONLY] [WORKS] [FOR] [YOUNG] [PEOPLE]</div>
-                <div class="example">W7: [YOU] [CANNOT] [GO] [TO] [THE] [GYM] [ALONE]</div>
-                <div class="example">W8: [WHY] [IS] [IT] [TAKING] [TOO] [LONG] [TO] [LAND]</div>
-            </div>
-        </div>
-
-        <div class="rules">
-            <h2 class="panel-title"><i class="fas fa-info-circle"></i> Game Rules</h2>
-            <ul>
-                <li>Place a bet and select a word count (W3-W10)</li>
-                <li>Select the specified number of words from the number grid</li>
-                <li>Words appear directly in the sentence area when selected</li>
-                <li>Words must be arranged in the correct grammatical order</li>
-                <li>Your sentence will be automatically validated when all words are selected</li>
-                <li>Win your bet multiplied by the payout rate if your sentence is valid</li>
-                <li>Challenge yourself to create more complex sentences for higher payouts</li>
-                <li>Each round has a 2-minute time limit</li>
-            </ul>
-        </div>
-
         <footer>
             <p>SyntaxBet &copy; 2023 | Part of the EnglaBet Language Learning System</p>
         </footer>
+    </div>
+
+    <!-- Help Overlay -->
+    <div class="overlay" id="helpOverlay">
+        <div class="overlay-content">
+            <button class="overlay-close" id="helpClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="overlay-title"><i class="fas fa-question-circle"></i> Game Help</h2>
+            
+            <div class="help-examples">
+                <h3 class="panel-title"><i class="fas fa-lightbulb"></i> Example Sentences</h3>
+                <div class="help-examples-grid">
+                    <div class="help-example">W3: [I] [AM] [HERE]</div>
+                    <div class="help-example">W4: [BRING] [BACK] [MY] [PHONE]</div>
+                    <div class="help-example">W5: [STAY] [WITH] [US] [FOR] [NOW]</div>
+                    <div class="help-example">W6: [IT] [ONLY] [WORKS] [FOR] [YOUNG] [PEOPLE]</div>
+                    <div class="help-example">W7: [YOU] [CANNOT] [GO] [TO] [THE] [GYM] [ALONE]</div>
+                    <div class="help-example">W8: [WHY] [IS] [IT] [TAKING] [TOO] [LONG] [TO] [LAND]</div>
+                </div>
+            </div>
+            
+            <div class="help-rules">
+                <h3 class="panel-title"><i class="fas fa-info-circle"></i> Game Rules</h3>
+                <ul>
+                    <li>Place a bet and select a word count (W3-W10)</li>
+                    <li>Select the specified number of words from the number grid</li>
+                    <li>Words appear directly in the sentence area when selected</li>
+                    <li>Words must be arranged in the correct grammatical order</li>
+                    <li>Your sentence will be automatically validated when all words are selected</li>
+                    <li>Win your bet multiplied by the payout rate if your sentence is valid</li>
+                    <li>Challenge yourself to create more complex sentences for higher payouts</li>
+                    <li>Each round has a 2-minute time limit</li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -852,6 +1025,9 @@
         const betValue = document.getElementById('betValue');
         const timerElement = document.getElementById('timer');
         const timerValue = document.getElementById('timerValue');
+        const helpBtn = document.getElementById('helpBtn');
+        const helpOverlay = document.getElementById('helpOverlay');
+        const helpClose = document.getElementById('helpClose');
         const correctionsBtn = document.getElementById('correctionsBtn');
 
         // Cohere API key
@@ -879,6 +1055,8 @@
 
             // Event listeners
             placeBetBtn.addEventListener('click', placeBet);
+            helpBtn.addEventListener('click', showHelp);
+            helpClose.addEventListener('click', hideHelp);
             correctionsBtn.addEventListener('click', showCorrections);
             
             // Word button event listeners
@@ -1312,6 +1490,16 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
             aiResponse.classList.add('show');
         }
 
+        // Show help overlay
+        function showHelp() {
+            helpOverlay.classList.add('active');
+        }
+
+        // Hide help overlay
+        function hideHelp() {
+            helpOverlay.classList.remove('active');
+        }
+
         // Show corrections
         function showCorrections() {
             if (!roundActive) {
@@ -1344,7 +1532,7 @@ PERSON2: [I WILL STAY FOR TWO WEEKS] [I NEED TO FIND A HOTEL FIRST]`;
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
                 ${message}
             `;
             
