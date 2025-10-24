@@ -570,7 +570,7 @@
             background: var(--wordbet-gradient);
             color: white;
             font-weight: bold;
-            box-shadow: 0 2px 8px rgba(0, 168, 232, 0.4);
+            box-shadow: 0 2px8px rgba(0, 168, 232, 0.4);
         }
         .wordbet-promo-banner {
             background: var(--wordbet-gradient);
@@ -1169,15 +1169,15 @@
                 <div class="top-nav-icon"><i class="fas fa-home"></i></div>
                 <div class="top-nav-text">Home</div>
             </div>
-            <div class="top-nav-item" data-screen="wordbet">
+            <div class="top-nav-item" onclick="handleWordBetNavigation()">
                 <div class="top-nav-icon"><i class="fas fa-font"></i></div>
                 <div class="top-nav-text">WordBet</div>
             </div>
-            <div class="top-nav-item" data-screen="spelling">
+            <div class="top-nav-item" onclick="window.location.href='virtual_spelling.html'">
                 <div class="top-nav-icon"><i class="fas fa-spell-check"></i></div>
                 <div class="top-nav-text">Spelling</div>
             </div>
-            <div class="top-nav-item" data-screen="syntaxbet">
+            <div class="top-nav-item" onclick="window.location.href='syntaxbet.html'">
                 <div class="top-nav-icon"><i class="fas fa-code"></i></div>
                 <div class="top-nav-text">SyntaxBet</div>
             </div>
@@ -1224,96 +1224,6 @@
                 </div>
                 <div id="todays-schedule" class="schedule-container">
                     <!-- Today's schedule will be dynamically populated -->
-                </div>
-            </div>
-            <!-- Weekly Schedule Section -->
-            <div class="featured-section">
-                <div class="section-title">
-                    Weekly Schedule <span class="view-more" id="toggle-schedule">Show All</span>
-                </div>
-                <div id="weekly-schedule" class="schedule-container" style="display: none;">
-                    <!-- Weekly schedule will be dynamically populated -->
-                </div>
-            </div>
-            <!-- Live Games Section -->
-            <div class="featured-section">
-                <div class="live-indicator">
-                    <div class="live-dot"></div>
-                    <div class="section-title">Live Games</div>
-                </div>
-                <div class="game-card">
-                    <div class="game-header">
-                        <div class="game-status">LIVE</div>
-                        <div class="game-time">120 secs</div>
-                    </div>
-                    <div class="game-round">
-                        <div>VirtualSpelling: L5 HOUSE</div>
-                        <div class="round-info">Time left: 00:48</div>
-                    </div>
-                    <div class="word-components">
-                        <div class="letter-box">E</div>
-                        <div class="letter-box">S</div>
-                        <div class="letter-box">R</div>
-                        <div class="letter-box">O</div>
-                        <div class="letter-box">U</div>
-                        <div class="letter-box">L</div>
-                        <div class="letter-box">X</div>
-                        <div class="letter-box">H</div>
-                    </div>
-                    <div class="odds">
-                        <div class="odd-box">
-                            <div class="odd-type">Letters</div>
-                            <div class="odd-value">8</div>
-                        </div>
-                        <div class="odd-box">
-                            <div class="odd-type">Target</div>
-                            <div class="odd-value">5</div>
-                        </div>
-                        <div class="odd-box">
-                            <div class="odd-type">Strange</div>
-                            <div class="odd-value">3</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Featured Games Section -->
-            <div class="featured-section">
-                <div class="section-title">
-                    Featured Games <span class="view-more">View More ></span>
-                </div>
-                <div class="game-card">
-                    <div class="game-header">
-                        <div class="game-status">HOT</div>
-                        <div class="game-time">18:00 | Today</div>
-                    </div>
-                    <div class="game-round">
-                        <div>Current Round: DEWDROP</div>
-                        <div class="round-info">Ends in: 01:24:36</div>
-                    </div>
-                    <div class="game-title">KEY LETTER: <span style="color: #00d8e8;">O</span></div>
-                    <div class="word-components">
-                        <div class="letter-box key-letter">O</div>
-                        <div class="letter-box">B</div>
-                        <div class="letter-box">S</div>
-                        <div class="letter-box">E</div>
-                        <div class="letter-box">R</div>
-                        <div class="letter-box">V</div>
-                        <div class="letter-box">E</div>
-                    </div>
-                    <div class="odds">
-                        <div class="odd-box">
-                            <div class="odd-type">Keyword</div>
-                            <div class="odd-value">OBSERVE</div>
-                        </div>
-                        <div class="odd-box">
-                            <div class="odd-type">Rival</div>
-                            <div class="odd-value">OBSCURE</div>
-                        </div>
-                    </div>
-                    <div class="game-rules">
-                        <div class="rule-title">Rules & Clues</div>
-                        <div>Predict words using the key letter 'O' within the 2-hour round duration.</div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1753,6 +1663,48 @@
             const currentTime = today.getHours() * 60 + today.getMinutes();
             return currentTime >= startTime && currentTime <= endTime;
         }
+        // Function to get the currently active WordBet game
+        function getActiveWordBetGame() {
+            const today = new Date();
+            const dayIndex = today.getDay();
+            const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+            const currentDay = dayNames[dayIndex];
+            const schedule = daySchedule[currentDay] || daySchedule.monday;
+            const currentTime = today.getHours() * 60 + today.getMinutes();
+            
+            for (const game of schedule) {
+                const [startStr, endStr] = game.time.split('-').map(s => s.trim());
+                const startTime = convertTimeToMinutes(startStr);
+                const endTime = convertTimeToMinutes(endStr);
+                
+                if (currentTime >= startTime && currentTime <= endTime) {
+                    return game;
+                }
+            }
+            return null;
+        }
+        // Function to handle WordBet navigation
+        function handleWordBetNavigation() {
+            const activeGame = getActiveWordBetGame();
+            
+            if (activeGame) {
+                const gamePageMap = {
+                    "DEWDROP": "dewdrop.html",
+                    "WORDBASE": "wordbase.html",
+                    "MIDDAY": "midday.html",
+                    "FREE LUNCH": "free_lunch.html",
+                    "AWL": "awl.html",
+                    "WEEKEND": "weekend.html",
+                    "STRUCTURE": "structure.html",
+                    "EXIT": "exit.html"
+                };
+                const targetPage = gamePageMap[activeGame.name] || `${activeGame.name.toLowerCase()}.html`;
+                window.location.href = targetPage;
+            } else {
+                // If no active game, navigate to the WordBet screen
+                navigateTo('wordbet');
+            }
+        }
         // Function to populate schedule based on current day
         function populateSchedule() {
             const today = new Date();
@@ -1786,27 +1738,6 @@
                 `;
                 todaysScheduleContainer.appendChild(scheduleItem);
             });
-            const weeklyScheduleContainer = document.getElementById('weekly-schedule');
-            weeklyScheduleContainer.innerHTML = '';
-            for (const day in daySchedule) {
-                if (daySchedule.hasOwnProperty(day)) {
-                    const dayHeader = document.createElement('div');
-                    dayHeader.className = 'day-title';
-                    dayHeader.textContent = day.charAt(0).toUpperCase() + day.slice(1);
-                    weeklyScheduleContainer.appendChild(dayHeader);
-                    daySchedule[day].forEach(game => {
-                        const scheduleItem = document.createElement('div');
-                        scheduleItem.className = 'schedule-item';
-                        scheduleItem.innerHTML = `
-                            <div>
-                                <div class="game-name">${game.name}</div>
-                                <div class="game-time-slot">${game.time}</div>
-                            </div>
-                        `;
-                        weeklyScheduleContainer.appendChild(scheduleItem);
-                    });
-                }
-            }
         }
         // Function to populate WordBet games
         function populateWordBetGames() {
@@ -1938,16 +1869,18 @@
         }
         // Add event listeners to navigation items (only top-nav-item, not sport-item)
         document.querySelectorAll('.top-nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const screenId = this.getAttribute('data-screen');
-                navigateTo(screenId);
-            });
+            // Skip WordBet, SyntaxBet and Spelling items as they now have custom navigation
+            if (item.getAttribute('data-screen') !== 'wordbet' && 
+                item.getAttribute('data-screen') !== 'syntaxbet' && 
+                item.getAttribute('data-screen') !== 'spelling') {
+                item.addEventListener('click', function() {
+                    const screenId = this.getAttribute('data-screen');
+                    navigateTo(screenId);
+                });
+            }
         });
         function updateCountdowns() {
-            const countdownElements = document.querySelectorAll('.round-info');
-            if(countdownElements[0]) {
-                countdownElements[0].textContent = "Ends in: 01:24:20";
-            }
+            // This function is kept for compatibility but no longer needed
         }
         window.addEventListener('scroll', function() {
             const scrollTop = document.querySelector('.scroll-top');
@@ -1955,16 +1888,6 @@
                 scrollTop.style.display = 'flex';
             } else {
                 scrollTop.style.display = 'none';
-            }
-        });
-        document.getElementById('toggle-schedule').addEventListener('click', function() {
-            const weeklySchedule = document.getElementById('weekly-schedule');
-            if (weeklySchedule.style.display === 'none') {
-                weeklySchedule.style.display = 'block';
-                this.textContent = 'Hide';
-            } else {
-                weeklySchedule.style.display = 'none';
-                this.textContent = 'Show All';
             }
         });
         window.onload = function() {
@@ -1978,7 +1901,6 @@
             populateGameTypes();
             populateSchedule();
             navigateTo('home');
-            setInterval(updateCountdowns, 10000);
             setInterval(populateSchedule, 60000);
             setInterval(function() {
                 if (document.body.classList.contains('wordbet-body')) {

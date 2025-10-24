@@ -27,7 +27,7 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: var(--text-light);
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 20px;
         }
         .container {
             max-width: 480px;
@@ -49,13 +49,14 @@
         .logo {
             display: flex;
             align-items: center;
+            flex: 1;
         }
         .logo-img {
-            width: 150px; /* Adjusted for logo image */
+            width: 150px;
             height: 40px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
         }
         .logo-img img {
             max-width: 100%;
@@ -101,6 +102,7 @@
             border-bottom: 1px solid #1e4a86;
             scrollbar-width: none;
             -ms-overflow-style: none;
+            justify-content: center;
         }
         .sports-nav::-webkit-scrollbar {
             display: none;
@@ -230,47 +232,6 @@
             font-size: 12px;
             font-weight: 500;
         }
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--primary);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-            z-index: 100;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .nav-item:hover {
-            transform: translateY(-3px);
-        }
-        .nav-icon {
-            font-size: 20px;
-            margin-bottom: 3px;
-            color: #4a7cc2;
-            transition: all 0.3s ease;
-        }
-        .nav-text {
-            font-size: 12px;
-            color: #4a7cc2;
-            transition: all 0.3s ease;
-        }
-        .nav-active .nav-icon,
-        .nav-active .nav-text {
-            color: #00bfff;
-        }
         /* Animations */
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -280,7 +241,7 @@
         /* Scroll to Top Button */
         .scroll-top {
             position: fixed;
-            bottom: 90px;
+            bottom: 20px;
             right: 20px;
             width: 40px;
             height: 40px;
@@ -414,18 +375,6 @@
                 </div>
                 <div class="sport-name">SyntaxBet</div>
             </div>
-            <div class="sport-item" data-screen="tournaments">
-                <div class="sport-icon">
-                    <i class="fas fa-trophy"></i>
-                </div>
-                <div class="sport-name">Tournaments</div>
-            </div>
-            <div class="sport-item" data-screen="promotions">
-                <div class="sport-icon">
-                    <i class="fas fa-gift"></i>
-                </div>
-                <div class="sport-name">Promotions</div>
-            </div>
         </div>
         <div class="game-types">
             <div class="game-type game-type-active">All Games</div>
@@ -476,7 +425,7 @@
                 </div>
                 <div class="footer-text">
                     EnglaBet is a word gaming platform for entertainment purposes only. Please play responsibly. 
-                    Users must be 18 years or older to participate. © 2023 EnglaBet. All rights reserved.
+                    Users must be 18 years or older to participate. © 2026 EnglaBet. All rights reserved.
                 </div>
             </div>
         </div>
@@ -484,37 +433,25 @@
         <div id="wordbet-screen" class="empty-screen">
             <div class="empty-icon"><i class="fas fa-font"></i></div>
             <div class="empty-title">WordBet</div>
-            <div class="empty-text">This section is coming soon!</div>
+            <div class="empty-text"></div>
             <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
         </div>
         <div id="spelling-screen" class="empty-screen">
             <div class="empty-icon"><i class="fas fa-spell-check"></i></div>
             <div class="empty-title">Spelling Games</div>
-            <div class="empty-text">This section is coming soon!</div>
+            <div class="empty-text"></div>
             <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
         </div>
         <div id="syntaxbet-screen" class="empty-screen">
             <div class="empty-icon"><i class="fas fa-code"></i></div>
             <div class="empty-title">SyntaxBet</div>
-            <div class="empty-text">This section is coming soon!</div>
-            <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
-        </div>
-        <div id="tournaments-screen" class="empty-screen">
-            <div class="empty-icon"><i class="fas fa-trophy"></i></div>
-            <div class="empty-title">Tournaments</div>
-            <div class="empty-text">This section is coming soon!</div>
-            <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
-        </div>
-        <div id="promotions-screen" class="empty-screen">
-            <div class="empty-icon"><i class="fas fa-gift"></i></div>
-            <div class="empty-title">Promotions</div>
-            <div class="empty-text">This section is coming soon!</div>
+            <div class="empty-text"></div>
             <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
         </div>
         <div id="me-screen" class="empty-screen">
             <div class="empty-icon"><i class="fas fa-user"></i></div>
             <div class="empty-title">My Account</div>
-            <div class="empty-text">This section is coming soon!</div>
+            <div class="empty-text"></div>
             <button class="empty-btn" onclick="navigateTo('home')">Back to Home</button>
         </div>
         <!-- Footer Screens -->
@@ -559,29 +496,6 @@
     <div class="scroll-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
         <i class="fas fa-arrow-up"></i>
     </div>
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <div class="nav-item nav-active" data-screen="home">
-            <div class="nav-icon"><i class="fas fa-home"></i></div>
-            <div class="nav-text">Home</div>
-        </div>
-        <div class="nav-item" data-screen="wordbet">
-            <div class="nav-icon"><i class="fas fa-font"></i></div>
-            <div class="nav-text">WordBet</div>
-        </div>
-        <div class="nav-item" data-screen="spelling">
-            <div class="nav-icon"><i class="fas fa-spell-check"></i></div>
-            <div class="nav-text">Spelling</div>
-        </div>
-        <div class="nav-item" data-screen="syntaxbet">
-            <div class="nav-icon"><i class="fas fa-code"></i></div>
-            <div class="nav-text">SyntaxBet</div>
-        </div>
-        <div class="nav-item" data-screen="me">
-            <div class="nav-icon"><i class="fas fa-user"></i></div>
-            <div class="nav-text">Me</div>
-        </div>
-    </div>
 
     <!-- Firebase Module Import (Updated) -->
     <script type="module">
@@ -621,19 +535,19 @@
                 document.getElementById(`${screenId}-screen`).style.display = 'block';
             }
             // Update active states
-            document.querySelectorAll('.sport-item, .nav-item').forEach(item => {
-                item.classList.remove('sport-active', 'nav-active');
+            document.querySelectorAll('.sport-item').forEach(item => {
+                item.classList.remove('sport-active');
             });
             // Set active state for the clicked item
             document.querySelectorAll(`[data-screen="${screenId}"]`).forEach(item => {
-                item.classList.add('sport-active', 'nav-active');
+                item.classList.add('sport-active');
             });
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Set up navigation event listeners
-        document.querySelectorAll('.sport-item, .nav-item').forEach(item => {
+        document.querySelectorAll('.sport-item').forEach(item => {
             item.addEventListener('click', function() {
                 const screenId = this.getAttribute('data-screen');
                 navigateTo(screenId);

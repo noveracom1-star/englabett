@@ -25,8 +25,8 @@
         :root {
             --primary: #0a2e5a;
             --secondary: #1a4789;
-            --accent: #ff9d00;
-            --accent-gradient: linear-gradient(to right, #ff9d00, #ffcc00);
+            --accent: #00a8d8;
+            --accent-gradient: linear-gradient(to right, #00a8d8, #00d8e8);
             --text-light: #ffffff;
             --text-gray: #a0c1ed;
             --card-bg: #1a3e75;
@@ -73,7 +73,7 @@
         .logo-img {
             width: 50px;
             height: 50px;
-            background: var(--accent-gradient);
+            background: white;
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -81,15 +81,13 @@
             margin-right: 12px;
             font-weight: bold;
             font-size: 22px;
-            box-shadow: 0 4px 10px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 4px 10px rgba(0, 168, 216, 0.4);
         }
         
         .logo-text {
             font-size: 28px;
             font-weight: bold;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: white;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
@@ -170,7 +168,7 @@
         .form-control:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(255, 157, 0, 0.2);
+            box-shadow: 0 0 0 2px rgba(0, 168, 216, 0.2);
         }
         
         .password-toggle {
@@ -221,12 +219,12 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(255, 157, 0, 0.4);
+            box-shadow: 0 4px 10px rgba(0, 168, 216, 0.4);
         }
         
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 157, 0, 0.5);
+            box-shadow: 0 6px 15px rgba(0, 168, 216, 0.5);
         }
         
         .divider {
@@ -273,20 +271,7 @@
         .social-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        .facebook-btn:hover {
-            background: #3b5998;
-            color: white;
-        }
-        
-        .google-btn:hover {
-            background: #DB4437;
-            color: white;
-        }
-        
-        .twitter-btn:hover {
-            background: #1DA1F2;
+            background: var(--accent);
             color: white;
         }
         
@@ -670,7 +655,7 @@
                     } else if (password.length < 10) {
                         strength = 50;
                         text = 'Fair';
-                        strengthBar.style.background = '#ff9d00';
+                        strengthBar.style.background = '#3498db';
                     } else if (/[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
                         strength = 100;
                         text = 'Strong';
@@ -678,7 +663,7 @@
                     } else {
                         strength = 75;
                         text = 'Good';
-                        strengthBar.style.background = '#3498db';
+                        strengthBar.style.background = '#00a8d8';
                     }
                     
                     strengthBar.style.width = `${strength}%`;
