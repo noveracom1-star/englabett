@@ -221,7 +221,7 @@
             color: var(--text-gray);
         }
 
-        /* Updated word buttons - 4 per line like VirtualSpelling */
+        /* Updated word buttons - 4 per column, 2 rows */
         .word-buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -230,7 +230,7 @@
 
         @media (max-width: 600px) {
             .word-buttons {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
@@ -694,7 +694,7 @@
             line-height: 1.4;
         }
 
-        /* Game Records Styles */
+        /* Game Records Styles - moved to bottom */
         .records-container {
             margin-top: 15px;
             background: rgba(255, 255, 255, 0.1);
@@ -994,23 +994,6 @@
                         <div class="score-label">Current Bet</div>
                     </div>
                 </div>
-
-                <div class="records-container">
-                    <h3 class="records-title"><i class="fas fa-history"></i> Game Records</h3>
-                    <table class="records-table" id="recordsTable">
-                        <thead>
-                            <tr>
-                                <th>Word Length</th>
-                                <th>You Arranged</th>
-                                <th>Date</th>
-                                <th>Winning</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recordsBody">
-                            <!-- Records will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
             </div>
 
             <div class="panel">
@@ -1033,6 +1016,24 @@
                     <div id="aiText">Waiting for evaluation...</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Game Records moved to bottom of page -->
+        <div class="records-container">
+            <h3 class="records-title"><i class="fas fa-history"></i> Game Records</h3>
+            <table class="records-table" id="recordsTable">
+                <thead>
+                    <tr>
+                        <th>Word Length</th>
+                        <th>You Arranged</th>
+                        <th>Date</th>
+                        <th>Winning</th>
+                    </tr>
+                </thead>
+                <tbody id="recordsBody">
+                    <!-- Records will be populated here -->
+                </tbody>
+            </table>
         </div>
 
         <footer>

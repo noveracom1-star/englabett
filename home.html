@@ -1137,6 +1137,121 @@
             color: var(--text-gray);
             margin-bottom: 20px;
         }
+
+        /* Footer Styles */
+        .footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid #1e4a86;
+        }
+        .footer-section {
+            margin-bottom: 25px;
+        }
+        .footer-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #00d8e8;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .footer-link {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .footer-link:hover {
+            color: #00d8e8;
+            background: rgba(0, 216, 232, 0.1);
+        }
+        .footer-text {
+            font-size: 12px;
+            color: var(--text-gray);
+            text-align: center;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+        .accordion {
+            background: var(--card-bg);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .accordion-header {
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .accordion-header:hover {
+            background: rgba(0, 216, 232, 0.1);
+        }
+        .accordion-title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-content {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .accordion.active .accordion-content {
+            padding: 15px;
+            max-height: 500px;
+        }
+        .accordion.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        .accordion-content p {
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .accordion-content ul {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+        .accordion-content li {
+            margin-bottom: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
+            transition: all 0.3s ease;
+        }
+        .social-link:hover {
+            background: var(--accent-gradient);
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
     </style>
 </head>
 <body>
@@ -1419,6 +1534,140 @@
                     <div class="menu-text">Help & Support</div>
                     <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer">
+            <!-- FAQ Section -->
+            <div class="footer-section">
+                <div class="footer-title">Frequently Asked Questions</div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">How do I deposit funds?</div>
+                        <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>You can deposit funds by clicking on the "Deposit" button in the quick access menu. We support various payment methods including bank transfers, credit/debit cards, and mobile money services.</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">How do I withdraw my winnings?</div>
+                        <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>To withdraw your winnings, go to the "Withdraw" section in the quick access menu. Enter the amount you wish to withdraw and select your preferred withdrawal method. Withdrawals are processed within 24-48 hours.</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">What happens if I forget my password?</div>
+                        <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>If you forget your password, click on the "Forgot Password" link on the login page. You will receive an email with instructions to reset your password.</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">Are there any age restrictions?</div>
+                        <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Yes, you must be at least 18 years old to use our platform. We verify user age during the registration process to ensure compliance with legal requirements.</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">How are winners determined?</div>
+                        <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Winners are determined based on the accuracy of their word selections and the complexity of their answers. Our AI-powered system evaluates all submissions and ranks them according to predefined criteria.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links Section -->
+            <div class="footer-section">
+                <div class="footer-title">Quick Links</div>
+                <div class="footer-links">
+                    <a href="about.html" class="footer-link">About Us</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                    <a href="privacy.html" class="footer-link">Privacy Policy</a>
+                    <a href="terms.html" class="footer-link">Terms & Conditions</a>
+                    <a href="responsible_gaming.html" class="footer-link">Responsible Gaming</a>
+                    <a href="help_support.html" class="footer-link">Help & Support</a>
+                </div>
+            </div>
+
+            <!-- Terms & Conditions Section -->
+            <div class="footer-section">
+                <div class="footer-title">Terms & Conditions</div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">Account Registration</div>
+                        <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>By registering an account, you agree to provide accurate and complete information. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">Game Rules</div>
+                        <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>All games are governed by specific rules that are displayed before participation. By participating in any game, you agree to abide by these rules. The platform reserves the right to disqualify any participant who violates the rules.</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">Payments and Withdrawals</div>
+                        <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>All deposits and withdrawals are subject to verification. The platform reserves the right to request additional identification documents for security purposes. Withdrawals may be subject to processing fees depending on the method chosen.</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">Intellectual Property</div>
+                        <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>All content on this platform, including but not limited to text, graphics, logos, and software, is the property of EnglaBet and is protected by intellectual property laws. Users may not reproduce, distribute, or create derivative works without explicit permission.</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-title">Limitation of Liability</div>
+                        <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="accordion-content">
+                        <p>EnglaBet shall not be liable for any indirect, incidental, special, or consequential damages resulting from the use or inability to use the platform. Our liability is limited to the amount of funds in your account at the time of the incident.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Links -->
+            <div class="footer-section">
+                <div class="footer-title">Follow Us</div>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+
+            <!-- Copyright Notice -->
+            <div class="footer-text">
+                <p>&copy; 2023 EnglaBet. All rights reserved. EnglaBet is a registered trademark.</p>
+                <p>This platform is intended for entertainment purposes only. Please gamble responsibly.</p>
             </div>
         </div>
     </div>
@@ -1881,6 +2130,11 @@
         });
         function updateCountdowns() {
             // This function is kept for compatibility but no longer needed
+        }
+        // Accordion functionality for FAQ and Terms
+        function toggleAccordion(element) {
+            const accordion = element.parentElement;
+            accordion.classList.toggle('active');
         }
         window.addEventListener('scroll', function() {
             const scrollTop = document.querySelector('.scroll-top');
